@@ -37,3 +37,7 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+.Rproj.user/1AF5D456/sources/prop/INDEX
+.Rproj.user/1AF5D456/pcs/workbench-pane.pper
+.Rproj.user/1AF5D456/pcs/windowlayoutstate.pper
+.Rproj.user/1AF5D456/pcs/source-pane.pper
