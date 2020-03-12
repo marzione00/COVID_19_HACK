@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1584024448612.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "512528517",
+    "id" : "406AB3E1",
+    "lastKnownWriteTime" : 1584024495,
+    "last_content_update" : 1584024495264,
+    "path" : "C:/Users/Greg/Desktop/COVID_19_HACK/R/hello.R",
+    "project_path" : "R/hello.R",
+    "properties" : {
+        "cursorPosition" : "17,19",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
