@@ -26,7 +26,7 @@ if(interactive()){
       ),
       
       waiter::use_waiter(),
-      waiter::waiter_show_on_load(html = waiter::spin_flower()), # will show on load
+      waiter::waiter_show_on_load(html = waiter::spin_rotating_plane()), # will show on load
       
       shinydashboard::tabItems(
         shinydashboard::tabItem(tabName = "tab_1",
