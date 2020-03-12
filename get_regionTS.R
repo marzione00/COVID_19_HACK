@@ -1,3 +1,11 @@
+#' Data acquisition sorted by region
+#' 
+#' @return A list containing the original dataset splitted into each region.
+#' 
+#' @examples 
+#' regTS <- get_regionTS()
+#' names(regTS) # List of regions names
+#'
 get_regionTS <- function() {
   data <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv",
                    header = TRUE)
