@@ -64,7 +64,7 @@ server <- function(input, output, session) {
   })
 
   ## REGION reactive values ##
-  reac_region <- reactiveValues()
+  reac_region <- shiny::reactiveValues()
 
   ## REGION plot (currently date against total cases) ##
   output$coolplot_region <- shiny::renderPlot({
@@ -93,7 +93,7 @@ server <- function(input, output, session) {
       ggplot2::labs(title="COVID19")
   })
 
-  output$coolplot5_region <- renderPrint(
+  output$coolplot5_region <- shiny::renderPrint(
     summary(reac_region$model)
     )
 
@@ -123,7 +123,7 @@ server <- function(input, output, session) {
   })
 
   ## PROVINCE plot ##
-  output$coolplot_province <- renderPlot({
+  output$coolplot_province <- shiny::renderPlot({
 
     # CODICE DA SCRIVERE - FABIO #
 
