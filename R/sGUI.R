@@ -13,7 +13,7 @@
 #
 
 sGUI <- function(){
-  dir <- system.file("shinyApp", package = "CovidPack")
+  dir <- system.file("shinyAPP", package = "CovidPack")
   shiny::runApp(dir)
 }
 
