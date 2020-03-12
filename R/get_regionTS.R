@@ -6,6 +6,7 @@
 #' regTS <- get_regionTS()
 #' names(regTS) # List of regions names
 #'
+#' @export
 get_regionTS <- function() {
   data <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv",
                    header = TRUE)
