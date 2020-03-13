@@ -10,17 +10,17 @@ server <- function(input, output, session) {
   provNames <- names(provTS)
 
   # Time horizon of all graphs
-  Days <- (1:50)
+  days <- (1:50)
 
 
 
   # conf<-nlstools::confint2(level = 0.95,model)
 
-  #Conf_UP<-conf[1,1]/(conf[2,1] * exp(conf[3,1] * Days_dat) +1 )
-  #Conf_DOWN<-conf[1,2]/(conf[2,2] * exp(conf[3,2] * Days_dat) +1 )
+  #Conf_UP<-conf[1,1]/(conf[2,1] * exp(conf[3,1] * days_dat) +1 )
+  #Conf_DOWN<-conf[1,2]/(conf[2,2] * exp(conf[3,2] * days_dat) +1 )
 
-  #data_u<-data.frame(Days_dat,Conf_UP)
-  #data_u<-data.frame(Days_dat,Conf_DOWN)
+  #data_u<-data.frame(days_dat,Conf_UP)
+  #data_u<-data.frame(days_dat,Conf_DOWN)
 
   ### ------ COUNTRY ----- ###
   ## COUNTRY UI ##
@@ -69,27 +69,33 @@ server <- function(input, output, session) {
   ## REGION plot (currently date against total cases) ##
   output$coolplot_region <- shiny::renderPlot({
 
-    # Data retrieval and fitting
-    date <- regionTS[[input$region]]$data_seriale
-    cases <- regionTS[[input$region]]$totale_casi
-    points <- data.frame(date,cases)
-    reac_region$model <- stats::nls(cases ~ (alpha/(beta * exp(gamma * date) +1 )), start = list(alpha=9000,beta=1700,gamma=-0.36))
-    coeff <- coef(reac_region$model)
+    # Cruve fitting
+    sample_date <- regionTS[[input$region]]$data_seriale
+    sample_cases <- regionTS[[input$region]]$totale_casi
 
-    # Creation of fitted points
-    yFitted <- coeff[1]/(coeff[2] * exp(coeff[3] * Days) + 1)
-    fittedPoints <- data.frame(Days,yFitted)
+    fit_data <- exe_fit(sample_cases = sample_cases,
+                        sample_date = sample_date,
+                        days = days)
+    reac_region$model <- fit_data$out_fit$model
+
+    points <- data.frame(sample_date, sample_cases)
+    fittedPoints <- fit_data$fittedPoints
+
+    # Conversion to real date
+    init_date <- regionTS[[input$region]]$data[1]
+    seq_dates <- seq(from = init_date, by = 1, length.out = length(days))
+    fittedPoints$days <- seq_dates
+    points$sample_date <- seq_dates[points$sample_date]
 
     # Plot of fitted curve and points
-    ggplot2::ggplot(fittedPoints,ggplot2::aes_string("Days","yFitted")) +
-      ggplot2::geom_line(color="darkblue",size=1)+
-    ggplot2::geom_point(data=points,ggplot2::aes_string("date","cases"),size=1,color="red")+
-      #geom_line(data=data_u,aes_string("Days_dat","Conf_UP"),linetype = "dashed",size=1.05) +
-      #geom_line(data=data_u,aes_string("Days_dat","Conf_DOWN"),linetype = "dashed",size=1.05) +
+    ggplot2::ggplot(fittedPoints, ggplot2::aes_string("days","yFitted")) +
+      ggplot2::geom_line(color = "darkblue", size = 1)+
+    ggplot2::geom_point(data = points, ggplot2::aes_string("sample_date","sample_cases"), size = 1, color="red")+
+      #geom_line(data=data_u,aes_string("days_dat","Conf_UP"),linetype = "dashed",size=1.05) +
+      #geom_line(data=data_u,aes_string("days_dat","Conf_DOWN"),linetype = "dashed",size=1.05) +
       ggplot2::theme_dark() +
-      ggplot2::theme(legend.position="top",panel.grid.minor = ggplot2::element_line(),text = ggplot2::element_text(size=14)) +
-      ggplot2::scale_x_continuous(breaks=seq(0, 50, 2))+
-      ggplot2::scale_y_continuous(breaks=seq(0, 44000, 2000))+
+      ggplot2::theme(legend.position="top", panel.grid.minor = ggplot2::element_line(),text = ggplot2::element_text(size=14)) +
+      #ggplot2::scale_y_continuous(breaks=seq(0, 11/10*fit_data$out_fit$vals$k , 1/10*fit_data$out_fit$vals$k))+
       ggplot2::labs(title="COVID19")
   })
 
