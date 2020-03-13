@@ -29,16 +29,16 @@ server <- function(input, output, session) {
   
   # animations
   observeEvent(input$tabs,{
-    shinyanimate::startAnim(session, 'effect_1', 'slideInUp')
+    shinyanimate::startAnim(session, 'effect_1', 'fadeIn')
   })
   observeEvent(input$tabs,{
-    shinyanimate::startAnim(session, 'effect_2', 'slideInUp')
+    shinyanimate::startAnim(session, 'effect_2', 'fadeIn')
   })
   observeEvent(input$tabs,{
-    shinyanimate::startAnim(session, 'effect_3', 'slideInUp')
+    shinyanimate::startAnim(session, 'effect_3', 'fadeIn')
   })
   observeEvent(input$tabs,{
-    shinyanimate::startAnim(session, 'effect_4', 'slideInUp')
+    shinyanimate::startAnim(session, 'effect_4', 'fadeIn')
   })
   
 }
