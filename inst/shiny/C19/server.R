@@ -2,11 +2,7 @@ library(tidyverse)
 
 library(plotly)
 
-prov <- get_provTS()
-
-prov_names <- names(prov)
-
-
+library(mapIT)
 
 
 ## server.R ##
@@ -41,20 +37,54 @@ server <- function(input, output, session) {
     )
   })
   
-  output$map <- renderPlotly(
+# map section -------------------------------------------------------------
+  regions <- get_regionTS()
   
-    map_data("italy") %>%
-      group_by(group) %>%
-      plot_ly(x = ~long, y = ~lat, width = 500, height = 500) %>%
-      add_polygons() %>%
-      layout(
-        xaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE),
-        yaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE)
-      )
+  data <- map_df(names(regions), function(x) {
+    casi <- regions[[x]] %>% select(totale_casi) %>% summarise(totale_casi=sum(totale_casi)) %>% pull()
     
+    data_frame(region=x,cases=casi)
+  })
+  
+  data <- data %>%
+    mutate(region=ifelse(region%in%c("P.A. Trento", "P.A. Bolzano"), "Trentino-Alto Adige", region)) %>%
+    group_by(region) %>%
+    summarise(cases = sum(cases)) %>%
+    ungroup() %>%
+    mutate(region=ifelse(region=="Emilia Romagna", "Emilia-Romagna", region)) %>% 
+    mutate(region=ifelse(region=="Friuli Venezia Giulia", "Friuli-Venezia Giulia", region))
+  
+  
+  # map attempt -------------------------------------------------------------
+  
+  install_github("quantide/mapIT")
+  
+  cases_region <- data.frame(
+    region = c("Abruzzo","Basilicata","Calabria","Campania",
+               "Emilia-Romagna","Friuli-Venezia Giulia","Lazio",
+               "Liguria","Lombardia","Marche","Molise","Piemonte",
+               "Puglia","Sardegna","Sicilia","Toscana",
+               "Trentino-Alto Adige","Umbria","Valle d\'Aosta","Veneto")
   )
   
-  # animations
+  cases_region <- cases_region %>%
+    left_join(data)
+  
+  gp <- list(low="#fff0f0", high="red3")
+  
+  
+  output$map <- renderPlot(
+    
+    mapIT(cases, region, data=cases_region,
+          guide.label="Number of\ncases",  graphPar=gp) +
+      theme_void() +
+      theme(plot.margin=unit(c(1,1,1.5,1.2),"cm")) +
+      coord_fixed()
+    
+  )
+
+# animations --------------------------------------------------------------
+
   observeEvent(input$tabs,{
     shinyanimate::startAnim(session, 'effect_1', 'fadeIn')
   })

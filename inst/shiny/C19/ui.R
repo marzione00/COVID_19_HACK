@@ -38,7 +38,7 @@ if(interactive()){
                    <h1>Coronavirus Outbreak Analysis<br>"
                               ),
                          br(),
-                         plotlyOutput('map')
+                         plotOutput('map')
                          
                          )
         ),
