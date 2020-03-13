@@ -1,0 +1,71 @@
+library(tidyverse)
+
+library(plotly)
+
+prov <- get_provTS()
+
+prov_names <- names(prov)
+
+
+
+
+## server.R ##
+
+server <- function(input, output, session) {
+  
+  shinyjs::runjs('
+        var el2 = document.querySelector(".skin-red");
+        el2.className = "skin-red sidebar-mini";
+        ')
+  
+  shinyjs::addClass(selector = "body", class = "sidebar-collapse")
+  
+  # data ---------------------------------------------------------------
+  # get_countryTS() %>% View()
+  # 
+  # get_provTS() %>% View()
+  # 
+  # get_regionTS() %>% View()
+
+  # section 2 ---------------------------------------------------------------
+
+  waiter::waiter_hide()
+  
+  output$menu <- shinydashboard::renderMenu({
+    
+    shinydashboard::sidebarMenu(id="tabs",
+                                shinydashboard::menuItem("Home", tabName = "tab_1", icon=icon("home")),
+                                shinydashboard::menuItem("Inspection", tabName = "tab_2", icon=icon("search")),
+                                shinydashboard::menuItem("Analysis", tabName = "tab_3", icon=icon("chart-line")),
+                                shinydashboard::menuItem("Conclusion", tabName = "tab_4", icon=icon("calendar-check"))
+    )
+  })
+  
+  output$map <- renderPlotly(
+  
+    map_data("italy") %>%
+      group_by(group) %>%
+      plot_ly(x = ~long, y = ~lat, width = 500, height = 500) %>%
+      add_polygons() %>%
+      layout(
+        xaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE),
+        yaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE)
+      )
+    
+  )
+  
+  # animations
+  observeEvent(input$tabs,{
+    shinyanimate::startAnim(session, 'effect_1', 'fadeIn')
+  })
+  observeEvent(input$tabs,{
+    shinyanimate::startAnim(session, 'effect_2', 'fadeIn')
+  })
+  observeEvent(input$tabs,{
+    shinyanimate::startAnim(session, 'effect_3', 'fadeIn')
+  })
+  observeEvent(input$tabs,{
+    shinyanimate::startAnim(session, 'effect_4', 'fadeIn')
+  })
+  
+}
