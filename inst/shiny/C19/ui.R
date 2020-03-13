@@ -5,7 +5,6 @@ countryTS <- get_countryTS()
 
 if(interactive()){
   
-  
   ui <- shinydashboard::dashboardPage(skin = "red", title = "Covid-19",
     
     shinydashboard::dashboardHeader(title = img(src = "coronavirus_white.png")),

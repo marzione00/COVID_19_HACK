@@ -39,7 +39,7 @@ server <- function(input, output, session) {
   regions <- get_regionTS()
   
   data <- map_df(names(regions), function(x) {
-    casi <- regions[[x]] %>% select(totale_casi) %>% summarise(totale_casi=sum(totale_casi)) %>% pull()
+    casi <- regions[[x]] %>% select(totale_casi) %>% tail(1) %>% pull()
     
     data_frame(region=x,cases=casi)
   })
