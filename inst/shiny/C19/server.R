@@ -1,8 +1,7 @@
 library(tidyverse)
-
 library(plotly)
-
 library(mapIT)
+library(devtools)
 
 
 ## server.R ##
@@ -78,10 +77,11 @@ server <- function(input, output, session) {
     mapIT(cases, region, data=cases_region,
           guide.label="Number of\ncases",  graphPar=gp) +
       theme_void() +
-      theme(plot.margin=unit(c(1,1,1.5,1.2),"cm")) +
+      # theme(plot.margin=unit(c(1,1,1.5,1.2),"cm")) +
       coord_fixed()
     
   )
+  
 
 # animations --------------------------------------------------------------
 

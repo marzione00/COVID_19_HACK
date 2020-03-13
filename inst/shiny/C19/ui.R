@@ -1,4 +1,5 @@
 library(plotly)
+library(shinydashboard)
 ## ui.R ##
 
 if(interactive()){
@@ -38,7 +39,24 @@ if(interactive()){
                    <h1>Coronavirus Outbreak Analysis<br>"
                               ),
                          br(),
-                         plotOutput('map')
+                         fluidRow(
+                           column(6,
+                            plotOutput('map', width = "100%", height = "600px")
+                           ),
+                           column(6,
+                                  
+                                  fluidRow(
+                                    valueBox(10 * 2, "New Orders", icon = icon("notes-medical"),
+                                             color = "red"),
+                                    valueBox(10 * 2, "New Orders", icon = icon("notes-medical"),
+                                             color = "orange"),
+                                    valueBox(10 * 2, "New Orders", icon = icon("notes-medical"),
+                                             color = "orange")
+                                  )
+                                  
+                                  )
+                         
+                         )
                          
                          )
         ),
