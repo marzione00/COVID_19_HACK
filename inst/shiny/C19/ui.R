@@ -1,3 +1,4 @@
+library(plotly)
 ## ui.R ##
 
 if(interactive()){
@@ -34,7 +35,10 @@ if(interactive()){
                 tags$div(id = 'effect_1',
                          
                          HTML("
-                   <h1>Coronavirus Outbreak Analysis<br>")
+                   <h1>Coronavirus Outbreak Analysis<br>"
+                              ),
+                         br(),
+                         plotlyOutput('map')
                          
                          )
         ),

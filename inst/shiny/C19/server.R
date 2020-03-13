@@ -1,3 +1,14 @@
+library(tidyverse)
+
+library(plotly)
+
+prov <- get_provTS()
+
+prov_names <- names(prov)
+
+
+
+
 ## server.R ##
 
 server <- function(input, output, session) {
@@ -9,8 +20,12 @@ server <- function(input, output, session) {
   
   shinyjs::addClass(selector = "body", class = "sidebar-collapse")
   
-  # section 1 ---------------------------------------------------------------
-  
+  # data ---------------------------------------------------------------
+  # get_countryTS() %>% View()
+  # 
+  # get_provTS() %>% View()
+  # 
+  # get_regionTS() %>% View()
 
   # section 2 ---------------------------------------------------------------
 
@@ -26,6 +41,18 @@ server <- function(input, output, session) {
     )
   })
   
+  output$map <- renderPlotly(
+  
+    map_data("italy") %>%
+      group_by(group) %>%
+      plot_ly(x = ~long, y = ~lat, width = 500, height = 500) %>%
+      add_polygons() %>%
+      layout(
+        xaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE),
+        yaxis = list(title = "", showgrid = FALSE, showticklabels = FALSE)
+      )
+    
+  )
   
   # animations
   observeEvent(input$tabs,{
