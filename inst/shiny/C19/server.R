@@ -3,7 +3,6 @@ library(plotly)
 library(mapIT)
 library(devtools)
 
-
 ## server.R ##
 
 server <- function(input, output, session) {

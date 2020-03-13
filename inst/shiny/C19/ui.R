@@ -1,5 +1,6 @@
 library(plotly)
 library(shinydashboard)
+countryTS <- get_countryTS()
 ## ui.R ##
 
 if(interactive()){
@@ -41,19 +42,22 @@ if(interactive()){
                          br(),
                          fluidRow(
                            column(6,
-                            plotOutput('map', width = "100%", height = "600px")
+                            plotOutput('map', width = "100%", height = "550px")
                            ),
                            column(6,
                                   
                                   fluidRow(
-                                    valueBox(10 * 2, "New Orders", icon = icon("notes-medical"),
-                                             color = "red"),
-                                    valueBox(10 * 2, "New Orders", icon = icon("notes-medical"),
-                                             color = "orange"),
-                                    valueBox(10 * 2, "New Orders", icon = icon("notes-medical"),
-                                             color = "orange")
+                                    valueBox(tail(countryTS$totale_casi,1), "Totale Casi", icon = icon("notes-medical"),
+                                             color = "red", width = 6),
+                                    valueBox(tail(countryTS$terapia_intensiva,1), "Terapia Intens.", icon = icon("procedures"),
+                                             color = "orange", width = 6)
+                                  ),
+                                  fluidRow(
+                                    valueBox(tail(countryTS$totale_ospedalizzati,1), "Totale Ospedalizzati", icon = icon("hospital"),
+                                             color = "yellow", width = 6),
+                                    valueBox(tail(countryTS$isolamento_domiciliare,1), "Isolamento Domicil.", icon = icon("home"),
+                                             color = "maroon", width = 6)
                                   )
-                                  
                                   )
                          
                          )
