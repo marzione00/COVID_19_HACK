@@ -3,4 +3,4 @@
 export(get_countryTS)
 export(get_provTS)
 export(get_regionTS)
-export(sGUI)
+export(runC19)
