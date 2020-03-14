@@ -38,7 +38,7 @@ ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                  fluidRow(
                    column(6,
                           box(title="Number of cases by region", solidHeader = T,
-                    plotOutput('map', width = "100%", height = "530px"),
+                      highcharter::highchartOutput('map', width = "100%", height = "530px"),
                     width = NULL, status = "danger"
                           )
                    ),
