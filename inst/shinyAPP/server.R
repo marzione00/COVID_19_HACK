@@ -129,8 +129,7 @@ server <- function(input, output, session) {
     )
 
   output$coolplot6_region <- shiny::renderPrint(
-    #cat("Pvalue (chi-square) =",reac_region$chisq)
-    reac_region$vals$note
+    cat("Pvalue (chi-square) =",reac_region$chisq)    
   )
 
   # output$coolplot_region <- renderText({
