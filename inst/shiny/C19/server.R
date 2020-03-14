@@ -2,6 +2,7 @@ library(tidyverse)
 library(plotly)
 library(mapIT)
 library(devtools)
+library(shinydashboard)
 
 ## server.R ##
 
@@ -13,25 +14,16 @@ server <- function(input, output, session) {
         ')
   
   shinyjs::addClass(selector = "body", class = "sidebar-collapse")
-  
-  # data ---------------------------------------------------------------
-  # get_countryTS() %>% View()
-  # 
-  # get_provTS() %>% View()
-  # 
-  # get_regionTS() %>% View()
-
-  # section 2 ---------------------------------------------------------------
 
   waiter::waiter_hide()
-  
-  output$menu <- shinydashboard::renderMenu({
-    
-    shinydashboard::sidebarMenu(id="tabs",
-                                shinydashboard::menuItem("Home", tabName = "tab_1", icon=icon("home")),
-                                shinydashboard::menuItem("Inspection", tabName = "tab_2", icon=icon("search")),
-                                shinydashboard::menuItem("Analysis", tabName = "tab_3", icon=icon("chart-line")),
-                                shinydashboard::menuItem("Conclusion", tabName = "tab_4", icon=icon("calendar-check"))
+
+# sidebard ----------------------------------------------------------------
+  output$menu <- renderMenu({
+    sidebarMenu(id="tabs",
+                menuItem("Home", tabName = "tab_1", icon=icon("home")),
+                menuItem("Inspection", tabName = "tab_2", icon=icon("search")),
+                menuItem("Analysis", tabName = "tab_3", icon=icon("chart-line")),
+                menuItem("Conclusion", tabName = "tab_4", icon=icon("calendar-check"))
     )
   })
   
@@ -52,9 +44,8 @@ server <- function(input, output, session) {
     mutate(region=ifelse(region=="Emilia Romagna", "Emilia-Romagna", region)) %>% 
     mutate(region=ifelse(region=="Friuli Venezia Giulia", "Friuli-Venezia Giulia", region))
   
-  
-  # map attempt -------------------------------------------------------------
-  
+
+# map ---------------------------------------------------------------------
   install_github("quantide/mapIT")
   
   cases_region <- data.frame(
@@ -72,29 +63,10 @@ server <- function(input, output, session) {
   
   
   output$map <- renderPlot(
-    
     mapIT(cases, region, data=cases_region,
           guide.label="Number of\ncases",  graphPar=gp) +
       theme_void() +
-      # theme(plot.margin=unit(c(1,1,1.5,1.2),"cm")) +
       coord_fixed()
-    
   )
-  
-
-# animations --------------------------------------------------------------
-
-  observeEvent(input$tabs,{
-    shinyanimate::startAnim(session, 'effect_1', 'fadeIn')
-  })
-  observeEvent(input$tabs,{
-    shinyanimate::startAnim(session, 'effect_2', 'fadeIn')
-  })
-  observeEvent(input$tabs,{
-    shinyanimate::startAnim(session, 'effect_3', 'fadeIn')
-  })
-  observeEvent(input$tabs,{
-    shinyanimate::startAnim(session, 'effect_4', 'fadeIn')
-  })
   
 }
