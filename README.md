@@ -59,7 +59,7 @@ The function of the package is `runC19()` and is run without arguments.
 runC19()
 ```
 
-## Folders
+## Folder structure
 ```
 covid19 
 ├── R
