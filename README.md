@@ -1,9 +1,9 @@
-# Covid_19 Rates Package
+<h1 align="center"> Covid_19 Rates Package </h1>
 
 The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
 ## Lavora su
-Andrea: implementing on master module3, SIR on R<br>
+Andrea: implementing on master module3 - SIR on R - Editing Readme file <br>
 Fabio: dir 3module <br>
 Federico: <br>
 Gregorio: <br>
@@ -33,7 +33,7 @@ devtools::install_github('marzione00/COVID_19_HACK')
 Load the package
 
 ```R
-require(Covid19)
+require(covid19)
 ```
 
 The function of the package is `runC19()` and is run without arguments.
