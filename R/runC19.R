@@ -10,6 +10,6 @@
 runC19 <- function() {
 
 # run app -----------------------------------------------------------------
-  shiny::runApp(system.file("shiny/C19", package = "Covid19"), launch.browser = T)
+  shiny::runApp(system.file("shiny/C19", package = "covid19"), launch.browser = T)
 
 }
