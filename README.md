@@ -3,7 +3,7 @@
 The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
 ## Lavora su
-Andrea: <br>
+Andrea: implementing on master module3, SIR on R<br>
 Fabio: dir 3module <br>
 Federico: <br>
 Gregorio: <br>
