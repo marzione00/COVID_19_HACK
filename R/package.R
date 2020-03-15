@@ -3,5 +3,5 @@
 #' @name CovidPack
 #' @docType package
 #'
-#' @import ggpmisc growthcurver forecast nlstools ggplot2 shiny devtools
+#' @import ggpmisc growthcurver forecast nlstools shiny devtools plotly
 NULL
