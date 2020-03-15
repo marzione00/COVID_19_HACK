@@ -15,11 +15,28 @@ Marzio: <br>
     <img src="https://i.stack.imgur.com/gVE0j.png" alt="linkedin"> LinkedIn
   </a>  &nbsp;
   <a href="https://github.com/Andreaierardi" rel="nofollow noreferrer"> <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
-  <a href="https://andreaierardi.github.io/" rel="nofollow noreferrer">  <img src="https://github.com/Andreaierardi/Master-DataScience-Notes/blob/master/img/website.svg" width=15>  Website </a>
-- Marzio De Corato
-- Gregorio Saporito
-- Fabio Caironi
-- Federico Matteucci
+  <a href="https://ierardiandrea.com/" rel="nofollow noreferrer">  <img src="https://github.com/Andreaierardi/Master-DataScience-Notes/blob/master/img/website.svg" width=15>  Website </a>
+  
+- Marzio De Corato &nbsp; <a href="https://www.linkedin.com/in/marzio-de-corato-2351a44b/" rel="nofollow noreferrer">
+    <img src="https://i.stack.imgur.com/gVE0j.png" alt="linkedin"> LinkedIn
+  </a>  &nbsp;
+  <a href="https://github.com/marzione00" rel="nofollow noreferrer"> <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
+   
+- Gregorio Saporito &nbsp; <a href="https://www.linkedin.com/in/greg-saporito/" rel="nofollow noreferrer">
+    <img src="https://i.stack.imgur.com/gVE0j.png" alt="linkedin"> LinkedIn
+  </a>  &nbsp;
+  <a href="https://github.com/gregorio-saporito" rel="nofollow noreferrer"> <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
+
+  
+- Fabio Caironi &nbsp; <a href="https://www.linkedin.com/in/fabio-caironi-8361091a2/" rel="nofollow noreferrer">
+    <img src="https://i.stack.imgur.com/gVE0j.png" alt="linkedin"> LinkedIn
+  </a>  &nbsp;
+  <a href="https://github.com/fabio130497" rel="nofollow noreferrer"> <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
+ 
+  
+- Federico Matteucci &nbsp; 
+  <a href="https://github.com/De-Rham-Cohomology" rel="nofollow noreferrer"> <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
+
 
 ## Installation
 
