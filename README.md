@@ -10,6 +10,17 @@ Gregorio: <br>
 Marzio: <br>
 
 
+# Contributors :busts_in_silhouette:
+- Andrea Ierardi   &nbsp; <a href="https://www.linkedin.com/in/andreaierardi/" rel="nofollow noreferrer">
+    <img src="https://i.stack.imgur.com/gVE0j.png" alt="linkedin"> LinkedIn
+  </a> 
+  <a href="https://github.com/Andreaierardi" rel="nofollow noreferrer"> <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
+  <a href="https://andreaierardi.github.io/" rel="nofollow noreferrer">  <img src="https://github.com/Andreaierardi/Master-DataScience-Notes/blob/master/img/website.svg" width=15>  Website </a>
+- Marzio De Corato
+- Gregorio Saporito
+- Fabio Caironi
+- Federico Matteucci
+
 ## Installation
 
 ```R
