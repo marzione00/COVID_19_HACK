@@ -12,7 +12,11 @@ ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                         
                         dashboardBody(
                           
-                          source(file.path("ui/global", "css_js.R"),  local = TRUE)$value,
+                          #js
+                          shinyjs::useShinyjs(),
+                          
+                          #css
+                          source(file.path("ui/global", "css.R"),  local = TRUE)$value,
                           
                           #waiter
                           waiter::use_waiter(),
@@ -29,14 +33,14 @@ ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                             # tab 2 -------------------------------------------------------------------
                             source(file.path("ui/tabs", "2.tab_inspection.R"),  local = TRUE)$value,
                             
-            
+                            
                             # tab 3 -------------------------------------------------------------------
                             source(file.path("ui/tabs", "3.tab_analysis.R"),  local = TRUE)$value,
                             
                             # tab 4 -------------------------------------------------------------------
                             source(file.path("ui/tabs", "4.tab_conclusion.R"),  local = TRUE)$value
                             
-                                                      
+                            
                           )
                         )
 )
