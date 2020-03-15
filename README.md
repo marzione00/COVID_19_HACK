@@ -6,7 +6,7 @@ The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
 ```R
 # First install the R package "devtools" if not installed
-devtools::install_github('marzione00/COVID_19_HACK/tree/Gregorio')
+devtools::install_github('marzione00/COVID_19_HACK')
 ```
 
 ## Usage
