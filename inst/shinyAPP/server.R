@@ -74,7 +74,7 @@ server <- function(input, output, session) {
       shiny::mainPanel(
         plotly::plotlyOutput("coolplot_region"), #plots that has to be loaded on the app
 
-          # plot summary in html form - TODO
+        # plot summary in html form - TODO
         #htmlOutput("fit_smryhtml"),
 
         shiny::verbatimTextOutput("fit_smry"),
@@ -133,6 +133,7 @@ server <- function(input, output, session) {
 
     fig = plotly::plot_ly( name = "Cases", type= "scatter")
 
+
     # funtions for the two different plots
     plot1  = function(fig)
     {
@@ -172,6 +173,20 @@ server <- function(input, output, session) {
 
     }
 
+    #CHANGE LAYOUT (title, background colors, Axes name ecc.)
+    fig <- fig %>% plotly::layout(
+      title ="Data chart by region",
+      xaxis = list(title="Days",
+                   gridcolor = 'rgb(255,255,255)',
+                   showgrid = FALSE
+      ),
+
+      yaxis = list (title = "Fit",
+                    gridcolor = 'rgb(255,255,255)',
+                    showgrid = FALSE
+      )
+    )
+
     #plot
     fig
 
@@ -179,13 +194,13 @@ server <- function(input, output, session) {
   })
 
   # OUTPUT SUMMARY HTML --- TODO
- # output$fit_smryhtml <- shiny::renderText({
-#
- #   #text = HTML(paste0("<b>","Summary","</b><br>",  summary(reac_region$model)))
- #   text = HTML(paste0(as.character(summary(reac_region$model))))
- #   text
-#
- # })
+  # output$fit_smryhtml <- shiny::renderText({
+  #
+  #   #text = HTML(paste0("<b>","Summary","</b><br>",  summary(reac_region$model)))
+  #   text = HTML(paste0(as.character(summary(reac_region$model))))
+  #   text
+  #
+  # })
 
   output$fit_smry <- shiny::renderPrint(
     summary(reac_region$model)
