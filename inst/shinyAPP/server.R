@@ -74,7 +74,7 @@ server <- function(input, output, session) {
       shiny::mainPanel(
         plotly::plotlyOutput("coolplot_region"), #plots that has to be loaded on the app
 
-        # plot summary in html form - TODO
+          # plot summary in html form - TODO
         #htmlOutput("fit_smryhtml"),
 
         shiny::verbatimTextOutput("fit_smry"),
@@ -133,14 +133,13 @@ server <- function(input, output, session) {
 
     fig = plotly::plot_ly( name = "Cases", type= "scatter")
 
-
     # funtions for the two different plots
     plot1  = function(fig)
     {
       fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=4), mode='lines', name = "Fitted logistic curve”" )
 
-      fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (fitting)")
-      fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (excluded)")
+      fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
+      fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
       return(fig)
     }
 
@@ -148,8 +147,8 @@ server <- function(input, output, session) {
     {
       fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=4), mode='lines', name= "Fitted logistic distribution")
 
-      fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (fitting)")
-      fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (excluded)")
+      fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)")
+      fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)")
 
       return(fig)
     }
@@ -173,20 +172,6 @@ server <- function(input, output, session) {
 
     }
 
-    #CHANGE LAYOUT (title, background colors, Axes name ecc.)
-    fig <- fig %>% plotly::layout(
-      title ="Data chart by region",
-      xaxis = list(title="Days",
-                   gridcolor = 'rgb(255,255,255)',
-                   showgrid = FALSE
-      ),
-
-      yaxis = list (title = "Fit",
-                    gridcolor = 'rgb(255,255,255)',
-                    showgrid = FALSE
-      )
-    )
-
     #plot
     fig
 
@@ -194,13 +179,13 @@ server <- function(input, output, session) {
   })
 
   # OUTPUT SUMMARY HTML --- TODO
-  # output$fit_smryhtml <- shiny::renderText({
-  #
-  #   #text = HTML(paste0("<b>","Summary","</b><br>",  summary(reac_region$model)))
-  #   text = HTML(paste0(as.character(summary(reac_region$model))))
-  #   text
-  #
-  # })
+ # output$fit_smryhtml <- shiny::renderText({
+#
+ #   #text = HTML(paste0("<b>","Summary","</b><br>",  summary(reac_region$model)))
+ #   text = HTML(paste0(as.character(summary(reac_region$model))))
+ #   text
+#
+ # })
 
   output$fit_smry <- shiny::renderPrint(
     summary(reac_region$model)
