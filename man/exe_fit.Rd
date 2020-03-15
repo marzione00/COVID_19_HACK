@@ -2,7 +2,7 @@
 % Please edit documentation in R/exe_fit.R
 \name{exe_fit}
 \alias{exe_fit}
-\title{Fit of the data and forecast via the parameters estimed}
+\title{Logistic curve fitting}
 \usage{
 exe_fit(sample_cases, sample_date, days)
 }
@@ -14,15 +14,16 @@ exe_fit(sample_cases, sample_date, days)
 \item{days}{full vector of serial dates.}
 }
 \value{
-a list of fitting results
+a list of fitting results. Specifically:
 \describe{
   \item{out_fit}{The output of the fitting performed by \link[growthcurver]{SummarizeGrowth}.}
-  \item{fittedPoints}{A data frame containing dates and corresponding fitted values listed by columns}
-  \item{out_chisq}{The output of the chi-squared independence test of residuals}
+  \item{fittedPoints}{A data frame containing dates and corresponding fitted values of cumulative cases, listed by columns.}
+  \item{out_chisq}{The output of the chi-squared independence test of residuals.}
+  \item{fittedPoints_der}{A data frame containing dates and the corresponding fitted values of new cases, listed by columns.}
 }
 }
 \description{
-Fit of the data and forecast via the parameters estimed
+Logistic curve fitting
 }
 \examples{
 \dontrun{
