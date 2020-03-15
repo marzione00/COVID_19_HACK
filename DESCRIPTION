@@ -10,5 +10,5 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.6.0)
-Imports: ggpmisc, growthcurver, forecast, nlstools, ggplot2, shiny, devtools
+Imports: ggpmisc, growthcurver, forecast, nlstools, ggplot2, shiny, devtools, plotly
 RoxygenNote: 7.0.2
