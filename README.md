@@ -30,3 +30,46 @@ The function of the package is `runC19()` and is run without arguments.
 ```R
 runC19()
 ```
+
+## Folders
+```
+covid19 
+├── R
+|   ├── get_countryTS.R
+|   ├── get_provTS.R
+|   ├── get_regionTS.R
+|   └── runC19.R
+|
+├── inst
+│   └── shiny
+|         └── C19
+│              ├── server
+│              |     ├── 1module
+|              |     |      └── map.R
+│              |     ├── 2module
+│              |     ├── 3module
+│              |     ├── 4module
+│              │     └── global
+│              │            ├── shinyjs.R
+│              │            └── sidebar.R
+│              │   
+│              ├── ui
+│              |    ├── global
+│              |    │     └── css.R
+│              |    │       
+│              |    └── tabs
+│              |          ├── 1.tab_home.R
+│              |          ├── 2.tab_inspection.R
+│              |          ├── 3.tab_analysis.R
+|              |          └── 4.tab_conclusion.R
+|              ├── server.R
+|              └── ui.R
+├── man
+│ 
+├── .gitignore
+├── .Rbuildignore
+├── .Covid_19.Rproj
+├── DESCRIPTION
+├── NAMESPACE
+└── README.md
+```
