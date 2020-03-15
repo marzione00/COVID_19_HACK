@@ -89,9 +89,11 @@ server <- function(input, output, session) {
   
   output$map <- highcharter::renderHighchart(
     highcharter::highchart(type = "map") %>% 
-      highcharter::hc_add_series_map(map = map, df = dfita1, joinBy = "id", value = "cases") %>%
+      highcharter::hc_add_series_map(map = map, df = dfita1,
+                                     joinBy = "id", value = "cases", name="total cases") %>%
       highcharter::hc_colorAxis(minColor = "#ffcc00", maxColor = "#cc0000")
   )
   
   
 }
+

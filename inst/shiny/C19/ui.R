@@ -2,7 +2,6 @@ library(plotly)
 library(shinydashboard)
 library(shinydashboardPlus)
 ## ui.R ##
-  
 ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
     
     dashboardHeader(title = img(src = "coronavirus_white.png")),
@@ -37,10 +36,14 @@ ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                          color = "red", width = NULL),
                  fluidRow(
                    column(6,
-                          box(title="Number of cases by region", solidHeader = T,
-                      highcharter::highchartOutput('map', width = "100%", height = "530px"),
+                          
+                      box(title="Number of cases by region", solidHeader = T,
+                          highcharter::highchartOutput('map',
+                                                       width = "100%", 
+                                                       height = "530px"),
                     width = NULL, status = "danger"
                           )
+                    
                    ),
                    column(6,
                           
@@ -103,3 +106,4 @@ ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
       )
     )
   )
+

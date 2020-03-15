@@ -18,7 +18,9 @@ Imports:
     shinyanimate (>= 0.3.0),
     waiter (>= 0.1.0),
     shinyWidgets (>= 0.5.0),
-    shinyjs
+    shinyjs,
+    shinydashboardPlus,
+    highcharter
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
