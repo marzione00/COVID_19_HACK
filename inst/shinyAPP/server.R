@@ -51,7 +51,7 @@ server <- function(input, output, session) {
   ## COUNTRY plot ##
   output$coolplot_country <- shiny::renderPlot({
 
-     # CODICE DA SCRIVERE - FABIO #
+    # CODICE DA SCRIVERE - FABIO #
 
   })
 
@@ -72,7 +72,11 @@ server <- function(input, output, session) {
                                   selected = 1)
       ),
       shiny::mainPanel(
-        shiny::plotOutput("coolplot_region"), #plots that has to be loaded on the app
+        plotly::plotlyOutput("coolplot_region"), #plots that has to be loaded on the app
+
+          # plot summary in html form - TODO
+        #htmlOutput("fit_smryhtml"),
+
         shiny::verbatimTextOutput("fit_smry"),
         shiny::verbatimTextOutput("chisq_smry")
       )
@@ -84,11 +88,11 @@ server <- function(input, output, session) {
 
 
   ## REGION plot (currently date against total cases) ##
-  output$coolplot_region <- shiny::renderPlot({
+  output$coolplot_region <- plotly::renderPlotly({
 
     # Data trim and curve fitting
     logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-                      regionTS[[input$region]]$data <= input$fitInterval[2]
+      regionTS[[input$region]]$data <= input$fitInterval[2]
 
     sample_date <- regionTS[[input$region]]$data_seriale
     sample_cases <- regionTS[[input$region]]$totale_casi
@@ -126,37 +130,67 @@ server <- function(input, output, session) {
     fittedPoints$days <- seq_dates
     fittedPoints_der$days <- seq_dates
 
-    # Plot of fitted curve and points, conditional on checkbox input
-    if( 1 %in% input$plot_type ) {
-      ggplot2::ggplot(fittedPoints, ggplot2::aes_string("days","yFitted")) +
-        ggplot2::geom_line(color = "darkblue", size = 1)+
-        ggplot2::geom_point(data = points_rem, ggplot2::aes_string("sample_date_rem","sample_cases_rem"), size = 1, color="red")+
-        ggplot2::geom_point(data = points_trim, ggplot2::aes_string("sample_date_trim","sample_cases_trim"), size = 1, color="green")+
-        #geom_line(data=data_u,aes_string("days_dat","Conf_UP"),linetype = "dashed",size=1.05) +
-        #geom_line(data=data_u,aes_string("days_dat","Conf_DOWN"),linetype = "dashed",size=1.05) +
-    ggplot2::theme_dark() +
-      ggplot2::theme(legend.position="top", panel.grid.minor = ggplot2::element_line(),text = ggplot2::element_text(size=14)) +
-      #ggplot2::scale_y_continuous(breaks=seq(0, 11/10*fit_data$out_fit$vals$k , 1/10*fit_data$out_fit$vals$k))+
-      ggplot2::labs(title="COVID19")
+
+    fig = plotly::plot_ly( name = "Cases", type= "scatter")
+
+    # funtions for the two different plots
+    plot1  = function(fig)
+    {
+      fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=4), mode='lines', name = "Fitted logistic curve”" )
+
+      fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (fitting)")
+      fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (excluded)")
+      return(fig)
     }
-    if( 2 %in% input$plot_type ) {
-      ggplot2::ggplot(fittedPoints_der, ggplot2::aes_string("days","yFitted_der")) +
-        ggplot2::geom_line(color = "darkgreen", size = 1)+
-        ggplot2::geom_point(data = points_diff_rem, ggplot2::aes_string("sample_date_rem","sample_diff_rem"), size = 1, color="red")+
-        ggplot2::geom_point(data = points_diff_trim, ggplot2::aes_string("sample_date_trim","sample_diff_trim"), size = 1, color="green")+
-        #geom_line(data=data_u,aes_string("days_dat","Conf_UP"),linetype = "dashed",size=1.05) +
-        #geom_line(data=data_u,aes_string("days_dat","Conf_DOWN"),linetype = "dashed",size=1.05) +
-        ggplot2::theme_dark() +
-        ggplot2::theme(legend.position="top", panel.grid.minor = ggplot2::element_line(),text = ggplot2::element_text(size=14)) +
-        #ggplot2::scale_y_continuous(breaks=seq(0, 11/10*fit_data$out_fit$vals$k , 1/10*fit_data$out_fit$vals$k))+
-        ggplot2::labs(title="COVID19")
+
+    plot2 = function (fig)
+    {
+      fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=4), mode='lines', name= "Fitted logistic distribution")
+
+      fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (fitting)")
+      fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (excluded)")
+
+      return(fig)
     }
+
+
+    #Plot based on the checkbox
+
+    if( 1 %in% input$plot_type && !(2 %in% input$plot_type ) )
+    {
+      fig = plot1(fig)
+    }
+
+    else if( 2 %in% input$plot_type && !(1 %in% input$plot_type ) )
+    {
+      fig = plot2(fig)
+    }
+    else if( 1 %in% input$plot_type && (2 %in% input$plot_type ) )
+    {
+      fig = plot1(fig)
+      fig = plot2(fig)
+
+    }
+
+    #plot
+    fig
+
 
   })
 
+  # OUTPUT SUMMARY HTML --- TODO
+ # output$fit_smryhtml <- shiny::renderText({
+#
+ #   #text = HTML(paste0("<b>","Summary","</b><br>",  summary(reac_region$model)))
+ #   text = HTML(paste0(as.character(summary(reac_region$model))))
+ #   text
+#
+ # })
+
   output$fit_smry <- shiny::renderPrint(
     summary(reac_region$model)
-    )
+
+  )
 
   output$chisq_smry <- shiny::renderPrint(
     cat("Pvalue (chi-square) =",reac_region$chisq)
