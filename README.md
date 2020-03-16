@@ -4,7 +4,7 @@ The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
 ## Lavora su
 Andrea: implementing on master module3 - SIR on R - Editing Readme file <br>
-Fabio: adding current shiny on Fabio branch to master's (3module) <br>
+Fabio: working on files server/3module/analysis.R, ui/tabs/3.tab_analysis.R <br>
 Federico: <br>
 Gregorio: <br>
 Marzio: <br>
