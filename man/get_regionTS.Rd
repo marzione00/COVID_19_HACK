@@ -13,7 +13,9 @@ A list containing the original dataset splitted into each region.
 Data acquisition sorted by region
 }
 \examples{
+\dontrun{
 regTS <- get_regionTS()
 names(regTS) # List of regions names
+}
 
 }

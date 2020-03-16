@@ -18,24 +18,27 @@ output$regionPanel <- shiny::renderUI({
     waiter::use_waiter(),
     waiter::waiter_show(id = "coolplot_region", html = waiter::spin_fading_circles()),
     shiny::fluidRow(
-      shinydashboard::box(title = "Input", 
-                          shiny::selectInput(inputId = "region", label = "Choose one region",
-                                             choices = regNames),
-                          shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
-                                             min = init_date, max = fin_date, timeFormat = "%d %b",
-                                             step = 1, value = c(init_date, fin_date)),
-                          shiny::checkboxGroupInput(inputId = "plot_type", label = "Plot type",
-                                                    choices = list("Cumulative cases" = 1, "New cases" = 2),
-                                                    selected = 1),
-                          width = 4),
-      shinydashboard::box(title = "Charts", plotly::plotlyOutput("coolplot_region"),
-                          width = 8)
-    ),
-    shiny::fluidRow(
-      shinydashboard::tabBox(
-        title = "Technical data", id = "tech_tab",
-        shiny::tabPanel("Fitting output", shiny::verbatimTextOutput("fit_smry")),
-        shiny::tabPanel("Chi-squared test", shiny::verbatimTextOutput("chisq_smry"))
+      shiny::column(width = 4,
+                shinydashboard::box(title = "Input", 
+                              shiny::selectInput(inputId = "region", label = "Choose one region",
+                                                 choices = regNames),
+                              shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
+                                                 min = init_date, max = fin_date, timeFormat = "%d %b",
+                                                 step = 1, value = c(init_date, fin_date)),
+                              shiny::checkboxGroupInput(inputId = "plot_type", label = "Plot type",
+                                                        choices = list("Cumulative cases" = 1, "New cases" = 2),
+                                                        selected = 1),
+                              width = NULL),
+                shinydashboard::box("Qualcosa", "Qua metteremo qualcosa", width = NULL)
+                ),
+      shiny::column(width = 8,
+                    shinydashboard::box(title = "Charts", plotly::plotlyOutput("coolplot_region"),
+                                        width = NULL),
+                    shinydashboard::tabBox(
+                        title = "Technical data", id = "tech_tab", width = NULL,
+                        shiny::tabPanel("Fitting output", shiny::verbatimTextOutput("fit_smry")),
+                        shiny::tabPanel("Chi-squared test", shiny::verbatimTextOutput("chisq_smry"))
+           )
       )
     )
       
@@ -96,7 +99,7 @@ output$coolplot_region <- plotly::renderPlotly({
   # funtions for the two different plots
   plot1  = function(fig)
   {
-    fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=4), mode='lines', name = "Fitted logistic curve”" )
+    fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=4), mode='lines', name = "Fitted logistic curve" )
     
     fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
     fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")

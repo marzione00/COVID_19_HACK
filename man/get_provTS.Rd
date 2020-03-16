@@ -13,7 +13,8 @@ A list containing the original dataset splitted into single provinces.
 Data acquisition sorted by province
 }
 \examples{
-provTS <- get_provTS()
-names(provTS) # List of provinces names
+\dontrun{
+  names(get_provTS()) # List of provinces names
+}
 
 }
