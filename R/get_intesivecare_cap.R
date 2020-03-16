@@ -13,17 +13,21 @@ get_intensivecare_cap <- function(regionTS) {
   colnames(readfile) = c("region","intensivecare_cap")
   readfile = readfile[order(readfile$region),]
   value =c()
-  for(index_region in 1:length(regionTS)) 
+  
+  sortedreg = regionTS[order(names(regionTS))]
+  for(index_region in 1:length(sortedreg)) 
   {
     
     
-    vector = regionTS[[index_region]]$terapia_intensiva  
+    vector = sortedreg[[index_region]]$terapia_intensiva  
+    print(names(sortedreg))
     value[index_region] = tail(vector, n = 1)
     
   }
     
   
   df = data.frame(readfile,value)
+  colnames(df) = c("region","intensivecare_cap","intensive_care_occupation")
   
   return(df)
 }

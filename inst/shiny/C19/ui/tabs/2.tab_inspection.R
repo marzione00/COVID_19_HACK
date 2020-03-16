@@ -26,7 +26,7 @@ tabItem(tabName = "tab_2",
           column(6,
                  
                  box(title="Intensive care capacity", solidHeader = T,
-                    plotlyOutput("intensivecare_cap"),
+                    plotOutput("plot4"), #plotlyOutput("intensivecare_cap"), 
                      width = NULL, status = "danger"
                  )
                  

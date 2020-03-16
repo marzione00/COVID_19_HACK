@@ -20,5 +20,8 @@ server <- function(input, output, session) {
   
   source(file.path("server/1module", "map.R"),  local = TRUE)$value
   
+  source(file.path("server/2module", "intensivecare_cap.R"),  local = TRUE)$value
+  
+  
 }
 
