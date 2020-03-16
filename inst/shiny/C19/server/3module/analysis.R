@@ -13,35 +13,18 @@ provNames <- names(provTS)
 # Time horizon of all graphs
 days <- (1:50)
 
-output$regionPanel <- shiny::renderUI({
-  shinydashboard::dashboardBody(
-    waiter::use_waiter(),
-    waiter::waiter_show(id = "coolplot_region", html = waiter::spin_fading_circles()),
-    shiny::fluidRow(
-      shiny::column(width = 4,
-                shinydashboard::box(title = "Input", 
-                              shiny::selectInput(inputId = "region", label = "Choose one region",
-                                                 choices = regNames),
-                              shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
-                                                 min = init_date, max = fin_date, timeFormat = "%d %b",
-                                                 step = 1, value = c(init_date, fin_date)),
-                              shiny::checkboxGroupInput(inputId = "plot_type", label = "Plot type",
-                                                        choices = list("Cumulative cases" = 1, "New cases" = 2),
-                                                        selected = 1),
-                              width = NULL),
-                shinydashboard::box("Qualcosa", "Qua metteremo qualcosa", width = NULL)
-                ),
-      shiny::column(width = 8,
-                    shinydashboard::box(title = "Charts", plotly::plotlyOutput("coolplot_region"),
-                                        width = NULL),
-                    shinydashboard::tabBox(
-                        title = "Technical data", id = "tech_tab", width = NULL,
-                        shiny::tabPanel("Fitting output", shiny::verbatimTextOutput("fit_smry")),
-                        shiny::tabPanel("Chi-squared test", shiny::verbatimTextOutput("chisq_smry"))
-           )
-      )
+output$regionInput <- shiny::renderUI({
+  fluidRow(
+    column(12,
+      shiny::selectInput(inputId = "region", label = "Choose one region",
+                         choices = regNames),
+      shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
+                         min = init_date, max = fin_date, timeFormat = "%d %b",
+                         step = 1, value = c(init_date, fin_date)),
+      shiny::checkboxGroupInput(inputId = "plot_type", label = "Plot type",
+                                choices = list("Cumulative cases" = 1, "New cases" = 2),
+                                selected = 1)
     )
-      
   )
 })
 
@@ -52,6 +35,7 @@ reac_region <- shiny::reactiveValues()
 ## REGION plot (currently date against total cases) ##
 output$coolplot_region <- plotly::renderPlotly({
   
+  waiter::waiter_show(id = "coolplot_region", html = waiter::spin_fading_circles())
   # Data trim and curve fitting #
   logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
     regionTS[[input$region]]$data <= input$fitInterval[2]
