@@ -105,9 +105,6 @@ clean_prov <- map_df(names(prov_TS), function(x) {
 clean_prov %>%
   filter(str_detect(name, "\\Aoste"))
 
-clean_prov %>%
-  filter(!name %in% exclude)
-
 clean_prov <- clean_prov %>%
   mutate(name = ifelse(name=="Massa Carrara","Massa-Carrara",name)) %>%
   mutate(name = ifelse(name=="Reggio nell'Emilia","Reggio Emilia",name)) %>% 
