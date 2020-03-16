@@ -1,13 +1,14 @@
 #' Data acquisition regional insentive care capacity
 #'
-#' @return dataframe. Return a dataframe containing information about regional intensive care capacity
 #'
 #' @examples
 #' \dontrun{
+#' regionTS = get_regionTS()
 #' get_intensivecare_cap(regionTS)
 #' }
 #' 
-#' @param list. List of the Italy regional dataset
+#' @param regionTS list. List of the Italy regional dataset
+#' @return dataframe. Return a dataframe containing information about regional intensive care capacity
 #' @export
 get_intensivecare_cap <- function(regionTS) {
   

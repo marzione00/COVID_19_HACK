@@ -7,7 +7,7 @@
 get_intensivecare_cap(regionTS)
 }
 \arguments{
-\item{list.}{List of the Italy regional dataset}
+\item{regionTS}{list. List of the Italy regional dataset}
 }
 \value{
 dataframe. Return a dataframe containing information about regional intensive care capacity
@@ -17,6 +17,7 @@ Data acquisition regional insentive care capacity
 }
 \examples{
 \dontrun{
+regionTS = get_regionTS()
 get_intensivecare_cap(regionTS)
 }
 

@@ -8,6 +8,8 @@
 #'
 #' @export
 get_provTS <- function() {
+  
+  
   data <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province.csv",
                    header = TRUE, na.strings = "In fase di definizione/aggiornamento")
 
