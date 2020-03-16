@@ -16,6 +16,6 @@ dataframe. Return a dataframe containing information about regional intensive ca
 Data acquisition regional insentive care capacity
 }
 \examples{
-  intensivecare_capacity = get_intensivecare_cap()
+  intensivecare_capacity = get_intensivecare_cap(regionTS)
 
 }
