@@ -1,7 +1,7 @@
 output$intensivecare_cap <- plotly::renderPlotly({
   
   
-    intensivecare_capacity
+    #intensivecare capacity
     
     x <- c('Product A', 'Product B', 'Product C')
     y <- c(20, 14, 23)
