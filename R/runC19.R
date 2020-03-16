@@ -1,10 +1,10 @@
-#' Shiny app with exploratory analysis of the term structure of interest rates
+#' Shiny app with exploratory analysis of covid19
 #' 
-#' The function works with no arguments. The function depends on the dataset \code{\link{term_structure}}
+#' The function works with no arguments. The function depends on the dataset \code{\link{covid19}}
 #'
 #' @return Runs the Shiny app retreiving the data, running the analysis and showing the report with interactive visualisations.
 #' 
-#' @seealso \code{\link{term_structure}}
+#' @seealso \code{\link{covid19}}
 #' 
 #' @export
 runC19 <- function() {

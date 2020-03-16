@@ -3,7 +3,9 @@
 #' @return dataframe. Return a dataframe containing information about regional intensive care capacity
 #'
 #' @examples
-#'   intensivecare_capacity = get_intensivecare_cap(regionTS)
+#' \dontrun{
+#' get_intensivecare_cap(regionTS)
+#' }
 #' 
 #' @param list. List of the Italy regional dataset
 #' @export
@@ -27,6 +29,7 @@ get_intensivecare_cap <- function(regionTS) {
   perc = c(as.integer(df$occupation/df$capacity*100))
   df = data.frame(df,perc)
   df = df[order(df$perc,decreasing = TRUE),]
+  rownames(df) <- 1:nrow(df)
   
   return(df)
 }

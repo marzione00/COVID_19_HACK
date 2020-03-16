@@ -1,13 +1,42 @@
-output$intensivecare_cap <- plotly::renderPlotly({
+output$intensivecare_cap_perc <- plotly::renderPlotly({
   
-    print(intensivecare_capacity)
-
-    fig <- plot_ly(data = intensivecare_capacity, x =~region , y=~perc, type = 'bar', 
-                   marker = list(color = 'rgb(255,250,205)',
-                                 line = list(color = 'rgb(8,48,107)', width = 1.5)))
+    
+    fig <- plot_ly(type = 'bar', marker = list(color = intensivecare_capacity$perc, width=3,line = list(color = 'rgb(8,48,107)', width = 1.5)))
+    fig <- fig %>% add_bars(data = intensivecare_capacity, x =~region , y=~perc, name="percentage",
+                            text = ~perc, textposition = 'auto' )
     fig <- fig %>% layout(
-                          xaxis = list(title = "Region"),
-                          yaxis = list(title = "Percentage occupation/capacity"))
+      xaxis = list(title = "Region"),
+      yaxis = list(title = "Percentage occupation/capacity"))
     
     fig
 })
+
+
+
+output$intensivecare_cap <- plotly::renderPlotly({
+  
+  
+  fig2 <- data %>% plot_ly()
+  
+  fig2 <- fig2 %>% add_trace(name = "occupation",data = intensivecare_capacity,x = ~region, y=~occupation, type = 'bar',
+                           text = ~occupation, textposition = 'auto',
+                           marker = list(color = 'rgb(220,20,60)',
+                                         line = list(color = 'rgb(8,48,107)', width = 1.5)))
+  
+  fig2 <- fig2 %>% add_trace(data = intensivecare_capacity, name = "capacity",x = ~region, y = ~capacity, type = 'bar',
+                           text = ~capacity, textposition = 'auto',
+                           marker = list(color = 'rgb(255,228,181)',
+                                         line = list(color = 'rgb(8,48,107)', width = 1.5)))
+  
+  fig2 <- fig2 %>% layout(title = "Occupation vs Capacity",
+                        barmode = 'stack',
+                        xaxis = list(title = "Region"),
+                        yaxis = list(title = "Occupation vs Capacity"))
+  
+  fig2
+  
+  
+
+})
+
+

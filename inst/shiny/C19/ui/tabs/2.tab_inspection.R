@@ -25,8 +25,16 @@ tabItem(tabName = "tab_2",
         fluidRow(
           column(6,
                  
-                 box(title="Intensive care capacity", solidHeader = T,
-                    plotlyOutput("intensivecare_cap"), 
+                 box(title="Intensive care percentage occupation/capacity", solidHeader = T,
+                    plotlyOutput("intensivecare_cap_perc"), 
+                     width = NULL, status = "danger"
+                 )
+                 
+          ),
+          column(6,
+                 
+                 box(title="Intensive care capacity vs. occupation", solidHeader = T,
+                     plotlyOutput("intensivecare_cap"), 
                      width = NULL, status = "danger"
                  )
                  
