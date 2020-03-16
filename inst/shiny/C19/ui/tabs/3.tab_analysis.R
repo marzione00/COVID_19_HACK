@@ -1,4 +1,6 @@
 tabItem(tabName = "tab_3",
-        
-        HTML("<h2>Test</h2>")
+        shiny::navbarPage(title = "",
+             shiny::tabPanel(title = "Country", shiny::uiOutput("countryPanel")),
+             shiny::tabPanel(title = "Region", shiny::uiOutput("regionPanel"))
+        )
 )
