@@ -3,17 +3,15 @@
 #' @return A list containing the original dataset splitted into each region.
 #'
 #' @examples
-#' \dontrun{
 #' regTS <- get_regionTS()
 #' names(regTS) # List of regions names
-#' }
 #'
 #' @export
 get_regionTS <- function() {
   data <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-regioni/dpc-covid19-ita-regioni.csv",
                    header = TRUE)
 
-  data$data <- as.Date(as.character(data$data), format = "%Y-%m-%d")
+  data$data <- as.POSIXct(data$data, format = "%Y-%m-%d %H", tz = "Europe/Berlin")
 
   out <- list()
   for(region in unique(data$denominazione_regione)) {

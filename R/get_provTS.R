@@ -3,17 +3,18 @@
 #' @return A list containing the original dataset splitted into single provinces.
 #'
 #' @examples
-#' \dontrun{
-#'   names(get_provTS()) # List of provinces names
-#' }
+#' provTS <- get_provTS()
+#' names(provTS) # List of provinces names
 #'
 #' @export
 get_provTS <- function() {
+  
+  
   data <- read.csv("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-province/dpc-covid19-ita-province.csv",
                    header = TRUE, na.strings = "In fase di definizione/aggiornamento")
 
   data <- subset(data, !is.na(denominazione_provincia))
-  data$data <- as.Date(as.character(data$data), format = "%Y-%m-%d")
+  data$data <- as.POSIXct(data$data, format = "%Y-%m-%d %H", tz = "Europe/Berlin")
 
   out <- list()
   for(province in unique(data$denominazione_provincia)) {
