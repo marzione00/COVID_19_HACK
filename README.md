@@ -93,8 +93,12 @@ covid19
 |              ├── server.R
 |              └── ui.R
 ├── man
-│ 
+│    ├── get_countryTS.Rd
+│    ├── get_provTS.Rd
+│    ├── get_regionTS.Rd
+│    └── runC19.Rd
 ├── .gitignore
+├── LICENSE
 ├── .Rbuildignore
 ├── .Covid_19.Rproj
 ├── DESCRIPTION
