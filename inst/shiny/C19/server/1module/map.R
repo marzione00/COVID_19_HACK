@@ -59,11 +59,12 @@
   dfita1 <- dfita1 %>%
     left_join(pc_df)
   
-  output$map <- highcharter::renderHighchart(
+  output$map_region <- highcharter::renderHighchart(
     highcharter::highchart(type = "map") %>% 
       highcharter::hc_add_series_map(map = map, df = dfita1,
                                      joinBy = "id", value = "cases", name="total cases") %>%
-      highcharter::hc_colorAxis(minColor = "#ffcc00", maxColor = "#cc0000")
+      highcharter::hc_colorAxis(
+        stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
   )
   
 
@@ -88,8 +89,50 @@
     mutate(random = runif(nrow(.))) # create random value
   
   head(dfita2)
+
+# integrating civil protection data
+  prov_TS <- get_provTS()
   
+clean_prov <- map_df(names(prov_TS), function(x) {
+  tail(prov_TS[[x]],1)$totale_casi
+  data_frame(
+    name=x,
+    cases=tail(prov_TS[[x]],1)$totale_casi
+  )
+})
+
+# make names consistent
+clean_prov %>%
+  filter(str_detect(name, "\\Aoste"))
+
+clean_prov %>%
+  filter(!name %in% exclude)
+
+clean_prov <- clean_prov %>%
+  mutate(name = ifelse(name=="Massa Carrara","Massa-Carrara",name)) %>%
+  mutate(name = ifelse(name=="Reggio nell'Emilia","Reggio Emilia",name)) %>% 
+  mutate(name = ifelse(name=="Bolzano","Bozen",name)) %>%
+  mutate(name = ifelse(name=="Aosta","Aoste",name)) %>% 
+  mutate(name = ifelse(name=="Monza e della Brianza","Monza e Brianza",name)) %>%
+  mutate(name = ifelse(name=="Reggio di Calabria","Reggio Calabria",name)) %>%
+  mutate(name = ifelse(name=="Torino","Turin",name)) %>%
+  mutate(name = ifelse(name=="Oristano","Oristrano",name)) %>%
+  mutate(name = ifelse(name=="Barletta-Andria-Trani","Barletta-Andria Trani",name))
+
+dfita2 <- dfita2 %>% left_join(clean_prov)
+  
+output$map_province <- highcharter::renderHighchart(
   highcharter::highchart(type = "map") %>% 
-    highcharter::hc_title(text = "Airports in Australia") %>% 
-    highcharter::hc_add_series_map(map = ita, df = dfita2, joinBy = "hasc", value = "random")
+    highcharter::hc_add_series_map(map = ita, df = dfita2, 
+                                   joinBy = "hasc", value = "cases", name="total cases") %>%
+    highcharter::hc_colorAxis(
+      stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
+)
+
+
+# tabbox ------------------------------------------------------------------
+
+  output$tabset1Selected <- renderText({
+    input$tabset1
+  })
   

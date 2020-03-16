@@ -7,11 +7,35 @@ tabItem(tabName = "tab_1",
         fluidRow(
           column(6,
                  
-                 box(title="Number of cases by region", solidHeader = T,
-                     highcharter::highchartOutput('map',
-                                                  width = "100%", 
-                                                  height = "530px"),
-                     width = NULL, status = "danger"
+                 box(title="Number of cases", solidHeader = T,
+                     width = NULL,
+                     
+                     tags$head(tags$style(HTML('
+ /* tabBox background */
+
+ .nav-tabs-custom > .nav-tabs > li.active {
+     border-top-color: red !important;
+ }'))),
+                     
+                     tabBox(
+                       width = 12,
+                       # height = "250px",
+                       title = NULL,
+                       # The id lets us use input$tabset1 on the server to find the current tab
+                       id = "tabset1",
+                       tabPanel("By Province",
+                                highcharter::highchartOutput('map_province',
+                                                             width = "100%",
+                                                             height = "425px")
+                                ),
+                       tabPanel("By Region", 
+                                highcharter::highchartOutput('map_region',
+                                                             width = "100%",
+                                                             height = "425px"
+                                                             )
+                                )
+                     ),
+                     height=NULL, status="danger"
                  )
                  
           ),
@@ -49,12 +73,12 @@ tabItem(tabName = "tab_1",
                               productList(
                                 productListItem(
                                   src = "https://avatars1.githubusercontent.com/u/36515398?s=400&u=152624d5b1720f1e66ffd3fbd43c6e13704c3e42&v=4", 
-                                  productTitle = "Andrea Ierardi", 
+                                  productTitle = HTML('<b><a href="https://www.linkedin.com/in/andreaierardi/">Andrea Ierardi</a></b>'), 
                                   productPrice = NULL
                                 ),
                                 productListItem(
                                   src = "https://media-exp1.licdn.com/dms/image/C4D03AQFNxDX9vdxEmQ/profile-displayphoto-shrink_800_800/0?e=1590019200&v=beta&t=ftXpX3Wg-dB2t8sBoSYspTKC3z5cK2ehYhWk5obIBh4", 
-                                  productTitle = "Fabio Caironi", 
+                                  productTitle = HTML('<b><a href="https://www.linkedin.com/in/fabio-caironi-8361091a2/">Fabio Caironi</a></b>'),
                                   productPrice = NULL
                                 ),
                                 productListItem(
@@ -68,17 +92,17 @@ tabItem(tabName = "tab_1",
                               productList(
                                 productListItem(
                                   src = "https://avatars3.githubusercontent.com/u/59971032?s=400&u=38395af942e20f0c9a395b2b30b12763a39ca8ac&v=4", 
-                                  productTitle = "Gregorio Saporito", 
+                                  productTitle = HTML('<b><a href="https://www.linkedin.com/in/greg-saporito/">Gregorio Saporito</a></b>'), 
                                   productPrice = NULL
                                 ),
                                 productListItem(
                                   src = "https://media-exp1.licdn.com/dms/image/C5603AQG869ZMIPrdag/profile-displayphoto-shrink_800_800/0?e=1590019200&v=beta&t=hiWKi79i8C8R_m7c-tHu9AWcF_bv3WJPd6B9N7Wk2XM", 
-                                  productTitle = "Marzio De Corato", 
+                                  productTitle = HTML('<b><a href="https://www.linkedin.com/in/marzio-de-corato-2351a44b/">Marzio De Corato</a></b>'), 
                                   productPrice = NULL
                                 ),
                                 productListItem(
                                   src = "https://media-exp1.licdn.com/dms/image/C4D03AQFqmoSKGgjkVQ/profile-displayphoto-shrink_800_800/0?e=1590019200&v=beta&t=itYf9YpkVI0j3N7CDn4wv0KSoZJJO06NnvrHBzf0c8Q", 
-                                  productTitle = "Tommaso Pessina", 
+                                  productTitle = HTML('<b><a href="https://www.linkedin.com/in/tommaso-pessina-754960181/">Tommaso Pessina</a></b>'), 
                                   productPrice = NULL
                                 )
                               )
