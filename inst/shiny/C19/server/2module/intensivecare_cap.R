@@ -2,19 +2,17 @@ output$intensivecare_cap <- plotly::renderPlotly({
   
   
     #intensivecare capacity
+  #colnames(df) = c("region","intensivecare_cap","intensive_care_occupation")
     
-    x <- c('Product A', 'Product B', 'Product C')
-    y <- c(20, 14, 23)
-    text <- c('27% market share', '24% market share', '19% market share')
-    data <- data.frame(x, y, text)
-    
-    fig <- plot_ly(data, x = ~x, y = ~y, type = 'bar',
-                   text = y, textposition = 'auto',
+  print(intensivecare_capacity)
+  
+  print("DOPO")
+    fig <- plot_ly(data = intensivecare_capacity, x =~region , y=intensivecare_capacity$perc, type = 'bar',
                    marker = list(color = 'rgb(158,202,225)',
                                  line = list(color = 'rgb(8,48,107)', width = 1.5)))
-    fig <- fig %>% layout(title = "January 2013 Sales Report",
-                          xaxis = list(title = ""),
-                          yaxis = list(title = ""))
+    fig <- fig %>% layout(
+                          xaxis = list(title = "Region"),
+                          yaxis = list(title = "Intensive care capacity"))
     
     fig
 })
