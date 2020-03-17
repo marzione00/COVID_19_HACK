@@ -18,7 +18,7 @@ output$regionInput <- shiny::renderUI({
     column(12,
            
            shiny::selectInput(inputId = "region", label = "Choose one region",
-                              choices = regNames),
+                              choices = regNames, selected = "Lombardia"),
            
            shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
                               min = init_date, max = fin_date, timeFormat = "%d %b",
@@ -114,22 +114,23 @@ output$coolplot_region <- plotly::renderPlotly({
     plot1  = function(fig)
     {
       
-     fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
-     fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
+      fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
+      fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
       
       fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
       fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
       fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
       
-       return(fig)
+      return(fig)
     }
     
     plot2 = function (fig)
     {
-      fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=2.5), mode='lines', name= "Fitted logistic distribution")
       
       fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)")
       fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)")
+      fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=2.5), mode='lines', name= "Fitted logistic distribution")
+      
       
       return(fig)
     }
@@ -172,9 +173,7 @@ output$coolplot_country <- plotly::renderPlotly({
   
   waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
   
-  print("=====")
   logic_interval <- countryTS$data >= input$fi2[1] & countryTS$data <= input$fi2[2]
-  print(logic_interval)  
   sample_date = countryTS$data_seriale
   sample_cases <- countryTS$totale_casi
   sample_diff <-  c(NA,diff(sample_cases))
@@ -191,7 +190,7 @@ output$coolplot_country <- plotly::renderPlotly({
                       sample_date = sample_date_trim,
                       days = days)
   
-
+  
   reac_country$model <- fit_data$out_fit$model
   reac_country$chisq <- fit_data$out_chisq$p.value
   reac_country$vals <- fit_data$out_fit$vals
@@ -223,5 +222,53 @@ output$coolplot_country <- plotly::renderPlotly({
                               yConf_up)
   confPoints_down <- data.frame("sample_date_trim" =  countryTS$data[logic_interval],
                                 yConf_down)
+  
+  
+  
+  ###---- PLOT
+  # PLOT with plotly #
+  fig = plotly::plot_ly( name = "Cases", type= "scatter")
+  
+  # funtions for the two different plots
+  plot1  = function(fig)
+  {
+    
+    fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
+    fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
+    
+    fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
+    fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
+    fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
+    
+    return(fig)
+  }
+  
+  plot2 = function (fig)
+  {
+    
+    fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)")
+    fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)")
+    fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=2.5), mode='lines', name= "Fitted logistic distribution")
+    
+    
+    return(fig)
+  }
+  
+  #Plot based on the checkbox
+  if( 1 %in% input$plot_type && !(2 %in% input$plot_type ) )
+  {
+    fig = plot1(fig)
+  } else if( 2 %in% input$plot_type && !(1 %in% input$plot_type ) )
+  {
+    fig = plot2(fig)
+  } else if( 1 %in% input$plot_type && (2 %in% input$plot_type ) )
+  {
+    fig = plot1(fig)
+    fig = plot2(fig)
+  }
+  
+  #plot
+  fig
+  
   
 })
