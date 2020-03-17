@@ -9,7 +9,7 @@ tabItem(tabName = "tab_1",
                  
                  box(title="Number of cases", solidHeader = T,
                      width = NULL,
-                     
+                     color = "red",
                      tags$head(tags$style(HTML('
  /* tabBox background */
 
