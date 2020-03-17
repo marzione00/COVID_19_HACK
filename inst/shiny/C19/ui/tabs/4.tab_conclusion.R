@@ -1,7 +1,4 @@
 tabItem(tabName = "tab_4",
         
-        valueBox("Conclusion", "Analysis",
-                 icon=icon("chart-bar"),
-                 color = "red", width = NULL),
-        
-        )
+        HTML("<h2>Conclusion</h2>")
+)
