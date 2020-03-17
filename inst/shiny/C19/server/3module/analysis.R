@@ -113,14 +113,15 @@ output$coolplot_region <- plotly::renderPlotly({
     # funtions for the two different plots
     plot1  = function(fig)
     {
-      fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
       
-      fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy')
-      fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' )
+     fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
+     fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
       
       fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
       fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
-      return(fig)
+      fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
+      
+       return(fig)
     }
     
     plot2 = function (fig)
@@ -166,13 +167,14 @@ output$chisq_smry <- shiny::renderText({
 }
 )
 
-
+#======================================= COUNTRY SECTION ============================================
 output$coolplot_country <- plotly::renderPlotly({
   
   waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
   
+  print("=====")
   logic_interval <- countryTS$data >= input$fi2[1] & countryTS$data <= input$fi2[2]
-  
+  print(logic_interval)  
   sample_date = countryTS$data_seriale
   sample_cases <- countryTS$totale_casi
   sample_diff <-  c(NA,diff(sample_cases))
@@ -202,13 +204,13 @@ output$coolplot_country <- plotly::renderPlotly({
   
   
   # Conversion to real date and creation of fitted points #
-  points_trim <- data.frame("sample_date_trim" = country$data[logic_interval],
+  points_trim <- data.frame("sample_date_trim" = countryTS$data[logic_interval],
                             sample_cases_trim)
-  points_rem <- data.frame("sample_date_rem" = country$data[!logic_interval],
+  points_rem <- data.frame("sample_date_rem" = countryTS$data[!logic_interval],
                            sample_cases_rem)
-  points_diff_trim <- data.frame("sample_date_trim" = country$data[logic_interval],
+  points_diff_trim <- data.frame("sample_date_trim" = countryTS$data[logic_interval],
                                  sample_diff_trim)
-  points_diff_rem <- data.frame("sample_date_rem" = country$data[!logic_interval],
+  points_diff_rem <- data.frame("sample_date_rem" = countryTS$data[!logic_interval],
                                 sample_diff_rem)
   
   fittedPoints <- fit_data$fittedPoints
@@ -217,9 +219,9 @@ output$coolplot_country <- plotly::renderPlotly({
   fittedPoints$days <- seq_dates
   fittedPoints_der$days <- seq_dates
   
-  confPoints_up <- data.frame("sample_date_trim" = country$data[logic_interval],
+  confPoints_up <- data.frame("sample_date_trim" = countryTS$data[logic_interval],
                               yConf_up)
-  confPoints_down <- data.frame("sample_date_trim" =  country$data[logic_interval],
+  confPoints_down <- data.frame("sample_date_trim" =  countryTS$data[logic_interval],
                                 yConf_down)
   
 })
