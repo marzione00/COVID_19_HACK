@@ -8,7 +8,7 @@ get_countryTS <- function() {
                    header = TRUE)
 
   data$data <- as.Date(as.character(data$data), format = "%Y-%m-%d")
-
+  data["data_seriale"] = c(1:length(data$data))
   return(data)
 
 }
