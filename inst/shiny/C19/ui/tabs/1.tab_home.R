@@ -33,15 +33,21 @@ tabItem(tabName = "tab_1",
                        # The id lets us use input$tabset1 on the server to find the current tab
                        id = "tabset1",
                        tabPanel("By Province",
+                                shinycssloaders::withSpinner(
                                 highcharter::highchartOutput('map_province',
                                                              width = "100%",
-                                                             height = "425px")
+                                                             height = "425px"),
+                                color="#dd4b39"
+                                )
                                 ),
-                       tabPanel("By Region", 
+                       tabPanel("By Region",
+                                shinycssloaders::withSpinner(
                                 highcharter::highchartOutput('map_region',
                                                              width = "100%",
                                                              height = "425px"
-                                                             )
+                                                             ),
+                                color="#dd4b39"
+                                )
                                 )
                      ),
                      height=NULL, status="danger"

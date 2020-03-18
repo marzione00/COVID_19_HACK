@@ -180,15 +180,21 @@ observeEvent(input$show, {
           # The id lets us use input$tabset1 on the server to find the current tab
           id = "tabset1",
           tabPanel("By Province",
+                   shinycssloaders::withSpinner(
                    highcharter::highchartOutput('map_province_modal',
                                                 width = "100%",
                                                 height = "800px"
+                   ),
+                   color="#dd4b39"
                    )
           ),
           tabPanel("By Region", 
+                   shinycssloaders::withSpinner(
                    highcharter::highchartOutput('map_region_modal',
                                                 width = "100%",
                                                 height = "800px"
+                   ),
+                   color="#dd4b39"
                    )
           )
         )
