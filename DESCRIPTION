@@ -26,7 +26,8 @@ Imports:
     shinyjs,
     shinydashboardPlus,
     highcharter,
-    growthcurver
+    growthcurver,
+    shinycssloaders
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
