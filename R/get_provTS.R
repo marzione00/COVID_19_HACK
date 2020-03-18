@@ -3,8 +3,9 @@
 #' @return A list containing the original dataset splitted into single provinces.
 #'
 #' @examples
-#' provTS <- get_provTS()
-#' names(provTS) # List of provinces names
+#' \dontrun{
+#'   names(get_provTS()) # List of provinces names
+#' }
 #'
 #' @export
 get_provTS <- function() {
@@ -12,7 +13,7 @@ get_provTS <- function() {
                    header = TRUE, na.strings = "In fase di definizione/aggiornamento")
 
   data <- subset(data, !is.na(denominazione_provincia))
-  data$data <- as.POSIXct(data$data, format = "%Y-%m-%d %H", tz = "Europe/Berlin")
+  data$data <- as.Date(as.character(data$data), format = "%Y-%m-%d")
 
   out <- list()
   for(province in unique(data$denominazione_provincia)) {

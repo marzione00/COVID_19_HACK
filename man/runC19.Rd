@@ -2,7 +2,7 @@
 % Please edit documentation in R/runC19.R
 \name{runC19}
 \alias{runC19}
-\title{Shiny app with exploratory analysis of the term structure of interest rates}
+\title{Shiny app with exploratory analysis of covid19}
 \usage{
 runC19()
 }
@@ -10,8 +10,5 @@ runC19()
 Runs the Shiny app retreiving the data, running the analysis and showing the report with interactive visualisations.
 }
 \description{
-The function works with no arguments. The function depends on the dataset \code{\link{term_structure}}
-}
-\seealso{
-\code{\link{term_structure}}
+The function works with no arguments. The function depends on the dataset
 }
