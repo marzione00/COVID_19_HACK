@@ -126,10 +126,73 @@ output$map_province <- highcharter::renderHighchart(
       stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
 )
 
-
 # tabbox ------------------------------------------------------------------
 
   output$tabset1Selected <- renderText({
     input$tabset1
   })
+
+
+# modal dialog plot output ------------------------------------------------
+
+output$map_province_modal <- highcharter::renderHighchart(
+  highcharter::highchart(type = "map") %>% 
+    highcharter::hc_add_series_map(map = ita, df = dfita2, 
+                                   joinBy = "hasc", value = "cases", name="total cases") %>%
+    highcharter::hc_colorAxis(
+      stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
+)
+
+output$map_region_modal <- highcharter::renderHighchart(
+  highcharter::highchart(type = "map") %>% 
+    highcharter::hc_add_series_map(map = map, df = dfita1,
+                                   joinBy = "id", value = "cases", name="total cases") %>%
+    highcharter::hc_colorAxis(
+      stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
+)
+
+
+# modal dialog ------------------------------------------------------------
+
+observeEvent(input$show, {
+  showModal(modalDialog(
+    title = NULL, easyClose = TRUE, size = "l",
+    
+        tags$head(tags$style(HTML('
+ /* tabBox background */
+
+ .nav-tabs-custom > .nav-tabs > li.active {
+     border-top-color: red !important;
+ }
+ 
+ .btn-default {
+    background-color: #dd4b39 !important;
+    color: white !important;
+    border-color: #dd4b39 !important;
+}
+ 
+                                  '))),
+        
+        tabBox(
+          width = 12,
+          # height = "250px",
+          title = NULL,
+          # The id lets us use input$tabset1 on the server to find the current tab
+          id = "tabset1",
+          tabPanel("By Province",
+                   highcharter::highchartOutput('map_province_modal',
+                                                width = "100%",
+                                                height = "800px"
+                   )
+          ),
+          tabPanel("By Region", 
+                   highcharter::highchartOutput('map_region_modal',
+                                                width = "100%",
+                                                height = "800px"
+                   )
+          )
+        )
+    
+  ))
+})
   

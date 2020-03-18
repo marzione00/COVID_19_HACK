@@ -15,12 +15,21 @@ tabItem(tabName = "tab_1",
 
  .nav-tabs-custom > .nav-tabs > li.active {
      border-top-color: red !important;
- }'))),
+ }
+ 
+  .btn-default {
+    background-color: #dd4b39 !important;
+    color: white !important;
+    border-color: #dd4b39 !important;
+}
+                                               '))),
                      
                      tabBox(
                        width = 12,
                        # height = "250px",
-                       title = NULL,
+                       title = shinyWidgets::circleButton("show", 
+                                                          icon=icon("search-plus"),
+                                                          size="sm"),
                        # The id lets us use input$tabset1 on the server to find the current tab
                        id = "tabset1",
                        tabPanel("By Province",
