@@ -15,16 +15,21 @@ get_intensivecare_cap <- function(regionTS) {
   readfile  <- read.csv(system.file("extdata", "Posti_TI.csv", package="covid19"),header=TRUE)
   colnames(readfile) = c("region","capacity")
   readfile = readfile[order(readfile$region),]
-  occupation =c()
+  print(readfile)
   
+  occupation =c()
+ 
+  print(regionTS)
   sortedreg = regionTS[order(names(regionTS))]
   for(index_region in 1:length(sortedreg)) 
   {
     
-    vector = sortedreg[[index_region]]$terapia_intensiva  
+    vector = as.numeric(as.character(sortedreg[[index_region]]$terapia_intensiva)) 
     occupation[index_region] = tail(vector, n = 1)
     
   }
+  print("============")
+  print(occupation)
   df = data.frame(readfile,occupation)
   colnames(df)= c("region","capacity","occupation")
   perc = c(as.integer(df$occupation/df$capacity*100))

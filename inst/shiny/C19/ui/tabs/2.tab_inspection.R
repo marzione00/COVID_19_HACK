@@ -11,7 +11,12 @@ tabItem(tabName = "tab_2",
           column(6,
                  
                  box(title="Intensive care percentage occupation/capacity", solidHeader = T,
-                    plotlyOutput("intensivecare_cap_perc"), 
+                    
+                     
+                     shinycssloaders::withSpinner(
+                             plotlyOutput("intensivecare_cap_perc"),
+                             color="#dd4b39"
+                     ), 
                      width = NULL, status = "danger"
                  )
                  
@@ -19,7 +24,10 @@ tabItem(tabName = "tab_2",
           column(6,
                  
                  box(title="Intensive care capacity vs. occupation", solidHeader = T,
-                     plotlyOutput("intensivecare_cap"), 
+                     shinycssloaders::withSpinner(
+                             plotlyOutput("intensivecare_cap"), 
+                             color="#dd4b39"
+                     ), 
                      width = NULL, status = "danger"
                  )
                  
