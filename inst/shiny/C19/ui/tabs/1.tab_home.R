@@ -72,14 +72,15 @@ tabItem(tabName = "tab_1",
                  
                  flipBox(
                    id = 1,
+                   width = 12,
                    main_img = "https://cdn1.vectorstock.com/i/1000x1000/68/55/data-analysis-round-vector-7826855.jpg",
                    header_img = "https://cdn.mos.cms.futurecdn.net/JtVH5Khvihib7dBDFY9ZDR.jpg",
                    front_title = "Covid-19 Hack",
                    back_title = "About us",
-                   "We are a team of data science students from Università degli Studi di Milano. 
+                   HTML("We are a team of data science students from Universita' degli Studi di Milano. 
                             This project is aimed at tracking and modelling the Covid-19 spread in Italy.
                              The data is synchronised with the civil protection database. Each time the app is run it checks for
-                            updates in the civil protection database",
+                            updates in the civil protection database <br><br><hr>"),
                    back_content = tagList(
                      
                      
@@ -87,6 +88,7 @@ tabItem(tabName = "tab_1",
                        column(6,
                               productList(
                                 productListItem(
+                                  
                                   src = "https://avatars1.githubusercontent.com/u/36515398?s=400&u=152624d5b1720f1e66ffd3fbd43c6e13704c3e42&v=4", 
                                   productTitle = HTML('<b><a href="https://ierardiandrea.com/">Andrea Ierardi</a></b><br>
                                                        <a href="https://www.linkedin.com/in/andreaierardi/" rel="nofollow noreferrer">
