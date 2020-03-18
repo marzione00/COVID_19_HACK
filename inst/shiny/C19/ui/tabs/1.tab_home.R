@@ -1,7 +1,7 @@
 tabItem(tabName = "tab_1",
         valueBox("Coronavirus in Italy", 
                  paste("Most recent update:",
-                       tail(get_countryTS()$data,1)),
+                       tail(countryTS$data,1)),
                  icon=icon("history"),
                  color = "red", width = NULL),
         fluidRow(
@@ -58,15 +58,15 @@ tabItem(tabName = "tab_1",
                  
                  
                  fluidRow(
-                   valueBox(tail(get_countryTS()$totale_casi,1), "Total cases", icon = icon("notes-medical"),
+                   valueBox(tail(countryTS$totale_casi,1), "Total cases", icon = icon("notes-medical"),
                             color = "red", width = 6),
-                   valueBox(tail(get_countryTS()$terapia_intensiva,1), "Intensive care", icon = icon("procedures"),
+                   valueBox(tail(countryTS$terapia_intensiva,1), "Intensive care", icon = icon("procedures"),
                             color = "orange", width = 6)
                  ),
                  fluidRow(
-                   valueBox(tail(get_countryTS()$totale_ospedalizzati,1), "Hospitalised", icon = icon("hospital"),
+                   valueBox(tail(countryTS$totale_ospedalizzati,1), "Hospitalised", icon = icon("hospital"),
                             color = "yellow", width = 6),
-                   valueBox(tail(get_countryTS()$isolamento_domiciliare,1), "Home isolation", icon = icon("home"),
+                   valueBox(tail(countryTS$isolamento_domiciliare,1), "Home isolation", icon = icon("home"),
                             color = "maroon", width = 6)
                  ),
                  

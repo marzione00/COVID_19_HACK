@@ -2,6 +2,7 @@ library(plotly)
 library(shinydashboard)
 library(shinydashboardPlus)
 ## ui.R ##
+countryTS = get_countryTS()
 ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                         
                         dashboardHeader(title = img(src = "coronavirus_white.png")),
