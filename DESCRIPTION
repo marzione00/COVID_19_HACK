@@ -27,6 +27,7 @@ Imports:
     shinydashboardPlus,
     highcharter,
     growthcurver,
+    nlstools,
     shinycssloaders
 License: MIT + file LICENSE
 Encoding: UTF-8
