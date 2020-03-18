@@ -12,7 +12,9 @@
 #' @export
 get_intensivecare_cap <- function(regionTS) {
   
-  readfile  <- read.csv(system.file("extdata", "Posti_TI.csv", package="covid19"),header=TRUE)
+  readfile <- read.csv("https://raw.githubusercontent.com/marzione00/COVID_19_HACK/master/inst/extdata/Posti_TI.csv",
+                       header = TRUE)
+  #readfile  <- read.csv(system.file("extdata", "Posti_TI.csv", package="covid19"),header=TRUE)
   colnames(readfile) = c("region","capacity")
   readfile = readfile[order(readfile$region),]
   print(readfile)

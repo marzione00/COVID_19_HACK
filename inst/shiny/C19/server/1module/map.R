@@ -1,6 +1,6 @@
  
 # map section -------------------------------------------------------------
-  regions <- get_regionTS()
+  regions <- regionTS
   
   data <- map_df(names(regions), function(x) {
     casi <- regions[[x]] %>% select(totale_casi) %>% tail(1) %>% pull()
@@ -29,7 +29,7 @@
       as_data_frame(x$properties)
     })
   
-  pc_data <- get_regionTS()
+  pc_data <- regionTS
   
   names(pc_data) <- tolower(names(pc_data))
   
@@ -91,7 +91,7 @@
   head(dfita2)
 
 # integrating civil protection data
-  prov_TS <- get_provTS()
+  prov_TS <- provTS
   
 clean_prov <- map_df(names(prov_TS), function(x) {
   tail(prov_TS[[x]],1)$totale_casi
