@@ -26,7 +26,7 @@ output$regionInput <- shiny::renderUI({
            shiny::checkboxGroupInput(inputId = "plot_type_region", label = "Plot type",
                                      choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1),
-           shiny::sliderInput(inputId = "Typeplot", "Type of plot residuals",min = 0, max = 6, value = 0)
+           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices = c("0","1","2","3","4","5","6"))
            
     )
   )
