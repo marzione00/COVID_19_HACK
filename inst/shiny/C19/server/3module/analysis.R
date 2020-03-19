@@ -167,8 +167,7 @@ output$resid_smry_region <- shiny::renderPrint({
 
 output$Plot_residual <- plotly::renderPlotly({
   pippo<-nlstools::nlsResiduals(reac_region$model)
-  #plot(pippo,0)
-  
+
   Res_DF_1<-as.data.frame(pippo$resi1)
   Res_DF_2<-as.data.frame(pippo$resi2)
   Res_DF_3<-as.data.frame(pippo$resi4)
@@ -177,11 +176,13 @@ output$Plot_residual <- plotly::renderPlotly({
   
   if(input$Typeplot=="Residual"){
     colnames(Res_DF_1)=c("fitted1","res")
-    print(rownames(Res_DF_1))
-    plotly::plot_ly(data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 10,
+    p = plotly::plot_ly(data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 10,
                                                                                     color = 'rgba(255, 182, 193, .9)',
                                                                                     line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                 width = 2)))
+    p <- p %>% add_trace(y = 0, name = 'High 2000', line = list(color = 'orange', width = 4, dash = 'dot')) 
+    
+    p
     #grafico1
     
   }
@@ -189,21 +190,28 @@ output$Plot_residual <- plotly::renderPlotly({
   else if(input$Typeplot=="Residual_standardized"){
     colnames(Res_DF_2)=c("fitted2","res_stand")
     print(rownames(Res_DF_2))
-    plotly::plot_ly(data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 10,
+    p = plotly::plot_ly(data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 10,
                                                                                           color = 'rgba(255, 182, 193, .9)',
                                                                                           line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                       width = 2)))
-    #grafico1
+    p <- p %>% add_trace(y = 0, name = 'High 2000', line = list(color = 'orange', width = 4, dash = 'dot')) 
+    p <- p %>% add_trace(y = 2, name = 'High 2000', line = list(color = 'rgb(22, 96, 167)', width = 4)) 
     
+    p
+    
+    p    
   }
   
   else if(input$Typeplot=="Autocorrelation"){
     colnames(Res_DF_3)=c("fitted3","resiplus1")
     print(rownames(Res_DF_3))
-    plotly::plot_ly(data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 10,
+    p = plotly::plot_ly(data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 10,
                                                                                           color = 'rgba(255, 182, 193, .9)',
                                                                                           line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                       width = 2)))
+    p <- p %>% add_trace(y = 0, name = 'High 2000', line = list(color = 'orange', width = 4, dash = 'dot')) 
+    
+    p
     #grafico1
     
   }
