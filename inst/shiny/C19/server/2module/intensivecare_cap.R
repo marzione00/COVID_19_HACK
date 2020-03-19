@@ -1,3 +1,9 @@
+# tabbox selection
+output$tabset2Selected <- renderText({
+  input$tabset2
+})
+
+# plots
 output$intensivecare_cap_perc <- plotly::renderPlotly({
   
     
@@ -6,7 +12,8 @@ output$intensivecare_cap_perc <- plotly::renderPlotly({
                             text = ~perc, textposition = 'auto' )
     fig <- fig %>% layout(
       xaxis = list(title = "Region"),
-      yaxis = list(title = "Percentage occupation/capacity"))
+      yaxis = list(title = "Percentage occupation/capacity"),
+      legend = list(x = 0.1, y = 0.9))
     
     fig
 })
@@ -32,7 +39,8 @@ output$intensivecare_cap <- plotly::renderPlotly({
   fig <- fig %>% layout(title = "Occupation vs Capacity",
                         barmode = 'group',
                         xaxis = list(title = "Region"),
-                        yaxis = list(title = "Occupation vs Capacity"))
+                        yaxis = list(title = "Occupation vs Capacity"),
+                        legend = list(x = 0.1, y = 0.9))
   
   fig
   
