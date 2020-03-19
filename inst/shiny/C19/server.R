@@ -12,6 +12,7 @@ server <- function(input, output, session) {
   regionTS <- get_regionTS()
   provTS <- get_provTS()
   intensivecare_capacity = get_intensivecare_cap(regionTS)
+  country_growth <- get_country_growth()
   
   source(file.path("server", "global/shinyjs.R"),  local = TRUE)$value
   

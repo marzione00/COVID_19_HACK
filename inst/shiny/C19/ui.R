@@ -5,6 +5,7 @@ library(shinydashboardPlus)
 countryTS = get_countryTS()
 regionTS = get_regionTS()
 provTS = get_provTS()
+country_growth = get_country_growth()
 ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                         
                         dashboardHeader(title = img(src = "coronavirus_white.png")),
