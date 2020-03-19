@@ -26,7 +26,7 @@ output$regionInput <- shiny::renderUI({
            shiny::checkboxGroupInput(inputId = "plot_type_region", label = "Plot type",
                                      choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1),
-           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices =  c("Residual","Residual_standardized","Autocorrelation","Normal QQ plot of st. res"),selected = "Residual")
+           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices =  c("Residual","Residual_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residual")
            
     )
   )
@@ -175,7 +175,8 @@ output$Plot_residual <- plotly::renderPlotly({
   Res_DF_1<-as.data.frame(pippo$resi1)
   Res_DF_2<-as.data.frame(pippo$resi2)
   Res_DF_3<-as.data.frame(pippo$resi4)
-  Res_DF_4<-as.data.frame(pippo$resi6)
+  Res_DF_4<-as.data.frame(pippo$resi3)
+
   
   if(input$Typeplot=="Residual"){
     colnames(Res_DF_1)=c("fitted1","res")
@@ -210,13 +211,13 @@ output$Plot_residual <- plotly::renderPlotly({
     
   }
   
-  else if(input$Typeplot=="Normal QQ plot of st. res"){
+  else if(input$Typeplot=="Sqrt of abs of res vs fitted"){
     colnames(Res_DF_4)=c("fitted4","qq")
     print(rownames(Res_DF_4))
     plotly::plot_ly(data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 10,
-                                                                                  color = 'rgba(255, 182, 193, .9)',
-                                                                                  line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                              width = 2)))
+                                                                                   color = 'rgba(255, 182, 193, .9)',
+                                                                                   line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                               width = 2)))
     #grafico1
     
   }
