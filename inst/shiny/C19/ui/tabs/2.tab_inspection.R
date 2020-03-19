@@ -9,6 +9,7 @@ tabItem(tabName = "tab_2",
                           icon=icon("search"),
                           color = "red", width = NULL),
                  
+                 
                    box(title="Intensive care", solidHeader = T,
                      width = NULL,
                      color = "red",
@@ -55,7 +56,9 @@ tabItem(tabName = "tab_2",
                  
                  
                  
-                 
+                 box(title="Growth Monitoring", solidHeader = T,
+                     width = NULL,
+                     color = "red",
                  
                  
                  box(    
@@ -91,7 +94,11 @@ tabItem(tabName = "tab_2",
                                          )
                                  )
                          )
-                 )
+                 ),
+                 
+                 
+                 highcharter::highchartOutput("plot_test"),
+                 height=NULL, status="danger")
                  
                  
                  
