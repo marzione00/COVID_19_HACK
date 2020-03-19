@@ -54,12 +54,12 @@ output$intensivecare_cap <- plotly::renderPlotly({
 growth <- data.frame(date=get_countryTS()$data,
            growth=get_country_growth()$growth)
 
-growth_xts <- xts(growth[,-1], order.by=growth[,1])
+growth_xts <- xts::xts(growth[,-1], order.by=growth[,1])
 
 growth_change <- data.frame(date=get_countryTS()$data,
                      growth=get_country_growth()$growth_change)
 
-growth_change_xts <- xts(growth_change[,-1], order.by=growth_change[,1])
+growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
 
 hc <- highcharter::highchart(type = "stock") %>% 
   highcharter::hc_title(text = "% growth and growth change of total cases") %>%
