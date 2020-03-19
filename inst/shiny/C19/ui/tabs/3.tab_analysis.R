@@ -112,7 +112,7 @@ tabItem(
           column(7,
                  shinydashboard::box(width = 12,
                                        status = "danger",
-                                       title = "Charts",
+                                       title = "Residuals",
                                      plotly::plotlyOutput("Plot_residual")%>% shinycssloaders::withSpinner( color="#dd4b39")
                                      
                  )
