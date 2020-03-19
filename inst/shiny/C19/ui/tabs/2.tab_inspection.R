@@ -1,13 +1,14 @@
 tabItem(tabName = "tab_2",
         
+        valueBox("Data Inspection", "Descriptive analysis",
+                 icon=icon("search"),
+                 color = "red", width = NULL),
+        
         
         
         fluidRow(
           column(6,
                  
-                 valueBox("Data Inspection", "Descriptive analysis",
-                          icon=icon("search"),
-                          color = "red", width = NULL),
                  
                  
                    box(title="Intensive care", solidHeader = T,

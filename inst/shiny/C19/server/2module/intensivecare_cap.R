@@ -49,7 +49,7 @@ output$intensivecare_cap <- plotly::renderPlotly({
 })
 
 
-# plot --------------------------------------------------------------------
+# plot growth monitoring --------------------------------------------------------------------
 
 growth <- data.frame(date=get_countryTS()$data,
            growth=get_country_growth()$growth)
