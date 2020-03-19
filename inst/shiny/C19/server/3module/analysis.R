@@ -177,18 +177,16 @@ output$Plot_residual <- plotly::renderPlotly({
   p = plotly::plot_ly(type = 'scatter')
   
   p <- p %>% plotly::layout(
-    title ="",
     xaxis = list(
                  showline = FALSE,
-                 showgrid = FALSE,
                  dtick = 2000,
-                 zerolinewidth = 0,
+                 zeroline = FALSE
                  
     ),
   
     yaxis = list(
       showline = FALSE,
-      zerolinewidth = 0
+      zeroline = FALSE
       
     )
   )
@@ -198,7 +196,7 @@ output$Plot_residual <- plotly::renderPlotly({
 
     p <- p %>% plotly::layout(
       title ="Residual",
-      xaxis = list(title="Fitted values"),
+      xaxis = list(title="Fitted values",zeroline = FALSE),
       yaxis = list(title="Residuals")
       )
     p= p %>% add_trace(name = "residual",data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 10,
