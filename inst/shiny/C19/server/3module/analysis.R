@@ -26,7 +26,7 @@ output$regionInput <- shiny::renderUI({
            shiny::checkboxGroupInput(inputId = "plot_type_region", label = "Plot type",
                                      choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1),
-           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices = c("0","1","2","3","4","5","6"))
+           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices =  c("Residual","pluto","paperino"),selected = "Residual")
            
     )
   )
@@ -41,8 +41,9 @@ output$countryInput <- shiny::renderUI({
                               min = init_date, max = fin_date, timeFormat = "%d %b",
                               step = 1, value = c(init_date, fin_date)),
            shiny::checkboxGroupInput(inputId = "plot_type_country", label = "Plot type",
-                                     choices = list("Cumulative cases" = 1, "New cases" = 2),
+                                     choices = list("Cumulative cases" = , "New cases" = 2),
                                      selected = 1)
+           
     )
   )
 })
@@ -50,7 +51,6 @@ output$countryInput <- shiny::renderUI({
 ## REGION reactive values ##
 reac_region <- shiny::reactiveValues()
 
-type_res_plot <-reactive({input$"Typeplot"})
 
 
 ## REGION plot (currently date against total cases) ##
@@ -168,9 +168,28 @@ output$resid_smry_region <- shiny::renderPrint({
   nlstools::test.nlsResiduals(reac_region$resid)
 })
 
-output$Plot_residual <- shiny::renderPlot({
+output$Plot_residual <- plotly::renderPlotly({
   pippo<-nlstools::nlsResiduals(reac_region$model)
-  plot(pippo,which=type_res_plot())
+  #plot(pippo,0)
+  
+  Res_DF_1<-as.data.frame(pippo$resi1)
+  Res_DF_2<-as.data.frame(pippo$resi2)
+  Res_DF_3<-as.data.frame(pippo$resi3)
+  Res_DF_4<-as.data.frame(pippo$resi4)
+  
+  if(input$Typeplot=="Residual"){
+    colnames(Res_DF_1)=c("fitted","res")
+    print(rownames(Res_DF_1))
+    plotly::plot_ly(data=Res_DF_1,x=~Res_DF_1$fitted,y=~Res_DF_1$res,marker = list(size = 10,
+                                                                                               color = 'rgba(255, 182, 193, .9)',
+                                                                                               line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                           width = 2)))
+    #grafico1
+    
+  }
+  
+  
+  
 })
 #======================================= COUNTRY SECTION ============================================
 ## COUNTRY reactive values##

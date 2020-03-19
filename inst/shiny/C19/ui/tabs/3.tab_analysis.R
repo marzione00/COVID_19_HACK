@@ -94,8 +94,9 @@ tabItem(
             
             # ----- summary row
             fluidRow(
+              column(6,
               shinydashboard::tabBox(
-                width = 6,
+                width = 12,
                 title = "Technical data",
                 id = "tech_tab",
                 shiny::tabPanel("Fitting output",
@@ -110,12 +111,12 @@ tabItem(
               )
             ),
             
-            fluidRow(
-              shinydashboard::box(
+            column(6,
+              shinydashboard::box(width = 12,
               
-                shiny::plotOutput("Plot_residual")
+                plotly::plotlyOutput("Plot_residual")
                 
-              )
+              ))
               
               
             )
