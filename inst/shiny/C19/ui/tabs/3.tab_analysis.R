@@ -71,7 +71,7 @@ tabItem(
         # ---- selector + plot row
         fluidRow(
           column(
-            5,
+            4,
             shinydashboard::box(
               width = 12,
               status = "danger",
@@ -94,7 +94,7 @@ tabItem(
         
         # ----- summary row
         fluidRow(
-          column(4,
+          column(5,
                  
                  shinydashboard::tabBox(
                    width = 12,
@@ -109,7 +109,7 @@ tabItem(
                                    verbatimTextOutput("resid_smry_region"))
                  )
           ),
-          column(8,
+          column(7,
                  shinydashboard::box(width = 12,
                                        status = "danger",
                                        title = "Charts",
