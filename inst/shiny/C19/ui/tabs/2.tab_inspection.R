@@ -69,7 +69,7 @@ tabItem(tabName = "tab_2",
                                  column(
                                          width = 6,
                                          descriptionBlock(
-                                                 number = tail(country_growth$growth,1),
+                                                 number = paste0(tail(country_growth$growth,1),"%"),
                                                  number_color = ifelse(tail(country_growth$growth,1)>0,"red","green"), 
                                                  number_icon = ifelse(tail(country_growth$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
                                                  header = "CASES GROWTH", 
