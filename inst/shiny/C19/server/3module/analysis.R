@@ -26,7 +26,7 @@ output$regionInput <- shiny::renderUI({
            shiny::checkboxGroupInput(inputId = "plot_type_region", label = "Plot type",
                                      choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1),
-           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices =  c("Residual","pluto","paperino"),selected = "Residual")
+           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices =  c("Residual","Residual_standardized","Autocorrelation","Normal QQ plot of st. res"),selected = "Residual")
            
     )
   )
@@ -174,19 +174,53 @@ output$Plot_residual <- plotly::renderPlotly({
   
   Res_DF_1<-as.data.frame(pippo$resi1)
   Res_DF_2<-as.data.frame(pippo$resi2)
-  Res_DF_3<-as.data.frame(pippo$resi3)
-  Res_DF_4<-as.data.frame(pippo$resi4)
+  Res_DF_3<-as.data.frame(pippo$resi4)
+  Res_DF_4<-as.data.frame(pippo$resi6)
   
   if(input$Typeplot=="Residual"){
-    colnames(Res_DF_1)=c("fitted","res")
+    colnames(Res_DF_1)=c("fitted1","res")
     print(rownames(Res_DF_1))
-    plotly::plot_ly(data=Res_DF_1,x=~Res_DF_1$fitted,y=~Res_DF_1$res,marker = list(size = 10,
+    plotly::plot_ly(data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 10,
                                                                                                color = 'rgba(255, 182, 193, .9)',
                                                                                                line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                            width = 2)))
     #grafico1
     
   }
+  
+  else if(input$Typeplot=="Residual_standardized"){
+    colnames(Res_DF_2)=c("fitted2","res_stand")
+    print(rownames(Res_DF_2))
+    plotly::plot_ly(data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 10,
+                                                                                         color = 'rgba(255, 182, 193, .9)',
+                                                                                         line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                     width = 2)))
+    #grafico1
+    
+  }
+  
+  else if(input$Typeplot=="Autocorrelation"){
+    colnames(Res_DF_3)=c("fitted3","resiplus1")
+    print(rownames(Res_DF_3))
+    plotly::plot_ly(data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 10,
+                                                                                         color = 'rgba(255, 182, 193, .9)',
+                                                                                         line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                     width = 2)))
+    #grafico1
+    
+  }
+  
+  else if(input$Typeplot=="Normal QQ plot of st. res"){
+    colnames(Res_DF_4)=c("fitted4","qq")
+    print(rownames(Res_DF_4))
+    plotly::plot_ly(data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 10,
+                                                                                  color = 'rgba(255, 182, 193, .9)',
+                                                                                  line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                              width = 2)))
+    #grafico1
+    
+  }
+  
   
   
   
