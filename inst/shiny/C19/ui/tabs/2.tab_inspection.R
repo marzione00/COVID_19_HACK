@@ -1,13 +1,15 @@
 tabItem(tabName = "tab_2",
         
+        valueBox("Data Inspection", "Descriptive analysis",
+                 icon=icon("search"),
+                 color = "red", width = NULL),
+        
         
         
         fluidRow(
           column(6,
                  
-                 valueBox("Data Inspection", "Descriptive analysis",
-                          icon=icon("search"),
-                          color = "red", width = NULL),
+                 
                  
                    box(title="Intensive care", solidHeader = T,
                      width = NULL,
@@ -55,7 +57,9 @@ tabItem(tabName = "tab_2",
                  
                  
                  
-                 
+                 box(title="Growth Monitoring", solidHeader = T,
+                     width = NULL,
+                     color = "red",
                  
                  
                  box(    
@@ -91,7 +95,11 @@ tabItem(tabName = "tab_2",
                                          )
                                  )
                          )
-                 )
+                 ),
+                 
+                 
+                 highcharter::highchartOutput("plot_test"),
+                 height=NULL, status="danger")
                  
                  
                  
