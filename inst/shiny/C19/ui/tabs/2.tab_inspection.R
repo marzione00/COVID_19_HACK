@@ -1,13 +1,13 @@
 tabItem(tabName = "tab_2",
         
-        valueBox("Data Inspection", "Descriptive analysis",
-                 icon=icon("search"),
-                 color = "red", width = NULL),
-        
         
         
         fluidRow(
           column(6,
+                 
+                 valueBox("Data Inspection", "Descriptive analysis",
+                          icon=icon("search"),
+                          color = "red", width = NULL),
                  
                    box(title="Intensive care", solidHeader = T,
                      width = NULL,
@@ -59,7 +59,7 @@ tabItem(tabName = "tab_2",
                  
                  
                  box(    
-                         title="TOTAL CASES",
+                         title=NULL,
                          solidHeader = T,
                          width = NULL,
                          color = "red",
@@ -72,7 +72,7 @@ tabItem(tabName = "tab_2",
                                                  number = paste0(tail(country_growth$growth,1),"%"),
                                                  number_color = ifelse(tail(country_growth$growth,1)>0,"red","green"), 
                                                  number_icon = ifelse(tail(country_growth$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
-                                                 header = "GROWTH", 
+                                                 header = "CASES GROWTH", 
                                                  text = NULL, 
                                                  right_border = TRUE,
                                                  margin_bottom = FALSE
@@ -84,7 +84,7 @@ tabItem(tabName = "tab_2",
                                                  number = paste0(tail(country_growth$growth_change,1),"%"),
                                                  number_color = ifelse(tail(country_growth$growth_change,1)>0,"red","green"), 
                                                  number_icon = ifelse(tail(country_growth$growth_change,1)>0,"fa fa-caret-up","fa fa-caret-down"),
-                                                 header = "GROWTH CHANGE", 
+                                                 header = HTML("CASES GROWTH &Delta;"), 
                                                  text = NULL, 
                                                  right_border = FALSE,
                                                  margin_bottom = FALSE
