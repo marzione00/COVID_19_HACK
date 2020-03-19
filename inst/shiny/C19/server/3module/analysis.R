@@ -113,9 +113,10 @@ output$coolplot_region <- plotly::renderPlotly({
     # funtions for the two different plots
     plot1  = function(fig)
     {
-      
-      fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
+
       fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
+      
+      fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none',hoverinfo='skip',fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
       
       fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
       fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
@@ -202,7 +203,7 @@ output$Plot_residual <- plotly::renderPlotly({
     p= p %>% add_trace(name = "residual",data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 10,
                                                                                        color = 'rgba(255, 182, 193, .9)',
                                                                                        line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                   width = 2)))
+                                                                                                   width = 4)))
     p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_1$fitted1,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
     
     p
@@ -220,7 +221,7 @@ output$Plot_residual <- plotly::renderPlotly({
     p <- p %>% add_trace(name="Residual standardized",data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 10,
                                                                                                color = 'rgba(255, 182, 193, .9)',
                                                                                                line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                           width = 2)))
+                                                                                                           width = 4)))
     p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
     p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 2, name = 'liney2', line = list(color = 'rgb(0,0,0)', width = 1),showlegend = FALSE ,mode = 'lines') 
     
@@ -237,7 +238,7 @@ output$Plot_residual <- plotly::renderPlotly({
     p = p %>% add_trace(name = "Autocorrelation", data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 10,
                                                                                               color = 'rgba(255, 182, 193, .9)',
                                                                                               line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                          width = 2)))
+                                                                                                          width = 4)))
     p <- p %>% add_trace(data=Res_DF_3,x=~Res_DF_3$fitted3,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode="lines") 
     
     p
@@ -255,7 +256,7 @@ output$Plot_residual <- plotly::renderPlotly({
     p = p %>% add_trace(name="Sqrt of abs of res vs fitted",data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 10,
                                                                                        color = 'rgba(255, 182, 193, .9)',
                                                                                        line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                   width = 2)))
+                                                                                                   width = 4)))
     p
     #grafico1
     
@@ -330,9 +331,8 @@ output$Plot_residual <- plotly::renderPlotly({
 #   # funtions for the two different plots
 #   plot1  = function(fig)
 #   {
-#     
-#     fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
 #     fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
+#     fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
 #     
 #     fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
 #     fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
