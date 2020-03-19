@@ -176,11 +176,13 @@ output$Plot_residual <- plotly::renderPlotly({
   
   if(input$Typeplot=="Residual"){
     colnames(Res_DF_1)=c("fitted1","res")
-    p = plotly::plot_ly(data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 10,
+    p = plotly::plot_ly(type = 'scatter',showlines= FALSE)
+    
+    p= p %>% add_trace(data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 10,
                                                                                     color = 'rgba(255, 182, 193, .9)',
                                                                                     line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                 width = 2)))
-    p <- p %>% add_trace(y = 0, name = 'High 2000', line = list(color = 'orange', width = 4, dash = 'dot')) 
+    p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_1$fitted1,y = 0, name = "liney0", line = list(color = 'orange', width = 4, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
     
     p
     #grafico1
@@ -190,26 +192,28 @@ output$Plot_residual <- plotly::renderPlotly({
   else if(input$Typeplot=="Residual_standardized"){
     colnames(Res_DF_2)=c("fitted2","res_stand")
     print(rownames(Res_DF_2))
-    p = plotly::plot_ly(data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 10,
+    p = plotly::plot_ly(type = 'scatter',showlines= FALSE)
+    
+    p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 10,
                                                                                           color = 'rgba(255, 182, 193, .9)',
                                                                                           line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                       width = 2)))
-    p <- p %>% add_trace(y = 0, name = 'High 2000', line = list(color = 'orange', width = 4, dash = 'dot')) 
-    p <- p %>% add_trace(y = 2, name = 'High 2000', line = list(color = 'rgb(22, 96, 167)', width = 4)) 
+    p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 0, name = "liney0", line = list(color = 'orange', width = 4, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
+    p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 2, name = 'liney2', line = list(color = 'rgb(22, 96, 167)', width = 4),showlegend = FALSE ,mode = 'lines') 
     
-    p
-    
+  
     p    
   }
   
   else if(input$Typeplot=="Autocorrelation"){
     colnames(Res_DF_3)=c("fitted3","resiplus1")
     print(rownames(Res_DF_3))
-    p = plotly::plot_ly(data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 10,
+    p = plotly::plot_ly(type = 'scatter',showlines= FALSE)
+    p = p %>% add_trace(data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 10,
                                                                                           color = 'rgba(255, 182, 193, .9)',
                                                                                           line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                       width = 2)))
-    p <- p %>% add_trace(y = 0, name = 'High 2000', line = list(color = 'orange', width = 4, dash = 'dot')) 
+    p <- p %>% add_trace(data=Res_DF_3,x=~Res_DF_3$fitted3,y = 0, name = "liney0", line = list(color = 'orange', width = 4, dash = 'dot'),showlegend = FALSE, mode="lines") 
     
     p
     #grafico1
@@ -219,10 +223,12 @@ output$Plot_residual <- plotly::renderPlotly({
   else if(input$Typeplot=="Sqrt of abs of res vs fitted"){
     colnames(Res_DF_4)=c("fitted4","qq")
     print(rownames(Res_DF_4))
-    plotly::plot_ly(data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 10,
+    p = plotly::plot_ly(type = 'scatter',showlines= FALSE)
+    p = p %>% add_trace(data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 10,
                                                                                    color = 'rgba(255, 182, 193, .9)',
                                                                                    line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                width = 2)))
+    p
     #grafico1
     
   }
