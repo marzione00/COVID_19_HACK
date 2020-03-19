@@ -86,7 +86,7 @@ tabItem(
               color = "red",
               status = "danger",
               title = "Charts",
-              plotly::plotlyOutput("coolplot_region"),
+              plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
             )
           )
@@ -113,7 +113,7 @@ tabItem(
                  shinydashboard::box(width = 12,
                                        status = "danger",
                                        title = "Charts",
-                                     plotly::plotlyOutput("Plot_residual")
+                                     plotly::plotlyOutput("Plot_residual")%>% shinycssloaders::withSpinner( color="#dd4b39")
                                      
                  )
                  
