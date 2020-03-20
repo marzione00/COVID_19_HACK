@@ -22,12 +22,13 @@ ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                           
                           #css
                           source(file.path("ui/global", "css.R"),  local = TRUE)$value,
-                          
                           #waiter
                           waiter::use_waiter(),
                           waiter::waiter_show_on_load(html = waiter::spin_rotating_plane()), # will show on load
                           
                           
+                          
+                          shinyalert::useShinyalert(),  # Set up shinyalert
                           # tabs --------------------------------------------------------------------
                           tabItems(
                             
