@@ -2,10 +2,10 @@ library(plotly)
 library(shinydashboard)
 library(shinydashboardPlus)
 ## ui.R ##
-countryTS = get_countryTS()
-regionTS = get_regionTS()
-provTS = get_provTS()
-country_growth = get_country_growth()
+countryTS = covid19:::get_countryTS()
+regionTS = covid19:::get_regionTS()
+provTS = covid19:::get_provTS()
+country_growth = covid19:::get_country_growth()
 
 ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                         

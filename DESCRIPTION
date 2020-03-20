@@ -16,6 +16,7 @@ Imports:
     tidyverse (>= 1.3.0),
     plotly (>= 4.9.1),
     magrittr,
+    dplyr,
     aTSA (>= 3.1.2),
     vars (>= 1.5-3),
     broom (>= 0.5.4),
