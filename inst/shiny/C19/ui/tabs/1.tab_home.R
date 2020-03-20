@@ -29,9 +29,21 @@ tabItem(tabName = "tab_1",
                        # height = "250px",
                        title = fluidRow(
                          div(style="display: inline-block;vertical-align:top;",
+                             tags$head(tags$style("
+                       .jhr{
+                       display: inline;
+                       vertical-align: middle;
+                       padding-left: 10px;
+                       }")),
                          shinyWidgets::pickerInput(inputId = "map_value",
                                      label = NULL,
-                                     choices = c("absolute", "percentage", "density"))),
+                                     choices = c("absolute", "percentage", "density"),
+                                     choicesOpt = list(content = c(
+                                       sprintf("<img src='https://www.color-hex.com/palettes/4699.png' width=30px><div class='jhr'>%s</div></img>", factor("absolute",levels=c("absolute","percentage","density")) ),
+                                       sprintf("<img src='https://www.color-hex.com/palettes/12521.png' width=30px><div class='jhr'>%s</div></img>", factor("percentage",levels=c("absolute","percentage","density")) ),
+                                       sprintf("<img src='https://www.color-hex.com/palettes/30573.png' width=30px><div class='jhr'>%s</div></img>", factor("density",levels=c("absolute","percentage","density")) )
+                                     )))
+                                     ),
                          div(style="display: inline-block;vertical-align:top;",
                          shinyWidgets::circleButton("show", 
                                                           icon=icon("search-plus"),
