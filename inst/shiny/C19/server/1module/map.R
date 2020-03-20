@@ -61,7 +61,7 @@ territory_region <- italy_ext$region %>%
     mutate(density = round(density, 2))
   
 
-  output$map_region <- highcharter::renderHighchart(
+output$map_region <- output$map_region_modal <- highcharter::renderHighchart(
       if(input$map_value=="absolute") {
         highcharter::highchart(type = "map") %>% 
           highcharter::hc_add_series_map(map = map, df = dfita1,
@@ -116,11 +116,19 @@ clean_prov <- map_df(names(prov_TS), function(x) {
   )
 })
 
+# add population
+pop_prov <- rename(italy_pop$province, name=territorio,pop=valore)
+
+# add territory
+territory_prov <- italy_ext$province %>%
+  rename(name=territorio,ext=valore)
+
+
 # make names consistent
-clean_prov %>%
-  filter(str_detect(name, "\\Aoste"))
 
 clean_prov <- clean_prov %>%
+  left_join(pop_prov) %>% 
+  left_join(territory_prov) %>%
   mutate(name = ifelse(name=="Massa Carrara","Massa-Carrara",name)) %>%
   mutate(name = ifelse(name=="Reggio nell'Emilia","Reggio Emilia",name)) %>% 
   mutate(name = ifelse(name=="Bolzano","Bozen",name)) %>%
@@ -131,14 +139,31 @@ clean_prov <- clean_prov %>%
   mutate(name = ifelse(name=="Oristano","Oristrano",name)) %>%
   mutate(name = ifelse(name=="Barletta-Andria-Trani","Barletta-Andria Trani",name))
 
-dfita2 <- dfita2 %>% left_join(clean_prov)
+dfita2 <- dfita2 %>%
+  left_join(clean_prov) %>% 
+  ungroup() %>% 
+  mutate(percentage=(cases/pop)*100) %>%
+  mutate(density=(cases/ext)*1000) %>%
+  rename(absolute=cases)
   
-output$map_province <- highcharter::renderHighchart(
-  highcharter::highchart(type = "map") %>% 
-    highcharter::hc_add_series_map(map = ita, df = dfita2, 
-                                   joinBy = "hasc", value = "cases", name="total cases") %>%
-    highcharter::hc_colorAxis(
-      stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
+output$map_province <- output$map_province_modal <- highcharter::renderHighchart(
+  if(input$map_value=="absolute") {
+    highcharter::highchart(type = "map") %>% 
+      highcharter::hc_add_series_map(map = ita, df = dfita2, 
+                                     joinBy = "hasc", value = input$map_value, name="absolute (total cases)") %>%
+      highcharter::hc_colorAxis(
+        stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
+  } else if(input$map_value=="percentage") {
+    highcharter::highchart(type = "map") %>% 
+      highcharter::hc_add_series_map(map = ita, df = dfita2, 
+                                     joinBy = "hasc", value = input$map_value, name="percentage (cases/pop * 100)")
+  } else {
+    highcharter::highchart(type = "map") %>% 
+      highcharter::hc_add_series_map(map = ita, df = dfita2, 
+                                     joinBy = "hasc", value = input$map_value, name="density (cases/km^2 * 1000)") %>%
+      highcharter::hc_colorAxis(
+        stops = highcharter::color_stops(4,c("#d8ebb5","#639a67","#2b580c","#003000")))
+  }
 )
 
 # tabbox ------------------------------------------------------------------
@@ -146,25 +171,6 @@ output$map_province <- highcharter::renderHighchart(
   output$tabset1Selected <- renderText({
     input$tabset1
   })
-
-
-# modal dialog plot output ------------------------------------------------
-
-output$map_province_modal <- highcharter::renderHighchart(
-  highcharter::highchart(type = "map") %>% 
-    highcharter::hc_add_series_map(map = ita, df = dfita2, 
-                                   joinBy = "hasc", value = "cases", name="total cases") %>%
-    highcharter::hc_colorAxis(
-      stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
-)
-
-output$map_region_modal <- highcharter::renderHighchart(
-  highcharter::highchart(type = "map") %>% 
-    highcharter::hc_add_series_map(map = map, df = dfita1,
-                                   joinBy = "id", value = "cases", name="total cases") %>%
-    highcharter::hc_colorAxis(
-      stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
-)
 
 
 # modal dialog ------------------------------------------------------------
