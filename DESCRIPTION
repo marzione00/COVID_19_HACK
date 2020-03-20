@@ -26,6 +26,7 @@ Imports:
     shinyWidgets (>= 0.5.0),
     shinyjs,
     shinydashboardPlus,
+    shinyalert,
     highcharter,
     growthcurver,
     nlstools,

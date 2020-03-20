@@ -64,16 +64,21 @@ territory_region <- italy_ext$region %>%
 output$map_region <- output$map_region_modal <- highcharter::renderHighchart(
       if(input$map_value=="absolute") {
         highcharter::highchart(type = "map") %>% 
+          highcharter::hc_chart(zoomType = "xy") %>%
           highcharter::hc_add_series_map(map = map, df = dfita1,
                                          joinBy = "id", value = input$map_value, name="absolute (total cases)") %>%
         highcharter::hc_colorAxis(
           stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
       } else if(input$map_value=="percentage") {
         highcharter::highchart(type = "map") %>% 
+          highcharter::hc_chart(zoomType = "xy") %>%
+          
           highcharter::hc_add_series_map(map = map, df = dfita1,
                                          joinBy = "id", value = input$map_value, name="percentage (cases/pop * 100)")
       } else {
         highcharter::highchart(type = "map") %>% 
+          highcharter::hc_chart(zoomType = "xy") %>%
+          
           highcharter::hc_add_series_map(map = map, df = dfita1,
                                          joinBy = "id", value = input$map_value, name="density (cases/km^2 * 1000)") %>%
           highcharter::hc_colorAxis(
@@ -149,16 +154,20 @@ dfita2 <- dfita2 %>%
 output$map_province <- output$map_province_modal <- highcharter::renderHighchart(
   if(input$map_value=="absolute") {
     highcharter::highchart(type = "map") %>% 
+      highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_add_series_map(map = ita, df = dfita2, 
                                      joinBy = "hasc", value = input$map_value, name="absolute (total cases)") %>%
       highcharter::hc_colorAxis(
         stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
   } else if(input$map_value=="percentage") {
     highcharter::highchart(type = "map") %>% 
+      highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_add_series_map(map = ita, df = dfita2, 
                                      joinBy = "hasc", value = input$map_value, name="percentage (cases/pop * 100)")
   } else {
     highcharter::highchart(type = "map") %>% 
+      highcharter::hc_chart(zoomType = "xy") %>%
+      
       highcharter::hc_add_series_map(map = ita, df = dfita2, 
                                      joinBy = "hasc", value = input$map_value, name="density (cases/km^2 * 1000)") %>%
       highcharter::hc_colorAxis(
