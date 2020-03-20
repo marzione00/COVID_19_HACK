@@ -2,7 +2,9 @@
 
 export("%>%")
 export(exe_fit)
+export(exe_fit_TS)
 export(get_countryTS)
+export(get_country_growth)
 export(get_intensivecare_cap)
 export(get_provTS)
 export(get_regionTS)

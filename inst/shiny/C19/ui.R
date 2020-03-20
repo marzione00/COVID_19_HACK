@@ -2,9 +2,11 @@ library(plotly)
 library(shinydashboard)
 library(shinydashboardPlus)
 ## ui.R ##
-countryTS = get_countryTS()
-regionTS = get_regionTS()
-provTS = get_provTS()
+countryTS = covid19:::get_countryTS()
+regionTS = covid19:::get_regionTS()
+provTS = covid19:::get_provTS()
+country_growth = covid19:::get_country_growth()
+
 ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                         
                         dashboardHeader(title = img(src = "coronavirus_white.png")),
@@ -20,12 +22,13 @@ ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
                           
                           #css
                           source(file.path("ui/global", "css.R"),  local = TRUE)$value,
-                          
                           #waiter
                           waiter::use_waiter(),
                           waiter::waiter_show_on_load(html = waiter::spin_rotating_plane()), # will show on load
                           
                           
+                          
+                          shinyalert::useShinyalert(),  # Set up shinyalert
                           # tabs --------------------------------------------------------------------
                           tabItems(
                             

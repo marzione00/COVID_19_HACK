@@ -3,8 +3,8 @@
 The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
 ## Lavora su
-Andrea: SVM model - inspection section - Readme file editing   <br>
-Fabio: working on files server/3module/analysis.R, ui/tabs/3.tab_analysis.R and on DESCRIPTION<br>
+Andrea: try run  python code on  R  <br>
+Fabio: <br>
 Federico: <br>
 Gregorio: <br>
 Marzio: <br>

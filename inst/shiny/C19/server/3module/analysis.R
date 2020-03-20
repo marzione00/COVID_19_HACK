@@ -13,10 +13,23 @@ provNames <- names(provTS)
 # Time horizon of all graphs
 days <- (1:50)
 
+
+## CHECKS FOR ERROR PREVENTING ##
+is_ok_string <- function(x) {
+  if(( is.null(x) || length(x) == 0 ))
+    return(FALSE)
+  
+  return(TRUE)
+}
+
+
+
+
 output$regionInput <- shiny::renderUI({
   fluidRow(
     column(12,
            
+           h3("Confirmed cases of infection"),
            shiny::selectInput(inputId = "region", label = "Choose one region",
                               choices = regNames, selected = "Lombardia"),
            
@@ -26,11 +39,29 @@ output$regionInput <- shiny::renderUI({
            shiny::checkboxGroupInput(inputId = "plot_type_region", label = "Plot type",
                                      choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1),
-           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices =  c("Residual","Residual_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residual")
+           hr(),
+           h3("Residuals"),
+           shiny::selectInput(inputId = "plot_res_type_region", "Plot type",choices =  c("Residual","Residual_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residual")
            
     )
   )
 })
+
+output$regionInput_TS <- shiny::renderUI({
+  fluidRow(
+    column(12,
+           
+           shiny::sliderInput(inputId = "ARIMA_p", label = "Choose a q value",
+                              min = 0, max = 5,step = 0.1,value=1),
+           shiny::sliderInput(inputId = "ARIMA_q", label = "Choose a p value",
+                              min = 0, max = 5,step = 0.1,value=0),
+           shiny::sliderInput(inputId = "ARIMA_I", label = "Choose a I value",
+                              min = 0, max = 3,step = 1,value=1)
+           
+    )
+  )
+})
+
 
 output$countryInput <- shiny::renderUI({
   fluidRow(
@@ -41,23 +72,21 @@ output$countryInput <- shiny::renderUI({
                               min = init_date, max = fin_date, timeFormat = "%d %b",
                               step = 1, value = c(init_date, fin_date)),
            shiny::checkboxGroupInput(inputId = "plot_type_country", label = "Plot type",
-                                     choices = list("Cumulative cases" = , "New cases" = 2),
+                                     choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1)
-           
     )
   )
 })
 
 ## REGION reactive values ##
 reac_region <- shiny::reactiveValues()
-
-
+reac_region_TS <- shiny::reactiveValues()
 
 ## REGION plot (currently date against total cases) ##
 output$coolplot_region <- plotly::renderPlotly({
   
   waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
-  if(!( is.null(input$region) || length(input$region) == 0 ) ) {
+  if( is_ok_string(input$region) ) {
     # Data trim and curve fitting #
     logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
       regionTS[[input$region]]$data <= input$fitInterval[2]
@@ -116,9 +145,11 @@ output$coolplot_region <- plotly::renderPlotly({
     # funtions for the two different plots
     plot1  = function(fig)
     {
+
+      fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none',hoverinfo='skip',fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
       
-      fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
       fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
+      
       
       fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
       fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
@@ -154,8 +185,9 @@ output$coolplot_region <- plotly::renderPlotly({
     # labels and plot
     fig <- fig %>% layout(xaxis = list(title = "day"), yaxis = list(title = "Infected"))
     if( reac_region$vals$k > 1e7 )
-      fig <- fig %>% layout(title = "Warning: unrealistic model estimated", font = list(color = 'red'))
+      fig <- fig %>% layout(title = "Warning: unrealistic model estimated", font = list(color = 'red'),dtick= 5 )
     fig
+    
   }
 })
 
@@ -169,63 +201,198 @@ output$resid_smry_region <- shiny::renderPrint({
 })
 
 output$Plot_residual <- plotly::renderPlotly({
-  pippo<-nlstools::nlsResiduals(reac_region$model)
-  #plot(pippo,0)
+  pippo<-reac_region$resid
   
   Res_DF_1<-as.data.frame(pippo$resi1)
   Res_DF_2<-as.data.frame(pippo$resi2)
   Res_DF_3<-as.data.frame(pippo$resi4)
   Res_DF_4<-as.data.frame(pippo$resi3)
+ 
+  p = plotly::plot_ly(type = 'scatter')
+  
+  p <- p %>% plotly::layout(
+    xaxis = list(
+                 showline = FALSE,
+                 dtick = 2000,
+                 zeroline = FALSE
+                 
+    ),
+  
+    yaxis = list(
+      showline = FALSE,
+      zeroline = FALSE
+      
+    )
+  )
+  
+  if( is_ok_string(input$plot_res_type_region) ) {
+     if(input$plot_res_type_region=="Residual"){
+      colnames(Res_DF_1)=c("fitted1","res")
+  
+      p <- p %>% plotly::layout(
+        title ="Residual",
+        xaxis = list(title="Fitted values",zeroline = FALSE),
+        yaxis = list(title="Residuals")
+        )
+      p= p %>% add_trace(name = "residual",data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 15,
+                                                                                         color = 'rgba(255, 182, 193, .9)',
+                                                                                         line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                     width = 2)))
+      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_1$fitted1,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
+      
+      p
+      #grafico1
+      
+    }
+    
+    else if(input$plot_res_type_region=="Residual_standardized"){
+      colnames(Res_DF_2)=c("fitted2","res_stand")
+      p <- p %>% plotly::layout(
+        title ="Residual standardized",
+        xaxis = list(title="Fitted values"),
+        yaxis = list(title="Standardized residuals")
+        )
+      p <- p %>% add_trace(name="Residual standardized",data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
+                                                                                                 color = 'rgba(255, 182, 193, .9)',
+                                                                                                 line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                             width = 2)))
+      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
+      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 2, name = 'liney2', line = list(color = 'rgb(0,0,0)', width = 1),showlegend = FALSE ,mode = 'lines') 
+      
+      
+      p    
+    }
+    
+    else if(input$plot_res_type_region=="Autocorrelation"){
+      colnames(Res_DF_3)=c("fitted3","resiplus1")
+      p <- p %>% plotly::layout(
+        xaxis = list(title="Residuals i"),
+        yaxis = list(title="Residuals i+1"),
+        title ="Autocorrelation")
+      p = p %>% add_trace(name = "Autocorrelation", data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 15,
+                                                                                                color = 'rgba(255, 182, 193, .9)',
+                                                                                                line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                            width = 2)))
+      p <- p %>% add_trace(data=Res_DF_3,x=~Res_DF_3$fitted3,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode="lines") 
+      
+      p
+      #grafico1
+      
+    }
+    
+    else if(input$plot_res_type_region=="Sqrt of abs of res vs fitted"){
+      p <- p %>% plotly::layout(
+        title ="Sqrt of abs of residual",
+        xaxis = list(title="Fitted"),
+        yaxis = list(title="Residuals")
+        )
+      colnames(Res_DF_4)=c("fitted4","qq")
+      p = p %>% add_trace(name="Sqrt of abs of res vs fitted",data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 15,
+                                                                                         color = 'rgba(255, 182, 193, .9)',
+                                                                                         line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                     width = 2)))
+      p
+      #grafico1
+    }
+  }
+})
+
+output$Arima_coolplot0 <- shiny::renderPlot({
+  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
+    regionTS[[input$region]]$data <= input$fitInterval[2]
+  
+  sample_date <- regionTS[[input$region]]$data_seriale
+  sample_cases <- regionTS[[input$region]]$totale_casi
+  sample_diff <-  c(NA,diff(sample_cases))
+  
+  sample_date_trim <- sample_date[logic_interval]
+  sample_cases_trim <- sample_cases[logic_interval]
+  sample_diff_trim <- sample_diff[logic_interval]
+  
+  sample_date_rem <- sample_date[!logic_interval]
+  sample_cases_rem <- sample_cases[!logic_interval]
+  sample_diff_rem <- sample_diff[!logic_interval]
+  
+  acf(log(sample_cases_trim))  
 
   
-  if(input$Typeplot=="Residual"){
-    colnames(Res_DF_1)=c("fitted1","res")
-    print(rownames(Res_DF_1))
-    plotly::plot_ly(data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 10,
-                                                                                               color = 'rgba(255, 182, 193, .9)',
-                                                                                               line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                           width = 2)))
-    #grafico1
-    
-  }
+})
+
+output$Arima_coolplot00 <- shiny::renderPlot({
+  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
+    regionTS[[input$region]]$data <= input$fitInterval[2]
   
-  else if(input$Typeplot=="Residual_standardized"){
-    colnames(Res_DF_2)=c("fitted2","res_stand")
-    print(rownames(Res_DF_2))
-    plotly::plot_ly(data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 10,
-                                                                                         color = 'rgba(255, 182, 193, .9)',
-                                                                                         line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                     width = 2)))
-    #grafico1
-    
-  }
+  sample_date <- regionTS[[input$region]]$data_seriale
+  sample_cases <- regionTS[[input$region]]$totale_casi
+  sample_diff <-  c(NA,diff(sample_cases))
   
-  else if(input$Typeplot=="Autocorrelation"){
-    colnames(Res_DF_3)=c("fitted3","resiplus1")
-    print(rownames(Res_DF_3))
-    plotly::plot_ly(data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 10,
-                                                                                         color = 'rgba(255, 182, 193, .9)',
-                                                                                         line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                     width = 2)))
-    #grafico1
-    
-  }
+  sample_date_trim <- sample_date[logic_interval]
+  sample_cases_trim <- sample_cases[logic_interval]
+  sample_diff_trim <- sample_diff[logic_interval]
   
-  else if(input$Typeplot=="Sqrt of abs of res vs fitted"){
-    colnames(Res_DF_4)=c("fitted4","qq")
-    print(rownames(Res_DF_4))
-    plotly::plot_ly(data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 10,
-                                                                                   color = 'rgba(255, 182, 193, .9)',
-                                                                                   line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                               width = 2)))
-    #grafico1
-    
-  }
+  sample_date_rem <- sample_date[!logic_interval]
+  sample_cases_rem <- sample_cases[!logic_interval]
+  sample_diff_rem <- sample_diff[!logic_interval]
   
+  pacf(log(sample_cases_trim))  
+  
+  
+})
+
+
+output$Arima_coolplot <- shiny::renderPlot({
+  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
+  regionTS[[input$region]]$data <= input$fitInterval[2]
+  
+  sample_date <- regionTS[[input$region]]$data_seriale
+  sample_cases <- regionTS[[input$region]]$totale_casi
+  sample_diff <-  c(NA,diff(sample_cases))
+  
+  sample_date_trim <- sample_date[logic_interval]
+  sample_cases_trim <- sample_cases[logic_interval]
+  sample_diff_trim <- sample_diff[logic_interval]
+  
+  sample_date_rem <- sample_date[!logic_interval]
+  sample_cases_rem <- sample_cases[!logic_interval]
+  sample_diff_rem <- sample_diff[!logic_interval]
+
+#acf(log(sample_cases_trim))  
+#pacf(log(sample_cases_trim))
+  
+reac_region_TS_loc <-arima(log(sample_cases_trim),order=c(input$"ARIMA_p",input$"ARIMA_I",input$"ARIMA_q"))
+#print(reac_region_TS )
+autoplot(forecast::forecast(reac_region_TS_loc ))
+
+#forecast::checkresiduals(reac_region_TS)
+
+
+ 
+})
+
+output$Arima_coolplot2 <- shiny::renderPlot({
+  
+  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
+  regionTS[[input$region]]$data <= input$fitInterval[2]
+  
+  sample_date <- regionTS[[input$region]]$data_seriale
+  sample_cases <- regionTS[[input$region]]$totale_casi
+  sample_diff <-  c(NA,diff(sample_cases))
+  
+  sample_date_trim <- sample_date[logic_interval]
+  sample_cases_trim <- sample_cases[logic_interval]
+  sample_diff_trim <- sample_diff[logic_interval]
+  
+  sample_date_rem <- sample_date[!logic_interval]
+  sample_cases_rem <- sample_cases[!logic_interval]
+  sample_diff_rem <- sample_diff[!logic_interval]
+
+  reac_region_TS_loc2 <-arima(log(sample_cases_trim),order=c(input$"ARIMA_p",input$"ARIMA_I",input$"ARIMA_q"))
+  forecast::checkresiduals(reac_region_TS_loc2)
   
   
   
 })
+
 #======================================= COUNTRY SECTION ============================================
 ## COUNTRY reactive values##
 
@@ -294,9 +461,8 @@ output$Plot_residual <- plotly::renderPlotly({
 #   # funtions for the two different plots
 #   plot1  = function(fig)
 #   {
-#     
-#     fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
 #     fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
+#     fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none', fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
 #     
 #     fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
 #     fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
