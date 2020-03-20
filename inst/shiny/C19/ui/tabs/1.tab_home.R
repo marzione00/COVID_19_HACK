@@ -27,9 +27,16 @@ tabItem(tabName = "tab_1",
                      tabBox(
                        width = 12,
                        # height = "250px",
-                       title = shinyWidgets::circleButton("show", 
+                       title = fluidRow(
+                         div(style="display: inline-block;vertical-align:top;",
+                         shinyWidgets::pickerInput(inputId = "map_value",
+                                     label = NULL,
+                                     choices = c("absolute", "percentage", "density"))),
+                         div(style="display: inline-block;vertical-align:top;",
+                         shinyWidgets::circleButton("show", 
                                                           icon=icon("search-plus"),
-                                                          size="sm"),
+                                                          size="sm"))
+                         ),
                        # The id lets us use input$tabset1 on the server to find the current tab
                        id = "tabset1",
                        tabPanel("By Province",
