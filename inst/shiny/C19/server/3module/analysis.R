@@ -13,10 +13,23 @@ provNames <- names(provTS)
 # Time horizon of all graphs
 days <- (1:50)
 
+
+## CHECKS FOR ERROR PREVENTING ##
+is_ok_string <- function(x) {
+  if(( is.null(x) || length(x) == 0 ))
+    return(FALSE)
+  
+  return(TRUE)
+}
+
+
+
+
 output$regionInput <- shiny::renderUI({
   fluidRow(
     column(12,
            
+           h3("Confirmed cases of infection"),
            shiny::selectInput(inputId = "region", label = "Choose one region",
                               choices = regNames, selected = "Lombardia"),
            
@@ -26,7 +39,9 @@ output$regionInput <- shiny::renderUI({
            shiny::checkboxGroupInput(inputId = "plot_type_region", label = "Plot type",
                                      choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1),
-           shiny::selectInput(inputId = "Typeplot", "Type of plot residuals",choices =  c("Residual","Residual_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residual")
+           hr(),
+           h3("Residuals"),
+           shiny::selectInput(inputId = "plot_res_type_region", "Plot type",choices =  c("Residual","Residual_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residual")
            
     )
   )
@@ -54,7 +69,7 @@ reac_region <- shiny::reactiveValues()
 output$coolplot_region <- plotly::renderPlotly({
   
   waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
-  if(!( is.null(input$region) || length(input$region) == 0 ) ) {
+  if( is_ok_string(input$region) ) {
     # Data trim and curve fitting #
     logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
       regionTS[[input$region]]$data <= input$fitInterval[2]
@@ -169,7 +184,7 @@ output$resid_smry_region <- shiny::renderPrint({
 })
 
 output$Plot_residual <- plotly::renderPlotly({
-  pippo<-nlstools::nlsResiduals(reac_region$model)
+  pippo<-reac_region$resid
   
   Res_DF_1<-as.data.frame(pippo$resi1)
   Res_DF_2<-as.data.frame(pippo$resi2)
@@ -193,74 +208,75 @@ output$Plot_residual <- plotly::renderPlotly({
     )
   )
   
-  if(input$Typeplot=="Residual"){
-    colnames(Res_DF_1)=c("fitted1","res")
-
-    p <- p %>% plotly::layout(
-      title ="Residual",
-      xaxis = list(title="Fitted values",zeroline = FALSE),
-      yaxis = list(title="Residuals")
-      )
-    p= p %>% add_trace(name = "residual",data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 15,
-                                                                                       color = 'rgba(255, 182, 193, .9)',
-                                                                                       line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                   width = 2)))
-    p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_1$fitted1,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
-    
-    p
-    #grafico1
-    
-  }
+  if( is_ok_string(input$plot_res_type_region) ) {
+     if(input$plot_res_type_region=="Residual"){
+      colnames(Res_DF_1)=c("fitted1","res")
   
-  else if(input$Typeplot=="Residual_standardized"){
-    colnames(Res_DF_2)=c("fitted2","res_stand")
-    p <- p %>% plotly::layout(
-      title ="Residual standardized",
-      xaxis = list(title="Fitted values"),
-      yaxis = list(title="Standardized residuals")
-      )
-    p <- p %>% add_trace(name="Residual standardized",data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
-                                                                                               color = 'rgba(255, 182, 193, .9)',
-                                                                                               line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                           width = 2)))
-    p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
-    p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 2, name = 'liney2', line = list(color = 'rgb(0,0,0)', width = 1),showlegend = FALSE ,mode = 'lines') 
+      p <- p %>% plotly::layout(
+        title ="Residual",
+        xaxis = list(title="Fitted values",zeroline = FALSE),
+        yaxis = list(title="Residuals")
+        )
+      p= p %>% add_trace(name = "residual",data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 15,
+                                                                                         color = 'rgba(255, 182, 193, .9)',
+                                                                                         line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                     width = 2)))
+      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_1$fitted1,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
+      
+      p
+      #grafico1
+      
+    }
     
+    else if(input$plot_res_type_region=="Residual_standardized"){
+      colnames(Res_DF_2)=c("fitted2","res_stand")
+      p <- p %>% plotly::layout(
+        title ="Residual standardized",
+        xaxis = list(title="Fitted values"),
+        yaxis = list(title="Standardized residuals")
+        )
+      p <- p %>% add_trace(name="Residual standardized",data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
+                                                                                                 color = 'rgba(255, 182, 193, .9)',
+                                                                                                 line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                             width = 2)))
+      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
+      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 2, name = 'liney2', line = list(color = 'rgb(0,0,0)', width = 1),showlegend = FALSE ,mode = 'lines') 
+      
+      
+      p    
+    }
     
-    p    
-  }
-  
-  else if(input$Typeplot=="Autocorrelation"){
-    colnames(Res_DF_3)=c("fitted3","resiplus1")
-    p <- p %>% plotly::layout(
-      xaxis = list(title="Residuals i"),
-      yaxis = list(title="Residuals i+1"),
-      title ="Autocorrelation")
-    p = p %>% add_trace(name = "Autocorrelation", data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 15,
-                                                                                              color = 'rgba(255, 182, 193, .9)',
-                                                                                              line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                          width = 2)))
-    p <- p %>% add_trace(data=Res_DF_3,x=~Res_DF_3$fitted3,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode="lines") 
+    else if(input$plot_res_type_region=="Autocorrelation"){
+      colnames(Res_DF_3)=c("fitted3","resiplus1")
+      p <- p %>% plotly::layout(
+        xaxis = list(title="Residuals i"),
+        yaxis = list(title="Residuals i+1"),
+        title ="Autocorrelation")
+      p = p %>% add_trace(name = "Autocorrelation", data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 15,
+                                                                                                color = 'rgba(255, 182, 193, .9)',
+                                                                                                line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                            width = 2)))
+      p <- p %>% add_trace(data=Res_DF_3,x=~Res_DF_3$fitted3,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode="lines") 
+      
+      p
+      #grafico1
+      
+    }
     
-    p
-    #grafico1
-    
-  }
-  
-  else if(input$Typeplot=="Sqrt of abs of res vs fitted"){
-    p <- p %>% plotly::layout(
-      title ="Sqrt of abs of residual",
-      xaxis = list(title="Fitted"),
-      yaxis = list(title="Residuals")
-      )
-    colnames(Res_DF_4)=c("fitted4","qq")
-    p = p %>% add_trace(name="Sqrt of abs of res vs fitted",data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 15,
-                                                                                       color = 'rgba(255, 182, 193, .9)',
-                                                                                       line = list(color = 'rgba(152, 0, 0, .8)',
-                                                                                                   width = 2)))
-    p
-    #grafico1
-    
+    else if(input$plot_res_type_region=="Sqrt of abs of res vs fitted"){
+      p <- p %>% plotly::layout(
+        title ="Sqrt of abs of residual",
+        xaxis = list(title="Fitted"),
+        yaxis = list(title="Residuals")
+        )
+      colnames(Res_DF_4)=c("fitted4","qq")
+      p = p %>% add_trace(name="Sqrt of abs of res vs fitted",data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 15,
+                                                                                         color = 'rgba(255, 182, 193, .9)',
+                                                                                         line = list(color = 'rgba(152, 0, 0, .8)',
+                                                                                                     width = 2)))
+      p
+      #grafico1
+    }
   }
 })
 
