@@ -173,7 +173,10 @@ output$map_province <- output$map_province_modal <- highcharter::renderHighchart
       highcharter::hc_colorAxis(
         stops = highcharter::color_stops(4,c("#d8ebb5","#639a67","#2b580c","#003000")))
   }
+  
+  
 )
+
 
 # tabbox ------------------------------------------------------------------
 
