@@ -118,7 +118,43 @@ tabItem(
                  )
                  
           )
-        )
+        ),
+        
+        hr(),
+        
+        
+        # --------  ARIMA ------
+        valueBox(
+          "ARIMA model",
+          "Autoregressive integrated moving average",
+          icon = icon("analytics"),
+          color = "red",
+          width = NULL
+        ),
+        
+        
+        fluidRow(
+          column(
+            4,
+            shinydashboard::box(
+              width = 12,
+              status = "danger",
+              solidHeader = TRUE,
+              title = "Input",
+              #PUT HERE INPUTS            ///#shiny::uiOutput("regionInput")
+            )
+          ),
+          column(
+            8,
+            shinydashboard::box(
+              color = "red",
+              status = "danger",
+              title = "Charts",
+              #PUT HERE PLOTLY PLOT     ///#plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+              width = 12
+            )
+          )
+        ),
       ),
       
       
