@@ -1,6 +1,11 @@
-#' Data acquisition
+#' Data acquisition of Italy
 #'
-#' @return the national dataset
+#' @return dataframe. Return a dataframe containing the dataset covid19 for Italty
+#'
+#' @examples
+#' \dontrun{
+#' get_countryTS()
+#' }
 #'
 #' @export
 get_countryTS <- function() {
