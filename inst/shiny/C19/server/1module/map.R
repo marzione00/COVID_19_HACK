@@ -1,22 +1,3 @@
- 
-# map section -------------------------------------------------------------
-  regions <- regionTS
-  
-  data <- map_df(names(regions), function(x) {
-    casi <- regions[[x]] %>% select(totale_casi) %>% tail(1) %>% pull()
-    
-    data_frame(region=x,cases=casi)
-  })
-  
-  data <- data %>%
-    mutate(region=ifelse(region%in%c("P.A. Trento", "P.A. Bolzano"), "Trentino-Alto Adige", region)) %>%
-    group_by(region) %>%
-    summarise(cases = sum(cases)) %>%
-    ungroup() %>%
-    mutate(region=ifelse(region=="Emilia Romagna", "Emilia-Romagna", region)) %>% 
-    mutate(region=ifelse(region=="Friuli Venezia Giulia", "Friuli-Venezia Giulia", region))
-  
-
 # map ---------------------------------------------------------------------
   
   map <- "https://raw.githubusercontent.com/stefanocudini/leaflet-geojson-selector/master/examples/italy-regions.json" %>% 
@@ -40,12 +21,26 @@
   
   pc_df$name
   
+# integrate population info
+pop_region <- italy_pop$region %>% 
+    rename(name=territorio,pop=valore) %>%
+    mutate(name=tolower(name))
+
+territory_region <- italy_ext$region %>%
+  rename(name=territorio,ext=valore) %>% 
+  mutate(name=tolower(name))
+
+  
   pc_df <- pc_df %>%
+    left_join(pop_region) %>% 
+    left_join(territory_region) %>%
     filter(!name%in%c("friuli v. g. ")) %>%
     mutate(name=ifelse(name%in%c("trento","bolzano","p.a. trento","p.a. bolzano"),
                        "trentino-alto adige/sudtirol",name)) %>%
     group_by(name) %>%
-    summarise(cases=sum(cases)) %>%
+    summarise(cases=sum(cases), 
+              pop=sum(pop),
+              ext=sum(ext)) %>%
     mutate(name=ifelse(name=="emilia romagna","emilia-romagna",name))
   
   
@@ -57,15 +52,35 @@
   setdiff(b,a)
   
   dfita1 <- dfita1 %>%
-    left_join(pc_df)
+    left_join(pc_df) %>%
+    ungroup() %>% 
+    mutate(percentage=(cases/pop)*100) %>%
+    mutate(density=(cases/ext)*1000) %>%
+    rename(absolute=cases) %>%
+    mutate(percentage = round(percentage,2)) %>%
+    mutate(density = round(density, 2))
   
+
   output$map_region <- highcharter::renderHighchart(
-    highcharter::highchart(type = "map") %>% 
-      highcharter::hc_add_series_map(map = map, df = dfita1,
-                                     joinBy = "id", value = "cases", name="total cases") %>%
-      highcharter::hc_colorAxis(
-        stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
+      if(input$map_value=="absolute") {
+        highcharter::highchart(type = "map") %>% 
+          highcharter::hc_add_series_map(map = map, df = dfita1,
+                                         joinBy = "id", value = input$map_value, name="absolute (total cases)") %>%
+        highcharter::hc_colorAxis(
+          stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000")))
+      } else if(input$map_value=="percentage") {
+        highcharter::highchart(type = "map") %>% 
+          highcharter::hc_add_series_map(map = map, df = dfita1,
+                                         joinBy = "id", value = input$map_value, name="percentage (cases/pop * 100)")
+      } else {
+        highcharter::highchart(type = "map") %>% 
+          highcharter::hc_add_series_map(map = map, df = dfita1,
+                                         joinBy = "id", value = input$map_value, name="density (cases/km^2 * 1000)") %>%
+          highcharter::hc_colorAxis(
+            stops = highcharter::color_stops(4,c("#d8ebb5","#639a67","#2b580c","#003000")))
+      }
   )
+
   
 
 # map by province ---------------------------------------------------------
