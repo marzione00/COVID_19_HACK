@@ -52,9 +52,9 @@ output$regionInput_TS <- shiny::renderUI({
     column(12,
            
            shiny::sliderInput(inputId = "ARIMA_p", label = "Choose a q value",
-                              min = 0, max = 5,step = 0.1,value=1),
+                              min = 0, max = 10,step = 1,value=1),
            shiny::sliderInput(inputId = "ARIMA_q", label = "Choose a p value",
-                              min = 0, max = 5,step = 0.1,value=0),
+                              min = 0, max = 10,step = 1,value=0),
            shiny::sliderInput(inputId = "ARIMA_I", label = "Choose a I value",
                               min = 0, max = 3,step = 1,value=1)
            
