@@ -17,6 +17,7 @@
 #'  temperatures <- get_temperatures()
 #'  subset(temperatures, loc == "Italy")
 #' }
+#' @export
 get_temperatures <- function() {
   
   provnames <- italy_ext$province$territorio
