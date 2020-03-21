@@ -4,9 +4,7 @@
 \name{italy_pop}
 \alias{italy_pop}
 \title{Dataset Italy pop}
-\format{
-tibble
-}
+\format{tibble}
 \usage{
 italy_pop
 }

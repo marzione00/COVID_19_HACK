@@ -31,7 +31,8 @@ Imports:
     growthcurver,
     nlstools,
     shinycssloaders,
-    xts
+    xts,
+    imputeTS
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
