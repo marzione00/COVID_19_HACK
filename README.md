@@ -3,7 +3,7 @@
 The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
 ## Lavora su
-Andrea: try run  python code on  R  <br>
+Andrea: 2 Slider ARIMA,  Change output text, cssloader<br>
 Fabio: <br>
 Federico: <br>
 Gregorio: <br>
