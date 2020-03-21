@@ -372,13 +372,11 @@ output$Arima_coolplot <- plotly::renderPlotly({
   
   reac_region_TS_loc <-arima(log(sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
   #print(reac_region_TS )
-  
-  TSplotly::TSplot(length(reac_region_TS_loc),forecast::forecast(reac_region_TS_loc,10),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle="ARIMA Forecast",title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
-  
-  #forecast::checkresiduals(reac_region_TS)
+  p = TSplotly::TSplot(length(sample_cases_trim),forecast::forecast(reac_region_TS_loc,10),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle=paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
   
   
-  
+  #autoplot(forecast::forecast(reac_region_TS_loc ))
+
 })
 
 output$Arima_coolplot2 <- shiny::renderPlot({
@@ -407,11 +405,16 @@ output$Arima_coolplot2 <- shiny::renderPlot({
 
 # --- Summary ARIMA
 
-output$parameters_sugg <- shiny::renderPrint({
-  
-  d.arima <- auto.arima(log(sample_cases_trim))
-  toString(d.arima)
+output$parameters_sugg <- shiny::renderUI({
+
+  req(sample_cases_trim)
+  d.arima <- forecast::auto.arima(log(sample_cases_trim))
+  h3(paste("Suggested Parameters: ",toString(d.arima)))
 })
+
+
+
+
 
 output$Arima_shell_output <- shiny::renderPrint({
   

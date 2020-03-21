@@ -153,12 +153,16 @@ tabItem(
               status = "danger",
               
               title = "ARIMA forecast",
-              shiny::verbatimTextOutput("parameters_sugg"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
-              
+              h3(shiny::htmlOutput("parameters_sugg")), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               plotly::plotlyOutput("Arima_coolplot"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
-            ),
-            
+            ))
+        ),
+        
+        
+        fluidRow(
+          column(
+            6,
             shinydashboard::box(
               color = "red",
               status = "danger",
@@ -166,22 +170,31 @@ tabItem(
               plotly::plotlyOutput("Arima_coolplot0"),
               #PUT HERE PLOTLY PLOT     ///#plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
-            ),
+            )),
+          column(
+            6,
             shinydashboard::box(
               color = "red",
               status = "danger",
               title = "Partial autocorrelations",
               plotly::plotlyOutput("Arima_coolplot00"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
-            ),
+            ))
+        ),
         
+        
+        fluidRow(
+          column(
+            6,
             shinydashboard::box(
               color = "red",
               status = "danger",
               title = "Arima Check residuals",
               shiny::plotOutput("Arima_coolplot2"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
-            ),
+            )),
+          column(
+            6,
             shinydashboard::box(
               color = "red",
               status = "danger",
@@ -190,8 +203,10 @@ tabItem(
               width = 12
             )
           )
+        )
+          
         ),
-      ),
+    
       
       
       #---------- TAB PROVINCE -----------
