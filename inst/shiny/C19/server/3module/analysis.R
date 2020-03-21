@@ -36,6 +36,7 @@ output$regionInput <- shiny::renderUI({
            shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
                               min = init_date, max = fin_date, timeFormat = "%d %b",
                               step = 1, value = c(init_date, fin_date)),
+           shiny::checkboxInput(inputId = "swab_std", label = "Standardise positive cases by total swabs"),
            shiny::checkboxGroupInput(inputId = "plot_type_region", label = "Plot type",
                                      choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1),
@@ -93,12 +94,21 @@ output$coolplot_region <- plotly::renderPlotly({
   waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
   if( is_ok_string(input$region) ) {
     # Data trim and curve fitting #
+    n <- nrow(regionTS[[input$region]])
     logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-      regionTS[[input$region]]$data <= input$fitInterval[2]
+                      regionTS[[input$region]]$data <= input$fitInterval[2]
     
     sample_date <- regionTS[[input$region]]$data_seriale
+    
     sample_cases <- regionTS[[input$region]]$totale_casi
     sample_diff <-  c(NA,diff(sample_cases))
+    
+    if( input$swab_std ) {
+      swabs <- regionTS[[input$region]]$tamponi
+      sample_cases <- sample_cases / swabs
+      sample_diff <-  c(NA,sample_diff[-1] / diff(swabs))
+    }
+    
     
     sample_date_trim <- sample_date[logic_interval]
     sample_cases_trim <- sample_cases[logic_interval]
@@ -155,9 +165,18 @@ output$coolplot_region <- plotly::renderPlotly({
       
       fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
       
+      hovlabels <- c("")
+      for(i in c(1:n)) {
+        hovlabels[i] <- paste(format(regionTS[[input$region]]$data[i], "%d %b"),
+                              ", Tot cases = ", regionTS[[input$region]]$totale_casi[i], sep ="")
+        if( input$swab_std )
+          hovlabels[i] <- paste(hovlabels[i], ", Tot swabs = ", swabs[i], sep = "")
+      }
       
-      fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
-      fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
+      fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)",
+                                       text = hovlabels[!logic_interval], hoverinfo = 'text')
+      fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)",
+                                       text = hovlabels[logic_interval], hoverinfo = 'text')
       fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
       
       return(fig)
@@ -165,9 +184,20 @@ output$coolplot_region <- plotly::renderPlotly({
     
     plot2 = function (fig)
     {
+      hovlabels <- c("")
+      for(i in c(2:n)) {
+        hovlabels[i] <- paste(format(regionTS[[input$region]]$data[i], "%d %b"),
+                              ", Cases = ", 
+                              regionTS[[input$region]]$totale_casi[i] - regionTS[[input$region]]$totale_casi[i-1], 
+                              sep ="")
+        if( input$swab_std )
+          hovlabels[i] <- paste(hovlabels[i], ", Swabs = ", swabs[i]-swabs[i-1], sep = "")
+      }
       
-      fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)")
-      fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)")
+      fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)",
+                                      text = hovlabels[!logic_interval], hoverinfo = 'text')
+      fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)",
+                                      text = hovlabels[logic_interval], hoverinfo = 'text')
       fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=2.5), mode='lines', name= "Fitted logistic distribution")
       
       

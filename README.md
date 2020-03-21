@@ -3,7 +3,7 @@
 The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
 ## Lavora su
-Andrea: 2 Slider ARIMA,  Change output text, cssloader<br>
+Andrea: try run  python code on  R  <br>
 Fabio: <br>
 Federico: <br>
 Gregorio: <br>
@@ -37,10 +37,6 @@ Marzio: <br>
 - Federico Matteucci &nbsp; 
   <a href="https://github.com/De-Rham-Cohomology" rel="nofollow noreferrer"> <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
 
-
- # ShinyApp.io :fire:
- <h2> Try the ShinyApp.io:  <a href= "https://andreaierardi.shinyapps.io/disCOVIDer19/"> DiscCOVIDer19</a>   </h2>
-<br> 
 
 ## Installation
 
