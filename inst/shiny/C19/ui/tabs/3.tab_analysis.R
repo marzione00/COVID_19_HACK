@@ -155,6 +155,7 @@ tabItem(
               title = "ARIMA forecast",
               h3(shiny::htmlOutput("parameters_sugg")), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               plotly::plotlyOutput("Arima_coolplot"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+              hr(),
               width = 12
             ))
         ),
