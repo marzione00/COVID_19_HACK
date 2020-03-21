@@ -393,6 +393,31 @@ output$Arima_coolplot2 <- shiny::renderPlot({
   
 })
 
+
+
+output$Arima_shell_output <- shiny::renderPrint({
+  
+  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
+    regionTS[[input$region]]$data <= input$fitInterval[2]
+  
+  sample_date <- regionTS[[input$region]]$data_seriale
+  sample_cases <- regionTS[[input$region]]$totale_casi
+  sample_diff <-  c(NA,diff(sample_cases))
+  
+  sample_date_trim <- sample_date[logic_interval]
+  sample_cases_trim <- sample_cases[logic_interval]
+  sample_diff_trim <- sample_diff[logic_interval]
+  
+  sample_date_rem <- sample_date[!logic_interval]
+  sample_cases_rem <- sample_cases[!logic_interval]
+  sample_diff_rem <- sample_diff[!logic_interval]
+  
+  outputX<-arima(log(sample_cases_trim),order=c(input$"ARIMA_p",input$"ARIMA_I",input$"ARIMA_q"))
+  
+  return(outputX)
+  
+})
+
 #======================================= COUNTRY SECTION ============================================
 ## COUNTRY reactive values##
 
