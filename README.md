@@ -38,6 +38,10 @@ Marzio: <br>
   <a href="https://github.com/De-Rham-Cohomology" rel="nofollow noreferrer"> <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
 
 
+ # ShinyApp.io :fire:
+ <h2> Try the ShinyApp.io:  <a href= "https://andreaierardi.shinyapps.io/disCOVIDer19/"> DiscCOVIDer19</a>   </h2>
+<br> 
+
 ## Installation
 
 ```R
