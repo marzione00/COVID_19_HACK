@@ -8,11 +8,6 @@ library(httr)
 
 server <- function(input, output, session) {
   
-  countryTS <- covid19:::get_countryTS()
-  regionTS <- covid19:::get_regionTS()
-  provTS <- covid19:::get_provTS()
-  intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
-  country_growth <- covid19:::get_country_growth()
   
   source(file.path("server", "global/shinyjs.R"),  local = TRUE)$value
   

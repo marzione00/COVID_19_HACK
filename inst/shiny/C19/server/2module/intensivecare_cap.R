@@ -51,20 +51,6 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 # plot growth monitoring --------------------------------------------------------------------
 
-growth <- data.frame(date=get_countryTS()$data,
-                     growth=get_country_growth()$growth)
-
-growth_xts <- xts::xts(growth[,-1], order.by=growth[,1])
-
-growth_change <- data.frame(date=get_countryTS()$data,
-                            growth=get_country_growth()$growth_change)
-
-growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
-
-hc <- highcharter::highchart(type = "stock") %>% 
-  highcharter::hc_title(text = "% growth and growth change of total cases") %>%
-  highcharter::hc_add_series(growth_xts, name="growth", color = "red") %>% 
-  highcharter::hc_add_series(growth_change_xts, name="growth_change", color = "orange")
 
 output$plot_test <- highcharter::renderHighchart(
   
@@ -73,22 +59,7 @@ output$plot_test <- highcharter::renderHighchart(
 )
 
 # tamponi graph -----------------------------------------------------------
-tamp_data <- tibble(
-  data=countryTS$data,
-  tamponi=countryTS$tamponi,
-  totale_casi=countryTS$totale_casi
-) %>% 
-  mutate(casi_giornalieri=totale_casi-lag(totale_casi)) %>%
-  mutate(casi_giornalieri=ifelse(data==as.Date("2020-02-24"),totale_casi,casi_giornalieri)) %>% 
-  mutate(tamponi_giornalieri=tamponi-lag(tamponi)) %>%
-  mutate(tamponi_giornalieri=ifelse(data==as.Date("2020-02-24"),tamponi,tamponi_giornalieri)) %>%
-  mutate(share_infected_discovered = casi_giornalieri/tamponi_giornalieri) %>%
-  select(data,casi_giornalieri,tamponi_giornalieri,share_infected_discovered) %>%
-  rename(daily_cases=casi_giornalieri,daily_tests=tamponi_giornalieri,date=data) %>%
-  mutate(share_infected_discovered=round(share_infected_discovered,2))
 
-tamp_data_1 <- tamp_data %>% select(1:3) %>%
-  gather(key="key",value="value",-date)
 
 output$tamp_plot <- highcharter::renderHighchart(
   highcharter::hchart(tamp_data_1, "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 

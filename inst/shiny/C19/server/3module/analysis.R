@@ -1,17 +1,4 @@
-# Inital and final dates of samples
-init_date <- min(countryTS$data)
-fin_date <- max(countryTS$data)
 
-# Total population sizes in 2020 winter
-country_tot_pop <- 6.048e+07
-region_tot_pop <- NULL
-
-
-regNames <- names(regionTS)
-provNames <- names(provTS)
-
-# Time horizon of all graphs
-days <- (1:50)
 
 
 ## CHECKS FOR ERROR PREVENTING ##
