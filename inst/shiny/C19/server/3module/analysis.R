@@ -36,6 +36,7 @@ output$regionInput <- shiny::renderUI({
            shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
                               min = init_date, max = fin_date, timeFormat = "%d %b",
                               step = 1, value = c(init_date, fin_date)),
+           shiny::checkboxInput(inputId = "swab_std", label = "Standardise positive cases by total swabs"),
            shiny::checkboxGroupInput(inputId = "plot_type_region", label = "Plot type",
                                      choices = list("Cumulative cases" = 1, "New cases" = 2),
                                      selected = 1),
@@ -93,12 +94,21 @@ output$coolplot_region <- plotly::renderPlotly({
   waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
   if( is_ok_string(input$region) ) {
     # Data trim and curve fitting #
+    n <- nrow(regionTS[[input$region]])
     logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
       regionTS[[input$region]]$data <= input$fitInterval[2]
     
     sample_date <- regionTS[[input$region]]$data_seriale
+    
     sample_cases <- regionTS[[input$region]]$totale_casi
     sample_diff <-  c(NA,diff(sample_cases))
+    
+    if( input$swab_std ) {
+      swabs <- regionTS[[input$region]]$tamponi
+      sample_cases <- sample_cases / swabs
+      sample_diff <-  c(NA,sample_diff[-1] / diff(swabs))
+    }
+    
     
     sample_date_trim <- sample_date[logic_interval]
     sample_cases_trim <- sample_cases[logic_interval]
@@ -155,9 +165,18 @@ output$coolplot_region <- plotly::renderPlotly({
       
       fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
       
+      hovlabels <- c("")
+      for(i in c(1:n)) {
+        hovlabels[i] <- paste(format(regionTS[[input$region]]$data[i], "%d %b"),
+                              ", Tot cases = ", regionTS[[input$region]]$totale_casi[i], sep ="")
+        if( input$swab_std )
+          hovlabels[i] <- paste(hovlabels[i], ", Tot swabs = ", swabs[i], sep = "")
+      }
       
-      fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)")
-      fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)")
+      fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)",
+                                       text = hovlabels[!logic_interval], hoverinfo = 'text')
+      fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)",
+                                       text = hovlabels[logic_interval], hoverinfo = 'text')
       fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
       
       return(fig)
@@ -165,9 +184,20 @@ output$coolplot_region <- plotly::renderPlotly({
     
     plot2 = function (fig)
     {
+      hovlabels <- c("")
+      for(i in c(2:n)) {
+        hovlabels[i] <- paste(format(regionTS[[input$region]]$data[i], "%d %b"),
+                              ", Cases = ", 
+                              regionTS[[input$region]]$totale_casi[i] - regionTS[[input$region]]$totale_casi[i-1], 
+                              sep ="")
+        if( input$swab_std )
+          hovlabels[i] <- paste(hovlabels[i], ", Swabs = ", swabs[i]-swabs[i-1], sep = "")
+      }
       
-      fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)")
-      fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)")
+      fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)",
+                                      text = hovlabels[!logic_interval], hoverinfo = 'text')
+      fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)",
+                                      text = hovlabels[logic_interval], hoverinfo = 'text')
       fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=2.5), mode='lines', name= "Fitted logistic distribution")
       
       
@@ -372,11 +402,47 @@ output$Arima_coolplot <- plotly::renderPlotly({
   
   reac_region_TS_loc <-arima(log(sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
   #print(reac_region_TS )
-  p = TSplotly::TSplot(length(sample_cases_trim),forecast::forecast(reac_region_TS_loc,10),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle=paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
+  
+  forecast_length = 10 
+  fore = forecast::forecast(reac_region_TS_loc,forecast_length)
+  
+  # Conversion to real date and creation of fitted points #
+  points_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
+                            sample_cases_trim)
+  
+  sdt = points_trim$sample_date_trim
+  
+  fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = forecast_length)
+  
+  p <- plot_ly() %>%
+    add_ribbons(x = fore.dates, 
+                ymin = fore.xts$lower[, 2], 
+                ymax = fore.xts$upper[, 2],
+                color = I("#17becf"), 
+                name = "95% confidence") %>%
+    add_ribbons(p, 
+                x = fore.dates, 
+                ymin = fore.xts$lower[, 1], 
+                ymax = fore.xts$upper[, 1],
+                color = I("#ed9dac"), name = "80% confidence")%>% 
+    add_lines(x = sdt, y = log(sample_cases_trim),
+            color = I("#037d50"), 
+            name = "observed", 
+            mode="lines")%>% 
+    add_lines(x = fore.dates, y = fore.xts$mean, color = I("#ee1147"), name = "prediction")
+  
+  p <- p %>% plotly::layout(
+    title = paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),
+    xaxis = list(title="Days"),
+    yaxis = list(title="Values")
+  )
+  p
+  
+  #p = TSplotly::TSplot(length(sample_cases_trim),forecast::forecast(reac_region_TS_loc,forecast_length),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle=paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
   
   
   #autoplot(forecast::forecast(reac_region_TS_loc ))
-
+  
 })
 
 output$Arima_coolplot2 <- shiny::renderPlot({
@@ -406,15 +472,16 @@ output$Arima_coolplot2 <- shiny::renderPlot({
 # --- Summary ARIMA
 
 output$parameters_sugg <- shiny::renderUI({
-
-  req(sample_cases_trim)
+  
   d.arima <- forecast::auto.arima(log(sample_cases_trim))
   h3(paste("Suggested Parameters: ",toString(d.arima)))
 })
 
 
-
-
+# toString(reac_region_TS_loc$coef)
+# suggested fit toString(forecast::auto.arima(log(sample_cases_trim)))
+#reac_region_TS_loc$coef
+# reac_region_TS_loc$sigma2
 
 output$Arima_shell_output <- shiny::renderPrint({
   
