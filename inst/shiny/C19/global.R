@@ -6,6 +6,12 @@ provTS = covid19:::get_provTS()
 country_growth = covid19:::get_country_growth()
 intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
 
+## temporary solution
+library(tidyverse)
+library(plotly)
+library(devtools)
+library(shinydashboard)
+library(httr)
 
 
 #================================
@@ -16,12 +22,12 @@ intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
 
 # --- region ---
 map <- "https://raw.githubusercontent.com/stefanocudini/leaflet-geojson-selector/master/examples/italy-regions.json" %>% 
-  GET() %>% 
-  content() %>% 
+  httr::GET() %>% 
+  httr::content() %>% 
   jsonlite::fromJSON(simplifyVector = FALSE)
 
 dfita1 <-  map$features %>% 
-  map_df(function(x){
+  purrr::map_df(function(x){
     as_data_frame(x$properties)
   })
 
@@ -29,7 +35,7 @@ pc_data <- regionTS
 
 names(pc_data) <- tolower(names(pc_data))
 
-pc_df <- map_df(names(pc_data), function(x){
+pc_df <- purrr::map_df(names(pc_data), function(x){
   casi <- tail(pc_data[[x]],1)$totale_casi
   data_frame(name=x,cases=casi)
 })
@@ -80,11 +86,11 @@ dfita1 <- dfita1 %>%
 
 # --- province ---
 
-clean_prov <- map_df(names(prov_TS), function(x) {
-  tail(prov_TS[[x]],1)$totale_casi
+clean_prov <- map_df(names(provTS), function(x) {
+  tail(provTS[[x]],1)$totale_casi
   data_frame(
     name=x,
-    cases=tail(prov_TS[[x]],1)$totale_casi
+    cases=tail(provTS[[x]],1)$totale_casi
   )
 })
 
@@ -109,8 +115,7 @@ dfita2 <-  ita$features %>%
 
 head(dfita2)
 
-# integrating civil protection data
-prov_TS <- provTS
+
 
 
 # add population

@@ -7,21 +7,44 @@ tabItem(tabName = "tab_2",
         
         
         fluidRow(
-                column(4,
+                # column(4,
+                #        
+                #        box(title="Inputs", solidHeader = T,
+                #            width = NULL,
+                #            status = "danger"
+                #            
+                #        )),
+                column(12,
                        
-                       box(title="Inputs", solidHeader = T,
-                           width = NULL,
-                           status = "danger"
-                           
-                       )),
-                column(8,
-                       
-                       box(title="Total cases/death/recoverd/hospitalised", solidHeader = T,
+                       box(title="General info", solidHeader = T,
                            width = NULL,
                            color = "red",
-                           highcharter::highchartOutput("general_infos_plot"),
-                           status = "danger"
+                           tags$head(tags$style(HTML('
+                                                     /* tabBox background */
+                                                     
+                                                     .nav-tabs-custom > .nav-tabs > li.active {
+                                                     border-top-color: red !important;
+                                                     }
+                                                     
+                                                     .btn-default {
+                                                     background-color: #dd4b39 !important;
+                                                     color: white !important;
+                                                     border-color: #dd4b39 !important;
+                                                     }
+                                                     '))),
+                     
+                           tabBox(width = 12,
+                                  title = NULL,
+                                  tabPanel("Plot",
+                                           highcharter::highchartOutput("general_infos_plot")
+                                  ),
+                                  
+                                  tabPanel("Raw data",
+                                           shiny::uiOutput("rawData_input"),
+                                           shiny::tableOutput("rawData_table")
+                                           )
                            )
+                       )
                            
                        
                        )

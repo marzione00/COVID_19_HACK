@@ -35,6 +35,74 @@ output$general_infos_plot <- highcharter::renderHighchart(
 )
 
 
+# General info raw data
+
+output$rawData_input <- shiny::renderUI({
+  
+  shiny::fluidPage(
+    shiny::fluidRow(
+      shiny::column(5,
+                    shiny::dateRangeInput(
+                      inputId = "rawData_date",
+                      label = "Select dates",
+                      start = countryTS$data[1],
+                      end = countryTS$data[nrow(countryTS)],
+                      min = countryTS$data[1], 
+                      max = countryTS$data[nrow(countryTS)]
+                    )
+      ),
+      shiny::column(3,
+                    shiny::radioButtons(
+                      inputId = "rawData_terr",
+                      label = NULL,
+                      choices = list("National" = 1, "By region" = 2, "By province" = 3),
+                      selected = 2
+                    )
+      ),
+      shiny::column(3,
+                    shiny::uiOutput("rawData_sel_input")
+      ),
+      shiny::column(1,
+                    shiny::actionButton(inputId = "rawData_go", "Show")
+      )
+    )
+
+  )
+  
+})
+
+output$rawData_sel_input <- shiny::renderUI({
+  if(input$rawData_terr != 1) {
+    if(input$rawData_terr == 2)
+      shiny::selectInput(inputId = "rawData_reg_sel", label = NULL,
+                         choices = regNames, selected = "Lombardia")
+    else if(input$rawData_terr == 3)
+      shiny::selectInput(inputId = "rawData_prov_sel", label = NULL,
+                         choices = provNames, selected = "Milano")
+  }
+})
+
+
+shiny::observeEvent(input$rawData_go, {
+  output$rawData_table <- shiny::renderTable({
+    
+    switch(input$rawData_terr,
+               "1" = countryTS %>% 
+                 dplyr::select(-stato, -data_seriale) %>%
+                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+               "2" = regionTS[[input$rawData_reg_sel]] %>%
+                 dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+               "3" = provTS[[input$rawData_prov_sel]] %>%
+                dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
+                              -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+                dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
+           )
+  })
+})
+
+
+
 # tabbox selection
 output$tabset2Selected <- renderText({
   input$tabset2
