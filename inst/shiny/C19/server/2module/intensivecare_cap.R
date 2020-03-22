@@ -89,18 +89,12 @@ totale_casi=countryTS$totale_casi
 
 tamp_data_1 <- tamp_data %>% select(1:3) %>%
   gather(key="key",value="value",-date)
-  
 
-
-mpgman2 <- mpg %>% 
-  count(class, year) %>% 
-  glimpse()
-
-hchart(tamp_data_1, "column", hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
-  hc_yAxis_multiples(
+highcharter::hchart(tamp_data_1, "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
+  highcharter::hc_yAxis_multiples(
     list(lineWidth = 3, title = list(text  =  '')),
     list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
   ) %>%
-  hc_add_series(data = tamp_data, type = "spline", 
-                yAxis = 1, hcaes(x = date, y = share_infected_discovered),
+  highcharter::hc_add_series(data = tamp_data, type = "spline", 
+                yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
                 name="share_infected_discovered", color="#383838")
