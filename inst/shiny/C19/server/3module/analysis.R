@@ -53,6 +53,17 @@ output$regionInput_TS <- shiny::renderUI({
   fluidRow(
     column(12,
            
+           h3("ARIMA inputs"),
+           
+           shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
+                              min = init_date, max = fin_date, timeFormat = "%d %b",
+                              step = 1, value = c(init_date, fin_date)),
+           
+           shiny::sliderInput(inputId = "forecast", label = "Choose forecast lags",
+                              min = 1,  max = 40, value = 10),
+           
+           hr(),
+           
            shiny::sliderInput(inputId = "ARIMA_p", label = "Choose a q value",
                               min = 0, max = 10,step = 1,value=1),
            shiny::sliderInput(inputId = "ARIMA_q", label = "Choose a p value",
@@ -338,8 +349,8 @@ output$Plot_residual <- plotly::renderPlotly({
 
 
 output$Arima_coolplot0 <- plotly::renderPlotly({
-  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-    regionTS[[input$region]]$data <= input$fitInterval[2]
+  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
+    regionTS[[input$region]]$data <= input$arima_interval[2]
   
   sample_date <- regionTS[[input$region]]$data_seriale
   sample_cases <- regionTS[[input$region]]$totale_casi
@@ -360,8 +371,8 @@ output$Arima_coolplot0 <- plotly::renderPlotly({
 })
 
 output$Arima_coolplot00 <- plotly::renderPlotly({
-  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-    regionTS[[input$region]]$data <= input$fitInterval[2]
+  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
+    regionTS[[input$region]]$data <= input$arima_interval[2]
   
   sample_date <- regionTS[[input$region]]$data_seriale
   sample_cases <- regionTS[[input$region]]$totale_casi
@@ -382,8 +393,9 @@ output$Arima_coolplot00 <- plotly::renderPlotly({
 
 
 output$Arima_coolplot <- plotly::renderPlotly({
-  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-    regionTS[[input$region]]$data <= input$fitInterval[2]
+  
+  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
+    regionTS[[input$region]]$data <= input$arima_interval[2]
   
   sample_date <- regionTS[[input$region]]$data_seriale
   sample_cases <- regionTS[[input$region]]$totale_casi
@@ -403,7 +415,7 @@ output$Arima_coolplot <- plotly::renderPlotly({
   reac_region_TS_loc <-arima(log(sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
   #print(reac_region_TS )
   
-  forecast_length = 10 
+  forecast_length = input$forecast
   fore = forecast::forecast(reac_region_TS_loc,forecast_length)
   
   # Conversion to real date and creation of fitted points #
@@ -416,20 +428,20 @@ output$Arima_coolplot <- plotly::renderPlotly({
   
   p <- plot_ly() %>%
     add_ribbons(x = fore.dates, 
-                ymin = fore.xts$lower[, 2], 
-                ymax = fore.xts$upper[, 2],
+                ymin = fore$lower[, 2], 
+                ymax = fore$upper[, 2],
                 color = I("#17becf"), 
                 name = "95% confidence") %>%
     add_ribbons(p, 
                 x = fore.dates, 
-                ymin = fore.xts$lower[, 1], 
-                ymax = fore.xts$upper[, 1],
+                ymin = fore$lower[, 1], 
+                ymax = fore$upper[, 1],
                 color = I("#ed9dac"), name = "80% confidence")%>% 
     add_lines(x = sdt, y = log(sample_cases_trim),
             color = I("#037d50"), 
             name = "observed", 
             mode="lines")%>% 
-    add_lines(x = fore.dates, y = fore.xts$mean, color = I("#ee1147"), name = "prediction")
+    add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
   
   p <- p %>% plotly::layout(
     title = paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),
@@ -447,8 +459,8 @@ output$Arima_coolplot <- plotly::renderPlotly({
 
 output$Arima_coolplot2 <- shiny::renderPlot({
   
-  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-    regionTS[[input$region]]$data <= input$fitInterval[2]
+  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
+    regionTS[[input$region]]$data <= input$arima_interval[2]
   
   sample_date <- regionTS[[input$region]]$data_seriale
   sample_cases <- regionTS[[input$region]]$totale_casi
@@ -473,8 +485,27 @@ output$Arima_coolplot2 <- shiny::renderPlot({
 
 output$parameters_sugg <- shiny::renderUI({
   
-  d.arima <- forecast::auto.arima(log(sample_cases_trim))
-  h3(paste("Suggested Parameters: ",toString(d.arima)))
+  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
+    regionTS[[input$region]]$data <= input$arima_interval[2]
+  
+  sample_date <- regionTS[[input$region]]$data_seriale
+  sample_cases <- regionTS[[input$region]]$totale_casi
+  sample_diff <-  c(NA,diff(sample_cases))
+  
+  sample_date_trim <- sample_date[logic_interval]
+  sample_cases_trim <- sample_cases[logic_interval]
+  sample_diff_trim <- sample_diff[logic_interval]
+  
+  sample_date_rem <- sample_date[!logic_interval]
+  sample_cases_rem <- sample_cases[!logic_interval]
+  sample_diff_rem <- sample_diff[!logic_interval]
+  
+  if(is_ok_string(sample_cases_trim))
+  {
+    auto_arima <- forecast::auto.arima(log(sample_cases_trim))
+    h3(paste("Suggested Parameters: ",toString(auto_arima)))
+  }
+  
 })
 
 
@@ -485,8 +516,8 @@ output$parameters_sugg <- shiny::renderUI({
 
 output$Arima_shell_output <- shiny::renderPrint({
   
-  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-    regionTS[[input$region]]$data <= input$fitInterval[2]
+  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
+    regionTS[[input$region]]$data <= input$arima_interval[2]
   
   sample_date <- regionTS[[input$region]]$data_seriale
   sample_cases <- regionTS[[input$region]]$totale_casi

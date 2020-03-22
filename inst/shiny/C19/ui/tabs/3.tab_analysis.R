@@ -164,7 +164,7 @@ tabItem(
         
         fluidRow(
           column(
-            6,
+            3,
             shinydashboard::box(
               color = "red",
               status = "danger",
@@ -174,18 +174,14 @@ tabItem(
               width = 12
             )),
           column(
-            6,
+            3,
             shinydashboard::box(
               color = "red",
               status = "danger",
               title = "Partial autocorrelations",
               plotly::plotlyOutput("Arima_coolplot00"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
-            ))
-        ),
-        
-        
-        fluidRow(
+            )),
           column(
             6,
             shinydashboard::box(
@@ -194,7 +190,12 @@ tabItem(
               title = "Arima Check residuals",
               shiny::plotOutput("Arima_coolplot2"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
-            )),
+            ))
+        ),
+        
+        
+        fluidRow(
+        
           column(
             6,
             shinydashboard::box(
