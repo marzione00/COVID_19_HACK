@@ -92,6 +92,8 @@ tamp_data_1 <- tamp_data %>% select(1:3) %>%
 
 output$tamp_plot <- highcharter::renderHighchart(
   highcharter::hchart(tamp_data_1, "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
+    highcharter::hc_chart(zoomType = "xy") %>%
+    
     highcharter::hc_yAxis_multiples(
       list(lineWidth = 3, title = list(text  =  '')),
       list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))

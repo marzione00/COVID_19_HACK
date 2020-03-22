@@ -102,11 +102,11 @@ tabItem(
                    id = "tech_tab",
                    shiny::tabPanel("Fitting output",
                                    status = "danger",
-                                   verbatimTextOutput("fit_smry_region"))%>% shinycssloaders::withSpinner( color="#dd4b39"),
+                                   verbatimTextOutput("fit_smry_region")),
                    
                    shiny::tabPanel("Tests",
                                    status = "danger",
-                                   verbatimTextOutput("resid_smry_region"))%>% shinycssloaders::withSpinner( color="#dd4b39")
+                                   verbatimTextOutput("resid_smry_region"))
                  )
           ),
           column(7,
@@ -193,7 +193,7 @@ tabItem(
         
         
         fluidRow(
-        
+          
           column(
             6,
             shinydashboard::box(
@@ -205,9 +205,9 @@ tabItem(
             )
           )
         )
-          
-        ),
-    
+        
+      ),
+      
       
       
       #---------- TAB PROVINCE -----------

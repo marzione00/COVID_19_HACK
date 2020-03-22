@@ -110,139 +110,141 @@ reac_region_TS <- shiny::reactiveValues()
 
 
 ## REGION plot (currently date against total cases) ##
+
 output$coolplot_region <- plotly::renderPlotly({
+  
   wait <- region()
   #waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
-    # Data trim and curve fitting #
-    n <- nrow(regionTS[[input$region]])
-    logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-      regionTS[[input$region]]$data <= input$fitInterval[2]
+  # Data trim and curve fitting #
+  n <- nrow(regionTS[[input$region]])
+  logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
+    regionTS[[input$region]]$data <= input$fitInterval[2]
+  
+  sample_date <- regionTS[[input$region]]$data_seriale
+  
+  sample_cases <- regionTS[[input$region]]$totale_casi
+  sample_diff <-  c(NA,diff(sample_cases))
+  
+  if( input$swab_std ) {
+    swabs <- regionTS[[input$region]]$tamponi
+    sample_cases <- sample_cases / swabs
+    sample_diff <-  c(NA,sample_diff[-1] / diff(swabs))
+  }
+  
+  
+  sample_date_trim <- sample_date[logic_interval]
+  sample_cases_trim <- sample_cases[logic_interval]
+  sample_diff_trim <- sample_diff[logic_interval]
+  
+  sample_date_rem <- sample_date[!logic_interval]
+  sample_cases_rem <- sample_cases[!logic_interval]
+  sample_diff_rem <- sample_diff[!logic_interval]
+  
+  fit_data <- exe_fit(sample_cases = sample_cases_trim,
+                      sample_date = sample_date_trim,
+                      days = days)
+  
+  reac_region$model <- fit_data$out_fit$model
+  reac_region$resid <- fit_data$out_resid
+  reac_region$vals <- fit_data$out_fit$vals
+  
+  conf <- nlstools::confint2(level = 0.95, object = reac_region$model)
+  
+  yConf_up <- (conf["n0",2]*conf["k",2])/(conf["n0",2] + (conf["k",2]-conf["n0",2]) * exp(-conf["r",2]*sample_date_trim))
+  yConf_down <- (conf["n0",1]*conf["k",1])/(conf["n0",1] + (conf["k",1]-conf["n0",1]) * exp(-conf["r",1]*sample_date_trim))
+  
+  
+  
+  # Conversion to real date and creation of fitted points #
+  points_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
+                            sample_cases_trim)
+  points_rem <- data.frame("sample_date_rem" = regionTS[[input$region]]$data[!logic_interval],
+                           sample_cases_rem)
+  points_diff_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
+                                 sample_diff_trim)
+  points_diff_rem <- data.frame("sample_date_rem" = regionTS[[input$region]]$data[!logic_interval],
+                                sample_diff_rem)
+  
+  fittedPoints <- fit_data$fittedPoints
+  fittedPoints_der <- fit_data$fittedPoints_der
+  seq_dates <- seq(from = init_date, by = 1, length.out = length(days))
+  fittedPoints$days <- seq_dates
+  fittedPoints_der$days <- seq_dates
+  
+  confPoints_up <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
+                              yConf_up)
+  confPoints_down <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
+                                yConf_down)
+  
+  # PLOT with plotly #
+  fig = plotly::plot_ly( name = "Cases", type= "scatter")
+  
+  # funtions for the two different plots
+  plot1  = function(fig)
+  {
     
-    sample_date <- regionTS[[input$region]]$data_seriale
+    fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none',hoverinfo='skip',fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
     
-    sample_cases <- regionTS[[input$region]]$totale_casi
-    sample_diff <-  c(NA,diff(sample_cases))
+    fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
     
-    if( input$swab_std ) {
-      swabs <- regionTS[[input$region]]$tamponi
-      sample_cases <- sample_cases / swabs
-      sample_diff <-  c(NA,sample_diff[-1] / diff(swabs))
+    hovlabels <- c("")
+    for(i in c(1:n)) {
+      hovlabels[i] <- paste(format(regionTS[[input$region]]$data[i], "%d %b"),
+                            ", Tot cases = ", regionTS[[input$region]]$totale_casi[i], sep ="")
+      if( input$swab_std )
+        hovlabels[i] <- paste(hovlabels[i], ", Tot swabs = ", swabs[i], sep = "")
     }
     
+    fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)",
+                                     text = hovlabels[!logic_interval], hoverinfo = 'text')
+    fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)",
+                                     text = hovlabels[logic_interval], hoverinfo = 'text')
+    fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
     
-    sample_date_trim <- sample_date[logic_interval]
-    sample_cases_trim <- sample_cases[logic_interval]
-    sample_diff_trim <- sample_diff[logic_interval]
-    
-    sample_date_rem <- sample_date[!logic_interval]
-    sample_cases_rem <- sample_cases[!logic_interval]
-    sample_diff_rem <- sample_diff[!logic_interval]
-    
-    fit_data <- exe_fit(sample_cases = sample_cases_trim,
-                        sample_date = sample_date_trim,
-                        days = days)
-    
-    reac_region$model <- fit_data$out_fit$model
-    reac_region$resid <- fit_data$out_resid
-    reac_region$vals <- fit_data$out_fit$vals
-    
-    conf <- nlstools::confint2(level = 0.95, object = reac_region$model)
-    
-    yConf_up <- (conf["n0",2]*conf["k",2])/(conf["n0",2] + (conf["k",2]-conf["n0",2]) * exp(-conf["r",2]*sample_date_trim))
-    yConf_down <- (conf["n0",1]*conf["k",1])/(conf["n0",1] + (conf["k",1]-conf["n0",1]) * exp(-conf["r",1]*sample_date_trim))
-    
-    
-    
-    # Conversion to real date and creation of fitted points #
-    points_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
-                              sample_cases_trim)
-    points_rem <- data.frame("sample_date_rem" = regionTS[[input$region]]$data[!logic_interval],
-                             sample_cases_rem)
-    points_diff_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
-                                   sample_diff_trim)
-    points_diff_rem <- data.frame("sample_date_rem" = regionTS[[input$region]]$data[!logic_interval],
-                                  sample_diff_rem)
-    
-    fittedPoints <- fit_data$fittedPoints
-    fittedPoints_der <- fit_data$fittedPoints_der
-    seq_dates <- seq(from = init_date, by = 1, length.out = length(days))
-    fittedPoints$days <- seq_dates
-    fittedPoints_der$days <- seq_dates
-    
-    confPoints_up <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
-                                yConf_up)
-    confPoints_down <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
-                                  yConf_down)
-    
-    # PLOT with plotly #
-    fig = plotly::plot_ly( name = "Cases", type= "scatter")
-    
-    # funtions for the two different plots
-    plot1  = function(fig)
-    {
-      
-      fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none',hoverinfo='skip',fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
-      
-      fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
-      
-      hovlabels <- c("")
-      for(i in c(1:n)) {
-        hovlabels[i] <- paste(format(regionTS[[input$region]]$data[i], "%d %b"),
-                              ", Tot cases = ", regionTS[[input$region]]$totale_casi[i], sep ="")
-        if( input$swab_std )
-          hovlabels[i] <- paste(hovlabels[i], ", Tot swabs = ", swabs[i], sep = "")
-      }
-      
-      fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)",
-                                       text = hovlabels[!logic_interval], hoverinfo = 'text')
-      fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)",
-                                       text = hovlabels[logic_interval], hoverinfo = 'text')
-      fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
-      
-      return(fig)
+    return(fig)
+  }
+  
+  plot2 = function (fig)
+  {
+    hovlabels <- c("")
+    for(i in c(2:n)) {
+      hovlabels[i] <- paste(format(regionTS[[input$region]]$data[i], "%d %b"),
+                            ", Cases = ", 
+                            regionTS[[input$region]]$totale_casi[i] - regionTS[[input$region]]$totale_casi[i-1], 
+                            sep ="")
+      if( input$swab_std )
+        hovlabels[i] <- paste(hovlabels[i], ", Swabs = ", swabs[i]-swabs[i-1], sep = "")
     }
     
-    plot2 = function (fig)
-    {
-      hovlabels <- c("")
-      for(i in c(2:n)) {
-        hovlabels[i] <- paste(format(regionTS[[input$region]]$data[i], "%d %b"),
-                              ", Cases = ", 
-                              regionTS[[input$region]]$totale_casi[i] - regionTS[[input$region]]$totale_casi[i-1], 
-                              sep ="")
-        if( input$swab_std )
-          hovlabels[i] <- paste(hovlabels[i], ", Swabs = ", swabs[i]-swabs[i-1], sep = "")
-      }
-      
-      fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)",
-                                      text = hovlabels[!logic_interval], hoverinfo = 'text')
-      fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)",
-                                      text = hovlabels[logic_interval], hoverinfo = 'text')
-      fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=2.5), mode='lines', name= "Fitted logistic distribution")
-      
-      
-      return(fig)
-    }
+    fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)",
+                                    text = hovlabels[!logic_interval], hoverinfo = 'text')
+    fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)",
+                                    text = hovlabels[logic_interval], hoverinfo = 'text')
+    fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=2.5), mode='lines', name= "Fitted logistic distribution")
     
-    #Plot based on the checkbox
-    if( 1 %in% input$plot_type_region && !(2 %in% input$plot_type_region ) )
-    {
-      fig = plot1(fig)
-    } else if( 2 %in% input$plot_type_region && !(1 %in% input$plot_type_region ) )
-    {
-      fig = plot2(fig)
-    } else if( 1 %in% input$plot_type_region && (2 %in% input$plot_type_region ) )
-    {
-      fig = plot1(fig)
-      fig = plot2(fig)
-    }
     
-    # labels and plot
-    fig <- fig %>% layout(xaxis = list(title = "day"), yaxis = list(title = "Infected"))
-    if( reac_region$vals$k > 1e7 )
-      fig <- fig %>% layout(title = "Warning: unrealistic model estimated", font = list(color = 'red'),dtick= 5 )
-    fig
-    
+    return(fig)
+  }
+  
+  #Plot based on the checkbox
+  if( 1 %in% input$plot_type_region && !(2 %in% input$plot_type_region ) )
+  {
+    fig = plot1(fig)
+  } else if( 2 %in% input$plot_type_region && !(1 %in% input$plot_type_region ) )
+  {
+    fig = plot2(fig)
+  } else if( 1 %in% input$plot_type_region && (2 %in% input$plot_type_region ) )
+  {
+    fig = plot1(fig)
+    fig = plot2(fig)
+  }
+  
+  # labels and plot
+  fig <- fig %>% layout(xaxis = list(title = "day"), yaxis = list(title = "Infected"))
+  if( reac_region$vals$k > 1e7 )
+    fig <- fig %>% layout(title = "Warning: unrealistic model estimated", font = list(color = 'red'),dtick= 5 )
+  fig
+  
 })
 
 #-- Summary of regions ---
@@ -366,7 +368,7 @@ reac_ARIMA <- shiny::reactiveValues()
 shiny::observe({
   wait <- region()
   reac_ARIMA$logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
-                               regionTS[[input$region]]$data <= input$arima_interval[2]
+    regionTS[[input$region]]$data <= input$arima_interval[2]
   
   reac_ARIMA$sample_date <- regionTS[[input$region]]$data_seriale
   reac_ARIMA$sample_cases <- regionTS[[input$region]]$totale_casi
@@ -381,10 +383,12 @@ shiny::observe({
   reac_ARIMA$sample_diff_rem <- reac_ARIMA$sample_diff[!reac_ARIMA$logic_interval]
   
   reac_ARIMA$points_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[reac_ARIMA$logic_interval],
-                                        "sample_cases_trim" = reac_ARIMA$sample_cases_trim)
+                                       "sample_cases_trim" = reac_ARIMA$sample_cases_trim)
   
   reac_ARIMA$arima <- arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
 })
+
+
 
 ## Plot of autocorrelation function
 output$Arima_coolplot0 <- plotly::renderPlotly({
@@ -405,7 +409,7 @@ output$Arima_coolplot00 <- plotly::renderPlotly({
     p = ggplot2::autoplot(pacf(log(reac_ARIMA$sample_cases_trim)) )
     ggplotly(p)
   }
- 
+  
 })
 
 ## Plot of ARIMA Time Series and FORECAST
@@ -418,7 +422,7 @@ output$Arima_coolplot <- plotly::renderPlotly({
   #print(reac_region_TS )
   if(is_ready(reac_ARIMA$points_trim)) {
     fore <- forecast::forecast(reac_ARIMA$arima,input$forecast)
-  
+    
     sdt <- reac_ARIMA$points_trim$sample_date_trim
     
     fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = input$forecast)
@@ -435,9 +439,9 @@ output$Arima_coolplot <- plotly::renderPlotly({
                   ymax = fore$upper[, 1],
                   color = I("#ed9dac"), name = "80% confidence")%>% 
       add_lines(x = sdt, y = log(reac_ARIMA$sample_cases_trim),
-              color = I("#037d50"), 
-              name = "observed", 
-              mode="lines")%>% 
+                color = I("#037d50"), 
+                name = "observed", 
+                mode="lines")%>% 
       add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
     
     p <- p %>% plotly::layout(
@@ -445,12 +449,9 @@ output$Arima_coolplot <- plotly::renderPlotly({
       xaxis = list(title="Days"),
       yaxis = list(title="log cases")
     )
+    
     p
     
-    #p = TSplotly::TSplot(length(reac_ARIMA$sample_cases_trim),forecast::forecast(reac_ARIMA$arima,input$forecast),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle=paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
-    
-    
-    #autoplot(forecast::forecast(reac_ARIMA$arima ))
   }
 })
 
@@ -469,7 +470,7 @@ output$Arima_coolplot2 <- shiny::renderPlot({
 
 ## Print of suggested parameters
 output$parameters_sugg <- shiny::renderUI({
- 
+  
   wait <- region()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
     auto_arima <- forecast::auto.arima(log(reac_ARIMA$sample_cases_trim))
@@ -492,6 +493,9 @@ output$Arima_shell_output <- shiny::renderPrint({
   }
   
 })
+
+
+
 
 #======================================= COUNTRY SECTION ============================================
 ## COUNTRY reactive values##
