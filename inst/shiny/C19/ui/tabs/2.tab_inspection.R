@@ -7,6 +7,27 @@ tabItem(tabName = "tab_2",
         
         
         fluidRow(
+                column(4,
+                       
+                       box(title="Inputs", solidHeader = T,
+                           width = NULL,
+                           status = "danger"
+                           
+                       )),
+                column(8,
+                       
+                       box(title="Total cases/death/recoverd/hospitalised", solidHeader = T,
+                           width = NULL,
+                           color = "red",
+                           highcharter::highchartOutput("general_infos_plot"),
+                           status = "danger"
+                           )
+                           
+                       
+                       )
+        ),
+        
+        fluidRow(
           column(6,
                  
                  

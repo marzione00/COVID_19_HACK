@@ -1,3 +1,40 @@
+# General info plot
+
+
+output$general_infos_plot <- highcharter::renderHighchart(
+  
+  
+  highcharter::hchart(countryTS,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="#383838", yAxis = 1)
+  %>% 
+    
+    highcharter::hc_chart(zoomType = "xy") %>%
+    
+    highcharter::hc_yAxis_multiples(
+      list(lineWidth = 3, title = list(text  =  '')),
+      list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
+    ) %>%
+    
+    highcharter::hc_add_series(data = countryTS, type = "spline", 
+                               yAxis = 1, highcharter::hcaes(x = data, y = terapia_intensiva),
+                               name="Total Intesive care", color="red")
+  %>%
+    highcharter::hc_add_series(data = countryTS, type = "spline", 
+                               yAxis = 1, highcharter::hcaes(x = data, y = ricoverati_con_sintomi),
+                               name="Total Hospitalized", color="orange")
+  %>%
+    highcharter::hc_add_series(data = countryTS, type = "spline", 
+                               yAxis = 1, highcharter::hcaes(x = data, y = deceduti),
+                               name="Total Deaths", color="black")
+  %>%
+    highcharter::hc_add_series(data = countryTS, type = "spline", 
+                               yAxis = 1, highcharter::hcaes(x = data, y = dimessi_guariti),
+                               name="Total recovered", color="green")
+  %>%
+    highcharter::hc_legend(align = "top", verticalAlign = "top",
+              layout = "vertical", x = 0, y = 100) 
+)
+
+
 # tabbox selection
 output$tabset2Selected <- renderText({
   input$tabset2
