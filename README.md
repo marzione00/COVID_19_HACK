@@ -4,7 +4,7 @@ The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
 ## Lavora su
 Andrea: try run  python code on  R  <br>
-Fabio: <br>
+Fabio: lavoro su analysis.R <br>
 Federico: <br>
 Gregorio: <br>
 Marzio: <br>
