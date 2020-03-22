@@ -102,11 +102,11 @@ tabItem(
                    id = "tech_tab",
                    shiny::tabPanel("Fitting output",
                                    status = "danger",
-                                   verbatimTextOutput("fit_smry_region")),
+                                   verbatimTextOutput("fit_smry_region"))%>% shinycssloaders::withSpinner( color="#dd4b39"),
                    
                    shiny::tabPanel("Tests",
                                    status = "danger",
-                                   verbatimTextOutput("resid_smry_region"))
+                                   verbatimTextOutput("resid_smry_region"))%>% shinycssloaders::withSpinner( color="#dd4b39")
                  )
           ),
           column(7,
@@ -142,7 +142,6 @@ tabItem(
               solidHeader = TRUE,
               title = "Input",
               shiny::uiOutput("regionInput_TS") 
-              #PUT HERE INPUTS            ///#shiny::uiOutput("regionInput")
             )
           ),
           column(
@@ -153,10 +152,10 @@ tabItem(
               status = "danger",
               
               title = "ARIMA forecast",
-              h3(shiny::htmlOutput("parameters_sugg")), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+              h3(shiny::htmlOutput("parameters_sugg")),
               hr(),
               
-              plotly::plotlyOutput("Arima_coolplot"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+              plotly::plotlyOutput("Arima_coolplot")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
             ))
         ),
@@ -169,8 +168,7 @@ tabItem(
               color = "red",
               status = "danger",
               title = "Autocorrelations",
-              plotly::plotlyOutput("Arima_coolplot0"),
-              #PUT HERE PLOTLY PLOT     ///#plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+              plotly::plotlyOutput("Arima_coolplot0")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
             )),
           column(
@@ -179,7 +177,7 @@ tabItem(
               color = "red",
               status = "danger",
               title = "Partial autocorrelations",
-              plotly::plotlyOutput("Arima_coolplot00"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+              plotly::plotlyOutput("Arima_coolplot00")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
             )),
           column(
@@ -188,7 +186,7 @@ tabItem(
               color = "red",
               status = "danger",
               title = "Arima Check residuals",
-              shiny::plotOutput("Arima_coolplot2"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+              shiny::plotOutput("Arima_coolplot2")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
             ))
         ),
@@ -202,7 +200,7 @@ tabItem(
               color = "red",
               status = "danger",
               title = "Arima Data Output",
-              shiny::verbatimTextOutput("Arima_shell_output"), #plotly::plotlyOutput("coolplot_region")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+              shiny::verbatimTextOutput("Arima_shell_output")%>% shinycssloaders::withSpinner( color="#dd4b39"),
               width = 12
             )
           )

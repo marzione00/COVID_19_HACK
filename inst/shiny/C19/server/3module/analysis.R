@@ -441,7 +441,7 @@ output$Arima_coolplot <- plotly::renderPlotly({
       add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
     
     p <- p %>% plotly::layout(
-      title = paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),
+      title = paste0("ARIMA Forecast (",input$ARIMA_p,",",input$ARIMA_I,",",input$ARIMA_q,")"),
       xaxis = list(title="Days"),
       yaxis = list(title="log cases")
     )
