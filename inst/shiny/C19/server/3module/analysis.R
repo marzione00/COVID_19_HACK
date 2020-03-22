@@ -15,12 +15,22 @@ days <- (1:50)
 
 
 ## CHECKS FOR ERROR PREVENTING ##
-is_ok_string <- function(x) {
+is_ready <- function(x) {
   if(( is.null(x) || length(x) == 0 ))
     return(FALSE)
   
   return(TRUE)
 }
+
+# Use this function region() to validate the content of input$region and prevent errors
+# (just use it at the beginning of each chunk of code)
+region <- shiny::reactive({
+  shiny::validate(
+    shiny::need(is_ready(input$region), "Wait...")
+  )
+  return(input$region)
+})
+
 
 
 
@@ -101,9 +111,8 @@ reac_region_TS <- shiny::reactiveValues()
 
 ## REGION plot (currently date against total cases) ##
 output$coolplot_region <- plotly::renderPlotly({
-  
-  waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
-  if( is_ok_string(input$region) ) {
+  wait <- region()
+  #waiter::waiter_show(id = "coolplot_region", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
     # Data trim and curve fitting #
     n <- nrow(regionTS[[input$region]])
     logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
@@ -234,16 +243,17 @@ output$coolplot_region <- plotly::renderPlotly({
       fig <- fig %>% layout(title = "Warning: unrealistic model estimated", font = list(color = 'red'),dtick= 5 )
     fig
     
-  }
 })
 
 #-- Summary of regions ---
-output$fit_smry_region <- shiny::renderPrint(
+output$fit_smry_region <- shiny::renderPrint({
+  wait <- region()
   summary(reac_region$model)
-)
+})
 
 
 output$resid_smry_region <- shiny::renderPrint({
+  wait <- region()
   nlstools::test.nlsResiduals(reac_region$resid)
 })
 
@@ -251,6 +261,7 @@ output$resid_smry_region <- shiny::renderPrint({
 #-- Residuals ---
 
 output$Plot_residual <- plotly::renderPlotly({
+  wait <- region()
   pippo<-reac_region$resid
   
   Res_DF_1<-as.data.frame(pippo$resi1)
@@ -275,7 +286,7 @@ output$Plot_residual <- plotly::renderPlotly({
     )
   )
   
-  if( is_ok_string(input$plot_res_type_region) ) {
+  if( is_ready(input$plot_res_type_region) ) {
     if(input$plot_res_type_region=="Residual"){
       colnames(Res_DF_1)=c("fitted1","res")
       
@@ -348,192 +359,137 @@ output$Plot_residual <- plotly::renderPlotly({
 })
 
 
+##===================================== ARIMA SECTION =============================================##
+reac_ARIMA <- shiny::reactiveValues()
+
+## HERE GOES ALL ARIMA IMPLEMENTATION COMMON TO ALL GRAPHS
+shiny::observe({
+  wait <- region()
+  reac_ARIMA$logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
+                               regionTS[[input$region]]$data <= input$arima_interval[2]
+  
+  reac_ARIMA$sample_date <- regionTS[[input$region]]$data_seriale
+  reac_ARIMA$sample_cases <- regionTS[[input$region]]$totale_casi
+  reac_ARIMA$sample_diff <-  c(NA,diff(reac_ARIMA$sample_cases))
+  
+  reac_ARIMA$sample_date_trim <- reac_ARIMA$sample_date[reac_ARIMA$logic_interval]
+  reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]
+  reac_ARIMA$sample_diff_trim <- reac_ARIMA$sample_diff[reac_ARIMA$logic_interval]
+  
+  reac_ARIMA$sample_date_rem <- reac_ARIMA$sample_date[!reac_ARIMA$logic_interval]
+  reac_ARIMA$sample_cases_rem <- reac_ARIMA$sample_cases[!reac_ARIMA$logic_interval]
+  reac_ARIMA$sample_diff_rem <- reac_ARIMA$sample_diff[!reac_ARIMA$logic_interval]
+  
+  reac_ARIMA$points_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[reac_ARIMA$logic_interval],
+                                        "sample_cases_trim" = reac_ARIMA$sample_cases_trim)
+  
+  reac_ARIMA$arima <- arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
+})
+
+## Plot of autocorrelation function
 output$Arima_coolplot0 <- plotly::renderPlotly({
-  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
-    regionTS[[input$region]]$data <= input$arima_interval[2]
   
-  sample_date <- regionTS[[input$region]]$data_seriale
-  sample_cases <- regionTS[[input$region]]$totale_casi
-  sample_diff <-  c(NA,diff(sample_cases))
-  
-  sample_date_trim <- sample_date[logic_interval]
-  sample_cases_trim <- sample_cases[logic_interval]
-  sample_diff_trim <- sample_diff[logic_interval]
-  
-  sample_date_rem <- sample_date[!logic_interval]
-  sample_cases_rem <- sample_cases[!logic_interval]
-  sample_diff_rem <- sample_diff[!logic_interval]
-  
-  p = autoplot(acf(log(sample_cases_trim)))
-  ggplotly(p)
-  
+  wait <- region()
+  if(is_ready(reac_ARIMA$sample_cases_trim)) {
+    p = autoplot(acf(log(reac_ARIMA$sample_cases_trim)))
+    ggplotly(p)
+  }
   
 })
 
+## Plot of partial autocorrelation function
 output$Arima_coolplot00 <- plotly::renderPlotly({
-  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
-    regionTS[[input$region]]$data <= input$arima_interval[2]
   
-  sample_date <- regionTS[[input$region]]$data_seriale
-  sample_cases <- regionTS[[input$region]]$totale_casi
-  sample_diff <-  c(NA,diff(sample_cases))
-  
-  sample_date_trim <- sample_date[logic_interval]
-  sample_cases_trim <- sample_cases[logic_interval]
-  sample_diff_trim <- sample_diff[logic_interval]
-  
-  sample_date_rem <- sample_date[!logic_interval]
-  sample_cases_rem <- sample_cases[!logic_interval]
-  sample_diff_rem <- sample_diff[!logic_interval]
-  
-  p = ggplot2::autoplot(  pacf(log(sample_cases_trim))  )
-  ggplotly(p)
-  
+  wait <- region()
+  if(is_ready(reac_ARIMA$sample_cases_trim)) {
+    p = ggplot2::autoplot(pacf(log(reac_ARIMA$sample_cases_trim)) )
+    ggplotly(p)
+  }
+ 
 })
 
-
+## Plot of ARIMA Time Series and FORECAST
 output$Arima_coolplot <- plotly::renderPlotly({
   
-  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
-    regionTS[[input$region]]$data <= input$arima_interval[2]
-  
-  sample_date <- regionTS[[input$region]]$data_seriale
-  sample_cases <- regionTS[[input$region]]$totale_casi
-  sample_diff <-  c(NA,diff(sample_cases))
-  
-  sample_date_trim <- sample_date[logic_interval]
-  sample_cases_trim <- sample_cases[logic_interval]
-  sample_diff_trim <- sample_diff[logic_interval]
-  
-  sample_date_rem <- sample_date[!logic_interval]
-  sample_cases_rem <- sample_cases[!logic_interval]
-  sample_diff_rem <- sample_diff[!logic_interval]
-  
+  wait <- region()
   #acf(log(sample_cases_trim))  
   #pacf(log(sample_cases_trim))
   
-  reac_region_TS_loc <-arima(log(sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
   #print(reac_region_TS )
+  if(is_ready(reac_ARIMA$points_trim)) {
+    fore <- forecast::forecast(reac_ARIMA$arima,input$forecast)
   
-  forecast_length = input$forecast
-  fore = forecast::forecast(reac_region_TS_loc,forecast_length)
-  
-  # Conversion to real date and creation of fitted points #
-  points_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
-                            sample_cases_trim)
-  
-  sdt = points_trim$sample_date_trim
-  
-  fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = forecast_length)
-  
-  p <- plot_ly() %>%
-    add_ribbons(x = fore.dates, 
-                ymin = fore$lower[, 2], 
-                ymax = fore$upper[, 2],
-                color = I("#17becf"), 
-                name = "95% confidence") %>%
-    add_ribbons(p, 
-                x = fore.dates, 
-                ymin = fore$lower[, 1], 
-                ymax = fore$upper[, 1],
-                color = I("#ed9dac"), name = "80% confidence")%>% 
-    add_lines(x = sdt, y = log(sample_cases_trim),
-            color = I("#037d50"), 
-            name = "observed", 
-            mode="lines")%>% 
-    add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
-  
-  p <- p %>% plotly::layout(
-    title = paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),
-    xaxis = list(title="Days"),
-    yaxis = list(title="log cases")
-  )
-  p
-  
-  #p = TSplotly::TSplot(length(sample_cases_trim),forecast::forecast(reac_region_TS_loc,forecast_length),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle=paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
-  
-  
-  #autoplot(forecast::forecast(reac_region_TS_loc ))
-  
+    sdt <- reac_ARIMA$points_trim$sample_date_trim
+    
+    fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = input$forecast)
+    
+    p <- plot_ly() %>%
+      add_ribbons(x = fore.dates, 
+                  ymin = fore$lower[, 2], 
+                  ymax = fore$upper[, 2],
+                  color = I("#17becf"), 
+                  name = "95% confidence") %>%
+      add_ribbons(p, 
+                  x = fore.dates, 
+                  ymin = fore$lower[, 1], 
+                  ymax = fore$upper[, 1],
+                  color = I("#ed9dac"), name = "80% confidence")%>% 
+      add_lines(x = sdt, y = log(reac_ARIMA$sample_cases_trim),
+              color = I("#037d50"), 
+              name = "observed", 
+              mode="lines")%>% 
+      add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
+    
+    p <- p %>% plotly::layout(
+      title = paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),
+      xaxis = list(title="Days"),
+      yaxis = list(title="log cases")
+    )
+    p
+    
+    #p = TSplotly::TSplot(length(reac_ARIMA$sample_cases_trim),forecast::forecast(reac_ARIMA$arima,input$forecast),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle=paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
+    
+    
+    #autoplot(forecast::forecast(reac_ARIMA$arima ))
+  }
 })
 
+## Plot of ARIMA residuals
 output$Arima_coolplot2 <- shiny::renderPlot({
   
-  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
-    regionTS[[input$region]]$data <= input$arima_interval[2]
-  
-  sample_date <- regionTS[[input$region]]$data_seriale
-  sample_cases <- regionTS[[input$region]]$totale_casi
-  sample_diff <-  c(NA,diff(sample_cases))
-  
-  sample_date_trim <- sample_date[logic_interval]
-  sample_cases_trim <- sample_cases[logic_interval]
-  sample_diff_trim <- sample_diff[logic_interval]
-  
-  sample_date_rem <- sample_date[!logic_interval]
-  sample_cases_rem <- sample_cases[!logic_interval]
-  sample_diff_rem <- sample_diff[!logic_interval]
-  
-  reac_region_TS_loc2 <-arima(log(sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
-  forecast::checkresiduals(reac_region_TS_loc2)
-  
+  wait <- region()
+  if(is_ready(reac_ARIMA$sample_cases_trim)) {
+    forecast::checkresiduals(reac_ARIMA$arima)
+  }
   
 })
 
 
 # --- Summary ARIMA
 
+## Print of suggested parameters
 output$parameters_sugg <- shiny::renderUI({
-  
-  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
-    regionTS[[input$region]]$data <= input$arima_interval[2]
-  
-  sample_date <- regionTS[[input$region]]$data_seriale
-  sample_cases <- regionTS[[input$region]]$totale_casi
-  sample_diff <-  c(NA,diff(sample_cases))
-  
-  sample_date_trim <- sample_date[logic_interval]
-  sample_cases_trim <- sample_cases[logic_interval]
-  sample_diff_trim <- sample_diff[logic_interval]
-  
-  sample_date_rem <- sample_date[!logic_interval]
-  sample_cases_rem <- sample_cases[!logic_interval]
-  sample_diff_rem <- sample_diff[!logic_interval]
-  
-  if(is_ok_string(sample_cases_trim))
-  {
-    auto_arima <- forecast::auto.arima(log(sample_cases_trim))
+ 
+  wait <- region()
+  if(is_ready(reac_ARIMA$sample_cases_trim)) {
+    auto_arima <- forecast::auto.arima(log(reac_ARIMA$sample_cases_trim))
     h3(paste("Suggested Parameters: ",toString(auto_arima)))
   }
   
 })
 
 
-# toString(reac_region_TS_loc$coef)
+# toString(reac_ARIMA$arima$coef)
 # suggested fit toString(forecast::auto.arima(log(sample_cases_trim)))
-#reac_region_TS_loc$coef
-# reac_region_TS_loc$sigma2
+#reac_ARIMA$arima$coef
+# reac_ARIMA$arima$sigma2
 
 output$Arima_shell_output <- shiny::renderPrint({
   
-  logic_interval <- regionTS[[input$region]]$data >= input$arima_interval[1] &
-    regionTS[[input$region]]$data <= input$arima_interval[2]
-  
-  sample_date <- regionTS[[input$region]]$data_seriale
-  sample_cases <- regionTS[[input$region]]$totale_casi
-  sample_diff <-  c(NA,diff(sample_cases))
-  
-  sample_date_trim <- sample_date[logic_interval]
-  sample_cases_trim <- sample_cases[logic_interval]
-  sample_diff_trim <- sample_diff[logic_interval]
-  
-  sample_date_rem <- sample_date[!logic_interval]
-  sample_cases_rem <- sample_cases[!logic_interval]
-  sample_diff_rem <- sample_diff[!logic_interval]
-  
-  outputX<-arima(log(sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
-  
-  outputX
+  wait <- region()
+  if(is_ready(reac_ARIMA$sample_cases_trim)) {
+    arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
+  }
   
 })
 
