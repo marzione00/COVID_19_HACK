@@ -53,9 +53,7 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 
 output$plot_test <- highcharter::renderHighchart(
-  
   hc
-  
 )
 
 # tamponi graph -----------------------------------------------------------
