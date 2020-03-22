@@ -98,10 +98,9 @@ mpgman2 <- mpg %>%
 
 hchart(tamp_data_1, "column", hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
   hc_yAxis_multiples(
-    list(lineWidth = 3),
-    list(showLastLabel = FALSE, opposite = TRUE)
+    list(lineWidth = 3, title = list(text  =  '')),
+    list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
   ) %>%
   hc_add_series(data = tamp_data, type = "spline", 
                 yAxis = 1, hcaes(x = date, y = share_infected_discovered),
                 name="share_infected_discovered", color="#383838")
-
