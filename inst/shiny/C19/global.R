@@ -166,8 +166,8 @@ growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
 
 hc <- highcharter::highchart(type = "stock") %>% 
   highcharter::hc_title(text = "% growth and growth change of total cases") %>%
-  highcharter::hc_add_series(growth_xts, name="growth", color = "red") %>% 
-  highcharter::hc_add_series(growth_change_xts, name="growth_change", color = "orange")
+  highcharter::hc_add_series(growth_xts, name="growth", color = "red", type = "spline") %>% 
+  highcharter::hc_add_series(growth_change_xts, name="growth_change", color = "orange", type = "spline")
 
 
 # tamponi graph -----------------------------------------------------------
