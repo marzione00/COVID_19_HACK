@@ -96,7 +96,7 @@ output$coolplot_region <- plotly::renderPlotly({
     # Data trim and curve fitting #
     n <- nrow(regionTS[[input$region]])
     logic_interval <- regionTS[[input$region]]$data >= input$fitInterval[1] &
-                      regionTS[[input$region]]$data <= input$fitInterval[2]
+      regionTS[[input$region]]$data <= input$fitInterval[2]
     
     sample_date <- regionTS[[input$region]]$data_seriale
     
@@ -402,11 +402,47 @@ output$Arima_coolplot <- plotly::renderPlotly({
   
   reac_region_TS_loc <-arima(log(sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
   #print(reac_region_TS )
-  p = TSplotly::TSplot(length(sample_cases_trim),forecast::forecast(reac_region_TS_loc,10),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle=paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
+  
+  forecast_length = 10 
+  fore = forecast::forecast(reac_region_TS_loc,forecast_length)
+  
+  # Conversion to real date and creation of fitted points #
+  points_trim <- data.frame("sample_date_trim" = regionTS[[input$region]]$data[logic_interval],
+                            sample_cases_trim)
+  
+  sdt = points_trim$sample_date_trim
+  
+  fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = forecast_length)
+  
+  p <- plot_ly() %>%
+    add_ribbons(x = fore.dates, 
+                ymin = fore.xts$lower[, 2], 
+                ymax = fore.xts$upper[, 2],
+                color = I("#17becf"), 
+                name = "95% confidence") %>%
+    add_ribbons(p, 
+                x = fore.dates, 
+                ymin = fore.xts$lower[, 1], 
+                ymax = fore.xts$upper[, 1],
+                color = I("#ed9dac"), name = "80% confidence")%>% 
+    add_lines(x = sdt, y = log(sample_cases_trim),
+            color = I("#037d50"), 
+            name = "observed", 
+            mode="lines")%>% 
+    add_lines(x = fore.dates, y = fore.xts$mean, color = I("#ee1147"), name = "prediction")
+  
+  p <- p %>% plotly::layout(
+    title = paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),
+    xaxis = list(title="Days"),
+    yaxis = list(title="Values")
+  )
+  p
+  
+  #p = TSplotly::TSplot(length(sample_cases_trim),forecast::forecast(reac_region_TS_loc,forecast_length),  Ylab = "Value", Xlab = "Time (Day) ",NEWtitle=paste0("ARIMA Forecast ( ",input$ARIMA_p,", ",input$ARIMA_I,", ",input$ARIMA_q," )"),title_size =15, ts_original = "Original time series", ts_forecast= "Predicted time series")
   
   
   #autoplot(forecast::forecast(reac_region_TS_loc ))
-
+  
 })
 
 output$Arima_coolplot2 <- shiny::renderPlot({
@@ -436,15 +472,16 @@ output$Arima_coolplot2 <- shiny::renderPlot({
 # --- Summary ARIMA
 
 output$parameters_sugg <- shiny::renderUI({
-
-  req(sample_cases_trim)
+  
   d.arima <- forecast::auto.arima(log(sample_cases_trim))
   h3(paste("Suggested Parameters: ",toString(d.arima)))
 })
 
 
-
-
+# toString(reac_region_TS_loc$coef)
+# suggested fit toString(forecast::auto.arima(log(sample_cases_trim)))
+#reac_region_TS_loc$coef
+# reac_region_TS_loc$sigma2
 
 output$Arima_shell_output <- shiny::renderPrint({
   
