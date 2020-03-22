@@ -103,10 +103,18 @@ tabItem(tabName = "tab_2",
                  
                  
                  
-                 
-                 
-                 
-                 
+          ),
+          
+          fluidRow(
+                  
+
+                          box(title="Tests Tracking", status="danger", 
+                              solidHeader = T, width = 12,
+                          highcharter::highchartOutput("tamp_plot")
+                          
+                  )
           )
+          
+          
         )
 )
