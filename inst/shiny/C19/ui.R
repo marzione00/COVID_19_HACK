@@ -2,7 +2,7 @@
 ## ui.R ##
 
 
-ui <- dashboardPagePlus(skin = "red", title = "Covid-19",
+ui <- shinydashboardPlus::dashboardPagePlus(skin = "red", title = "Covid-19",
                         
                         dashboardHeader(title = img(src = "coronavirus_white.png")),
                         

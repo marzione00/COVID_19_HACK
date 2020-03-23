@@ -124,7 +124,7 @@ tabItem(tabName = "tab_2",
                          footer = fluidRow(
                                  column(
                                          width = 6,
-                                         descriptionBlock(
+                                         shinydashboardPlus::descriptionBlock(
                                                  number = paste0(tail(country_growth$growth,1),"%"),
                                                  number_color = ifelse(tail(country_growth$growth,1)>0,"red","green"), 
                                                  number_icon = ifelse(tail(country_growth$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
@@ -136,7 +136,7 @@ tabItem(tabName = "tab_2",
                                  ),
                                  column(
                                          width = 6,
-                                         descriptionBlock(
+                                         shinydashboardPlus::descriptionBlock(
                                                  number = paste0(tail(country_growth$growth_change,1),"%"),
                                                  number_color = ifelse(tail(country_growth$growth_change,1)>0,"red","green"), 
                                                  number_icon = ifelse(tail(country_growth$growth_change,1)>0,"fa fa-caret-up","fa fa-caret-down"),
