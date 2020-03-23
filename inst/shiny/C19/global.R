@@ -7,9 +7,9 @@ country_growth = covid19:::get_country_growth()
 intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
 
 ## temporary solution
-library(tidyverse)
+#library(tidyverse)
 #library(devtools)
-library(shinydashboard)
+#library(shinydashboard)
 #library(httr)
 
 

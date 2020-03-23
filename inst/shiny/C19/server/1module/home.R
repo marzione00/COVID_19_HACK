@@ -90,7 +90,7 @@ observeEvent(input$show, {
  
                                   '))),
         
-        tabBox(
+    shinydashboard::tabBox(
           width = 12,
           # height = "250px",
           title = NULL,

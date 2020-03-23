@@ -1,7 +1,7 @@
-tabItem(
+shinydashboard::tabItem(
   tabName = "tab_3",
   
-  valueBox(
+  shinydashboard::valueBox(
     "Data Analysis",
     "Analysis",
     icon = icon("chart-bar"),
@@ -12,7 +12,7 @@ tabItem(
   
   fluidRow(column(
     12,
-    tabBox(
+    shinydashboard::tabBox(
       width = 12,
       title = "Analisys",
       id = "tabset1",
@@ -124,7 +124,7 @@ tabItem(
         
         
         # --------  ARIMA ------
-        valueBox(
+        shinydashboard::valueBox(
           "ARIMA model",
           "Autoregressive integrated moving average",
           icon = icon("analytics"),

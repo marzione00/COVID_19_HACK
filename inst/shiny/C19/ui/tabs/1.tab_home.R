@@ -1,5 +1,5 @@
-tabItem(tabName = "tab_1",
-        valueBox("Coronavirus in Italy", 
+shinydashboard::tabItem(tabName = "tab_1",
+                        shinydashboard::valueBox("Coronavirus in Italy", 
                  paste("Most recent update:",
                        tail(countryTS$data,1)),
                  icon=icon("history"),
@@ -7,7 +7,7 @@ tabItem(tabName = "tab_1",
         fluidRow(
           column(6,
                  
-                 box(title="Number of cases", solidHeader = T,
+                 shinydashboard::box(title="Number of cases", solidHeader = T,
                      width = NULL,
                      color = "red",
                      tags$head(tags$style(HTML('
@@ -24,7 +24,7 @@ tabItem(tabName = "tab_1",
 }
                                                '))),
                      
-                     tabBox(
+                     shinydashboard::tabBox(
                        width = 12,
                        # height = "250px",
                        title = fluidRow(
@@ -77,15 +77,15 @@ tabItem(tabName = "tab_1",
                  
                  
                  fluidRow(
-                   valueBox(tail(countryTS$totale_casi,1), "Total cases", icon = icon("notes-medical"),
+                   shinydashboard::valueBox(tail(countryTS$totale_casi,1), "Total cases", icon = icon("notes-medical"),
                             color = "red", width = 6),
-                   valueBox(tail(countryTS$terapia_intensiva,1), "Intensive care", icon = icon("procedures"),
+                   shinydashboard::valueBox(tail(countryTS$terapia_intensiva,1), "Intensive care", icon = icon("procedures"),
                             color = "orange", width = 6)
                  ),
                  fluidRow(
-                   valueBox(tail(countryTS$totale_ospedalizzati,1), "Hospitalised", icon = icon("hospital"),
+                   shinydashboard::valueBox(tail(countryTS$totale_ospedalizzati,1), "Hospitalised", icon = icon("hospital"),
                             color = "yellow", width = 6),
-                   valueBox(tail(countryTS$isolamento_domiciliare,1), "Home isolation", icon = icon("home"),
+                   shinydashboard::valueBox(tail(countryTS$isolamento_domiciliare,1), "Home isolation", icon = icon("home"),
                             color = "maroon", width = 6)
                  ),
                   
