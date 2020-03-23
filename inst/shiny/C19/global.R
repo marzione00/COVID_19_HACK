@@ -151,7 +151,7 @@ dfita2 <- dfita2 %>%
 
 
 # plot growth monitoring --------------------------------------------------------------------
-out_growth <- get_country_growth()
+out_growth <- country_growth
 
 growth <- data.frame(date=countryTS$data,
                      growth=out_growth$growth)
