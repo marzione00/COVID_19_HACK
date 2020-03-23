@@ -155,6 +155,11 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 # plot growth monitoring --------------------------------------------------------------------
 
+hc <- highcharter::highchart(type = "stock") %>% 
+  highcharter::hc_title(text = "% growth and growth change of total cases") %>%
+  highcharter::hc_add_series(growth_xts, name="growth", color = "red", type = "spline") %>% 
+  highcharter::hc_add_series(growth_change_xts, name="growth_change", color = "orange", type = "spline")
+
 
 output$plot_test <- highcharter::renderHighchart(
   hc

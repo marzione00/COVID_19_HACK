@@ -9,7 +9,7 @@ intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
 
 #================================
 
-
+#library(dplyr)
 #================================
 #====== MODULE 1 - HOME ====== 
 
@@ -30,32 +30,32 @@ names(pc_data) <- tolower(names(pc_data))
 
 pc_df <- purrr::map_df(names(pc_data), function(x){
   casi <- tail(pc_data[[x]],1)$totale_casi
-  data_frame(name=x,cases=casi)
+  dplyr::data_frame(name=x,cases=casi)
 })
 
 pc_df$name
 
 # integrate population info
 pop_region <- italy_pop$region %>% 
-  rename(name=territorio,pop=valore) %>%
-  mutate(name=tolower(name))
+  dplyr::rename(name=territorio,pop=valore) %>%
+ dplyr::mutate(name=tolower(name))
 
 territory_region <- italy_ext$region %>%
-  rename(name=territorio,ext=valore) %>% 
-  mutate(name=tolower(name))
+  dplyr::rename(name=territorio,ext=valore) %>% 
+ dplyr::mutate(name=tolower(name))
 
 
 pc_df <- pc_df %>%
-  left_join(pop_region) %>% 
-  left_join(territory_region) %>%
-  filter(!name%in%c("friuli v. g. ")) %>%
-  mutate(name=ifelse(name%in%c("trento","bolzano","p.a. trento","p.a. bolzano"),
+  dplyr::left_join(pop_region) %>% 
+  dplyr::left_join(territory_region) %>%
+  dplyr::filter(!name%in%c("friuli v. g. ")) %>%
+ dplyr::mutate(name=ifelse(name%in%c("trento","bolzano","p.a. trento","p.a. bolzano"),
                      "trentino-alto adige/sudtirol",name)) %>%
-  group_by(name) %>%
-  summarise(cases=sum(cases), 
+  dplyr::group_by(name) %>%
+  dplyr::summarise(cases=sum(cases), 
             pop=sum(pop),
             ext=sum(ext)) %>%
-  mutate(name=ifelse(name=="emilia romagna","emilia-romagna",name))
+ dplyr::mutate(name=ifelse(name=="emilia romagna","emilia-romagna",name))
 
 
 
@@ -66,22 +66,22 @@ b <- dfita1$name
 setdiff(b,a)
 
 dfita1 <- dfita1 %>%
-  left_join(pc_df) %>%
-  ungroup() %>% 
-  mutate(percentage=(cases/pop)*100) %>%
-  mutate(density=(cases/ext)*1000) %>%
-  rename(absolute=cases) %>%
-  mutate(percentage = round(percentage,2)) %>%
-  mutate(density = round(density, 2))
+  dplyr::left_join(pc_df) %>%
+  dplyr::ungroup() %>% 
+ dplyr::mutate(percentage=(cases/pop)*100) %>%
+ dplyr::mutate(density=(cases/ext)*1000) %>%
+  dplyr::rename(absolute=cases) %>%
+ dplyr::mutate(percentage = round(percentage,2)) %>%
+ dplyr::mutate(density = round(density, 2))
 
 
 
 
 # --- province ---
 
-clean_prov <- map_df(names(provTS), function(x) {
+clean_prov <- purrr::map_df(names(provTS), function(x) {
   tail(provTS[[x]],1)$totale_casi
-  data_frame(
+  dplyr::data_frame(
     name=x,
     cases=tail(provTS[[x]],1)$totale_casi
   )
@@ -101,10 +101,10 @@ x <- ita$features[[1]]
 x$properties
 
 dfita2 <-  ita$features %>% 
-  map_df(function(x){
-    data_frame(hasc = x$properties$hasc, name = x$properties$name)
+  purrr::map_df(function(x){
+    dplyr::data_frame(hasc = x$properties$hasc, name = x$properties$name)
   }) %>%  # extract the keys
-  mutate(random = runif(nrow(.))) # create random value
+  dplyr::mutate(random = runif(nrow(.))) # create random value
 
 head(dfita2)
 
@@ -112,34 +112,34 @@ head(dfita2)
 
 
 # add population
-pop_prov <- rename(italy_pop$province, name=territorio,pop=valore)
+pop_prov <- dplyr::rename(italy_pop$province, name=territorio,pop=valore)
 
 # add territory
 territory_prov <- italy_ext$province %>%
-  rename(name=territorio,ext=valore)
+  dplyr::rename(name=territorio,ext=valore)
 
 
 # make names consistent
 
 clean_prov <- clean_prov %>%
-  left_join(pop_prov) %>% 
-  left_join(territory_prov) %>%
-  mutate(name = ifelse(name=="Massa Carrara","Massa-Carrara",name)) %>%
-  mutate(name = ifelse(name=="Reggio nell'Emilia","Reggio Emilia",name)) %>% 
-  mutate(name = ifelse(name=="Bolzano","Bozen",name)) %>%
-  mutate(name = ifelse(name=="Aosta","Aoste",name)) %>% 
-  mutate(name = ifelse(name=="Monza e della Brianza","Monza e Brianza",name)) %>%
-  mutate(name = ifelse(name=="Reggio di Calabria","Reggio Calabria",name)) %>%
-  mutate(name = ifelse(name=="Torino","Turin",name)) %>%
-  mutate(name = ifelse(name=="Oristano","Oristrano",name)) %>%
-  mutate(name = ifelse(name=="Barletta-Andria-Trani","Barletta-Andria Trani",name))
+  dplyr::left_join(pop_prov) %>% 
+  dplyr::left_join(territory_prov) %>%
+  dplyr::mutate(name = ifelse(name=="Massa Carrara","Massa-Carrara",name)) %>%
+  dplyr::mutate(name = ifelse(name=="Reggio nell'Emilia","Reggio Emilia",name)) %>% 
+  dplyr::mutate(name = ifelse(name=="Bolzano","Bozen",name)) %>%
+  dplyr::mutate(name = ifelse(name=="Aosta","Aoste",name)) %>% 
+  dplyr::mutate(name = ifelse(name=="Monza e della Brianza","Monza e Brianza",name)) %>%
+  dplyr::mutate(name = ifelse(name=="Reggio di Calabria","Reggio Calabria",name)) %>%
+  dplyr::mutate(name = ifelse(name=="Torino","Turin",name)) %>%
+  dplyr::mutate(name = ifelse(name=="Oristano","Oristrano",name)) %>%
+  dplyr::mutate(name = ifelse(name=="Barletta-Andria-Trani","Barletta-Andria Trani",name))
 
 dfita2 <- dfita2 %>%
-  left_join(clean_prov) %>% 
-  ungroup() %>% 
-  mutate(percentage=(cases/pop)*100) %>%
-  mutate(density=(cases/ext)*1000) %>%
-  rename(absolute=cases)
+  dplyr::left_join(clean_prov) %>% 
+  dplyr::ungroup() %>% 
+  dplyr::mutate(percentage=(cases/pop)*100) %>%
+  dplyr::mutate(density=(cases/ext)*1000) %>%
+  dplyr::rename(absolute=cases)
 
 
 
@@ -152,12 +152,12 @@ dfita2 <- dfita2 %>%
 
 # plot growth monitoring --------------------------------------------------------------------
 
-growth <- data.frame(date=get_countryTS()$data,
+growth <- data.frame(date=countryTS$data,
                      growth=get_country_growth()$growth)
 
 growth_xts <- xts::xts(growth[,-1], order.by=growth[,1])
 
-growth_change <- data.frame(date=get_countryTS()$data,
+growth_change <- data.frame(date=countryTS$data,
                             growth=get_country_growth()$growth_change)
 
 growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
@@ -169,21 +169,21 @@ hc <- highcharter::highchart(type = "stock") %>%
 
 
 # tamponi graph -----------------------------------------------------------
-tamp_data <- tibble(
+tamp_data <- tibble::tibble(
   data=countryTS$data,
   tamponi=countryTS$tamponi,
   totale_casi=countryTS$totale_casi
 ) %>% 
-  mutate(casi_giornalieri=totale_casi-lag(totale_casi)) %>%
-  mutate(casi_giornalieri=ifelse(data==as.Date("2020-02-24"),totale_casi,casi_giornalieri)) %>% 
-  mutate(tamponi_giornalieri=tamponi-lag(tamponi)) %>%
-  mutate(tamponi_giornalieri=ifelse(data==as.Date("2020-02-24"),tamponi,tamponi_giornalieri)) %>%
-  mutate(share_infected_discovered = casi_giornalieri/tamponi_giornalieri) %>%
-  select(data,casi_giornalieri,tamponi_giornalieri,share_infected_discovered) %>%
-  rename(daily_cases=casi_giornalieri,daily_tests=tamponi_giornalieri,date=data) %>%
-  mutate(share_infected_discovered=round(share_infected_discovered,2))
+  dplyr::mutate(casi_giornalieri=totale_casi-lag(totale_casi)) %>%
+  dplyr::mutate(casi_giornalieri=ifelse(data==as.Date("2020-02-24"),totale_casi,casi_giornalieri)) %>% 
+  dplyr::mutate(tamponi_giornalieri=tamponi-lag(tamponi)) %>%
+  dplyr::mutate(tamponi_giornalieri=ifelse(data==as.Date("2020-02-24"),tamponi,tamponi_giornalieri)) %>%
+  dplyr::mutate(share_infected_discovered = casi_giornalieri/tamponi_giornalieri) %>%
+  dplyr::select(data,casi_giornalieri,tamponi_giornalieri,share_infected_discovered) %>%
+  dplyr::rename(daily_cases=casi_giornalieri,daily_tests=tamponi_giornalieri,date=data) %>%
+  dplyr::mutate(share_infected_discovered=round(share_infected_discovered,2))
 
-tamp_data_1 <- tamp_data %>% select(1:3) %>%
+tamp_data_1 <- tamp_data %>% dplyr::select(1:3) %>%
   tidyr::gather(key="key",value="value",-date)
 
 #================================
