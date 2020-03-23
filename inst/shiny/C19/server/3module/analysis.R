@@ -382,7 +382,7 @@ output$Arima_coolplot0 <- plotly::renderPlotly({
   
   wait <- region()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
-    p = ggplot2::autoplot(acf(log(reac_ARIMA$sample_cases_trim)))
+    p = forecast::autoplot(acf(log(reac_ARIMA$sample_cases_trim)))
    plotly::ggplotly(p)
   }
   
@@ -393,7 +393,7 @@ output$Arima_coolplot00 <- plotly::renderPlotly({
   
   wait <- region()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
-    p = ggplot2::autoplot(pacf(log(reac_ARIMA$sample_cases_trim)) )
+    p = forecast::autoplot(pacf(log(reac_ARIMA$sample_cases_trim)) )
    plotly::ggplotly(p)
   }
   
