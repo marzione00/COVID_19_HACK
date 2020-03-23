@@ -90,7 +90,7 @@ clean_prov <- purrr::map_df(names(provTS), function(x) {
 
 url <- "http://code.highcharts.com/mapdata/countries/it/it-all.geo.json"
 tmpfile <- tempfile(fileext = ".json")
-download.file(url, tmpfile)
+utils::download.file(url, tmpfile)
 
 ita <- readLines(tmpfile)
 
@@ -151,14 +151,15 @@ dfita2 <- dfita2 %>%
 
 
 # plot growth monitoring --------------------------------------------------------------------
+out_growth <- get_country_growth()
 
 growth <- data.frame(date=countryTS$data,
-                     growth=get_country_growth()$growth)
+                     growth=out_growth$growth)
 
 growth_xts <- xts::xts(growth[,-1], order.by=growth[,1])
 
 growth_change <- data.frame(date=countryTS$data,
-                            growth=get_country_growth()$growth_change)
+                            growth=out_growth$growth_change)
 
 growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
 
@@ -174,9 +175,9 @@ tamp_data <- tibble::tibble(
   tamponi=countryTS$tamponi,
   totale_casi=countryTS$totale_casi
 ) %>% 
-  dplyr::mutate(casi_giornalieri=totale_casi-lag(totale_casi)) %>%
+  dplyr::mutate(casi_giornalieri=totale_casi-dplyr::lag(totale_casi)) %>%
   dplyr::mutate(casi_giornalieri=ifelse(data==as.Date("2020-02-24"),totale_casi,casi_giornalieri)) %>% 
-  dplyr::mutate(tamponi_giornalieri=tamponi-lag(tamponi)) %>%
+  dplyr::mutate(tamponi_giornalieri=tamponi-dplyr::lag(tamponi)) %>%
   dplyr::mutate(tamponi_giornalieri=ifelse(data==as.Date("2020-02-24"),tamponi,tamponi_giornalieri)) %>%
   dplyr::mutate(share_infected_discovered = casi_giornalieri/tamponi_giornalieri) %>%
   dplyr::select(data,casi_giornalieri,tamponi_giornalieri,share_infected_discovered) %>%
