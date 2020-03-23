@@ -460,8 +460,7 @@ output$parameters_sugg <- shiny::renderUI({
   
   wait <- region()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
-    #auto_arima <- forecast::auto.arima(log(reac_ARIMA$sample_cases_trim))
-    auto_arima="Ciao"
+    auto_arima <- forecast::auto.arima(log(reac_ARIMA$sample_cases_trim))
     h3(paste("Suggested Parameters: ",toString(auto_arima)))
   }
   
