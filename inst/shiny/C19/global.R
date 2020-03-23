@@ -21,7 +21,7 @@ map <- "https://raw.githubusercontent.com/stefanocudini/leaflet-geojson-selector
 
 dfita1 <-  map$features %>% 
   purrr::map_df(function(x){
-    as_data_frame(x$properties)
+    dplyr::as_data_frame(x$properties)
   })
 
 pc_data <- regionTS
@@ -184,7 +184,7 @@ tamp_data <- tibble(
   mutate(share_infected_discovered=round(share_infected_discovered,2))
 
 tamp_data_1 <- tamp_data %>% select(1:3) %>%
-  gather(key="key",value="value",-date)
+  tidyr::gather(key="key",value="value",-date)
 
 #================================
 
