@@ -32,7 +32,8 @@ Imports:
     nlstools,
     shinycssloaders,
     xts,
-    imputeTS
+    imputeTS,
+    DT
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
