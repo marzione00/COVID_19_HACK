@@ -103,18 +103,24 @@ output$rawData_sel_input <- shiny::renderUI({
 shiny::observeEvent(input$rawData_go, {
   output$rawData_table <- DT::renderDataTable({
     
-    switch(input$rawData_terr,
-           "1" = countryTS %>% 
-             dplyr::select(-stato, -data_seriale) %>%
-             dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-           "2" = regionTS[[input$rawData_reg_sel]] %>%
-             dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-             dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-           "3" = provTS[[input$rawData_prov_sel]] %>%
-             dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
-                           -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-             dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
-    )
+   
+    
+    DT::datatable( 
+      switch(input$rawData_terr,
+                          "1" = countryTS %>% 
+                            dplyr::select(-stato, -data_seriale) %>%
+                            dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+                          "2" = regionTS[[input$rawData_reg_sel]] %>%
+                            dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+                            dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+                          "3" = provTS[[input$rawData_prov_sel]] %>%
+                            dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
+                                          -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+                            dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
+    ), options = list(
+      searching = TRUE,
+      pageLength = 10,scrollX = T))
+    
   })
 })
 
