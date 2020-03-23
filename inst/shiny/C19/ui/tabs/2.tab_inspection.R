@@ -41,7 +41,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                                   
                                                                                   tabPanel("Raw data",
                                                                                            shiny::uiOutput("rawData_input"),
-                                                                                           shiny::tableOutput("rawData_table")
+                                                                                           DT::dataTableOutput("rawData_table")
                                                                                   )
                                                            )
                                        )
