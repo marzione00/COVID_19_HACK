@@ -36,7 +36,7 @@ tabItem(tabName = "tab_2",
                            tabBox(width = 12,
                                   title = NULL,
                                   tabPanel("Plot",
-                                           highcharter::highchartOutput("general_infos_plot")
+                                           highcharter::highchartOutput("general_infos_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
                                   ),
                                   
                                   tabPanel("Raw data",
