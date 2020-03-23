@@ -416,13 +416,13 @@ output$Arima_coolplot <- plotly::renderPlotly({
     
     p <-plotly::plot_ly() %>%
      plotly::add_ribbons(x = fore.dates, 
-                  ymin = fore$lower[, 2], 
+                  ymin = fore$mean, 
                   ymax = fore$upper[, 2],
                   color = I("#17becf"), 
                   name = "95% confidence") %>%
      plotly::add_ribbons(p, 
                   x = fore.dates, 
-                  ymin = fore$lower[, 1], 
+                  ymin = fore$mean, 
                   ymax = fore$upper[, 1],
                   color = I("#ed9dac"), name = "80% confidence")%>% 
      plotly::add_lines(x = sdt, y = log(reac_ARIMA$sample_cases_trim),
