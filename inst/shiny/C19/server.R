@@ -1,8 +1,3 @@
-library(tidyverse)
-library(plotly)
-library(devtools)
-library(shinydashboard)
-library(httr)
 
 ## server.R ##
 

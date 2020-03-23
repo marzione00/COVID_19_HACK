@@ -227,9 +227,9 @@ output$coolplot_region <- plotly::renderPlotly({
   }
   
   # labels and plot
-  fig <- fig %>% layout(xaxis = list(title = "day"), yaxis = list(title = "Infected"))
+  fig <- fig %>%plotly::layout(xaxis = list(title = "day"), yaxis = list(title = "Infected"))
   if( reac_region$vals$k > 1e7 )
-    fig <- fig %>% layout(title = "Warning: unrealistic model estimated", font = list(color = 'red'),dtick= 5 )
+    fig <- fig %>%plotly::layout(title = "Warning: unrealistic model estimated", font = list(color = 'red'),dtick= 5 )
   fig
   
 })
@@ -284,11 +284,11 @@ output$Plot_residual <- plotly::renderPlotly({
         xaxis = list(title="Fitted values",zeroline = FALSE),
         yaxis = list(title="Residuals")
       )
-      p= p %>% add_trace(name = "residual",data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 15,
+      p= p %>%plotly::add_trace(name = "residual",data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 15,
                                                                                                            color = 'rgba(255, 182, 193, .9)',
                                                                                                            line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                        width = 2)))
-      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_1$fitted1,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
+      p <- p %>%plotly::add_trace(data=Res_DF_2,x=~Res_DF_1$fitted1,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
       
       p
       #grafico1
@@ -302,12 +302,12 @@ output$Plot_residual <- plotly::renderPlotly({
         xaxis = list(title="Fitted values"),
         yaxis = list(title="Standardized residuals")
       )
-      p <- p %>% add_trace(name="Residual standardized",data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
+      p <- p %>%plotly::add_trace(name="Residual standardized",data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
                                                                                                                               color = 'rgba(255, 182, 193, .9)',
                                                                                                                               line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                                           width = 2)))
-      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
-      p <- p %>% add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 2, name = 'liney2', line = list(color = 'rgb(0,0,0)', width = 1),showlegend = FALSE ,mode = 'lines') 
+      p <- p %>%plotly::add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode = 'lines') 
+      p <- p %>%plotly::add_trace(data=Res_DF_2,x=~Res_DF_2$fitted2,y = 2, name = 'liney2', line = list(color = 'rgb(0,0,0)', width = 1),showlegend = FALSE ,mode = 'lines') 
       
       
       p    
@@ -319,11 +319,11 @@ output$Plot_residual <- plotly::renderPlotly({
         xaxis = list(title="Residuals i"),
         yaxis = list(title="Residuals i+1"),
         title ="Autocorrelation")
-      p = p %>% add_trace(name = "Autocorrelation", data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 15,
+      p = p %>%plotly::add_trace(name = "Autocorrelation", data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 15,
                                                                                                                           color = 'rgba(255, 182, 193, .9)',
                                                                                                                           line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                                       width = 2)))
-      p <- p %>% add_trace(data=Res_DF_3,x=~Res_DF_3$fitted3,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode="lines") 
+      p <- p %>%plotly::add_trace(data=Res_DF_3,x=~Res_DF_3$fitted3,y = 0, name = "liney0", line = list(color = 'rgb(0,0,0)', width = 1, dash = 'dot'),showlegend = FALSE, mode="lines") 
       
       p
       #grafico1
@@ -337,7 +337,7 @@ output$Plot_residual <- plotly::renderPlotly({
         yaxis = list(title="Residuals")
       )
       colnames(Res_DF_4)=c("fitted4","qq")
-      p = p %>% add_trace(name="Sqrt of abs of res vs fitted",data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 15,
+      p = p %>%plotly::add_trace(name="Sqrt of abs of res vs fitted",data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 15,
                                                                                                                              color = 'rgba(255, 182, 193, .9)',
                                                                                                                              line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                                          width = 2)))
@@ -383,7 +383,7 @@ output$Arima_coolplot0 <- plotly::renderPlotly({
   wait <- region()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
     p = autoplot(acf(log(reac_ARIMA$sample_cases_trim)))
-    ggplotly(p)
+   plotly::ggplotly(p)
   }
   
 })
@@ -394,7 +394,7 @@ output$Arima_coolplot00 <- plotly::renderPlotly({
   wait <- region()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
     p = ggplot2::autoplot(pacf(log(reac_ARIMA$sample_cases_trim)) )
-    ggplotly(p)
+   plotly::ggplotly(p)
   }
   
 })
@@ -414,22 +414,22 @@ output$Arima_coolplot <- plotly::renderPlotly({
     
     fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = input$forecast)
     
-    p <- plot_ly() %>%
-      add_ribbons(x = fore.dates, 
+    p <-plotly::plot_ly() %>%
+     plotly::add_ribbons(x = fore.dates, 
                   ymin = fore$lower[, 2], 
                   ymax = fore$upper[, 2],
                   color = I("#17becf"), 
                   name = "95% confidence") %>%
-      add_ribbons(p, 
+     plotly::add_ribbons(p, 
                   x = fore.dates, 
                   ymin = fore$lower[, 1], 
                   ymax = fore$upper[, 1],
                   color = I("#ed9dac"), name = "80% confidence")%>% 
-      add_lines(x = sdt, y = log(reac_ARIMA$sample_cases_trim),
+     plotly::add_lines(x = sdt, y = log(reac_ARIMA$sample_cases_trim),
                 color = I("#037d50"), 
                 name = "observed", 
                 mode="lines")%>% 
-      add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
+     plotly::add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
     
     p <- p %>% plotly::layout(
       title = paste0("ARIMA Forecast (",input$ARIMA_p,",",input$ARIMA_I,",",input$ARIMA_q,")"),
@@ -460,7 +460,8 @@ output$parameters_sugg <- shiny::renderUI({
   
   wait <- region()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
-    auto_arima <- forecast::auto.arima(log(reac_ARIMA$sample_cases_trim))
+    #auto_arima <- forecast::auto.arima(log(reac_ARIMA$sample_cases_trim))
+    auto_arima="Ciao"
     h3(paste("Suggested Parameters: ",toString(auto_arima)))
   }
   
@@ -587,9 +588,9 @@ output$Arima_shell_output <- shiny::renderPrint({
 #   }
 #   
 #   # labels and plot
-#   fig <- fig %>% layout(xaxis = list(title = "day"), yaxis = list(title = "Infected"))
+#   fig <- fig %>%plotly::layout(xaxis = list(title = "day"), yaxis = list(title = "Infected"))
 #   if( reac_country$vals$k > 1e8 )
-#     fig <- fig %>% layout(title = "Warning: unrealistc model estimated", font = list(color = 'red'))
+#     fig <- fig %>%plotly::layout(title = "Warning: unrealistc model estimated", font = list(color = 'red'))
 #   fig
 #   
 #   

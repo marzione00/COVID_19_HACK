@@ -79,14 +79,14 @@ tabItem(tabName = "tab_2",
                             # The id lets us use input$tabset1 on the server to find the current tab
                             id = "tabset2",
                             tabPanel("% occupation/capacity",
-                                     plotlyOutput("intensivecare_cap_perc",
+                                     plotly::plotlyOutput("intensivecare_cap_perc",
                                                   width = "100%",
                                                   height = "415px"
                                                   ) %>% 
                                              shinycssloaders::withSpinner( color="#dd4b39")
                             ),
                             tabPanel("capacity vs. occupation ",
-                                     plotlyOutput("intensivecare_cap",
+                                     plotly::plotlyOutput("intensivecare_cap",
                                                   width = "100%",
                                                   height = "415px"
                                                   ) %>%

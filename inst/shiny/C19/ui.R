@@ -1,6 +1,4 @@
-library(plotly)
-library(shinydashboard)
-library(shinydashboardPlus)
+
 ## ui.R ##
 
 

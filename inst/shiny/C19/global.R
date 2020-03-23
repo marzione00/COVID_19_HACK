@@ -8,10 +8,11 @@ intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
 
 ## temporary solution
 library(tidyverse)
-library(plotly)
-library(devtools)
+#library(devtools)
 library(shinydashboard)
-library(httr)
+#library(httr)
+
+
 
 
 #================================
