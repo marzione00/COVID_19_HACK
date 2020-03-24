@@ -118,7 +118,7 @@ shiny::observeEvent(input$rawData_go, {
                                           -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
                             dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
     ), options = list(
-      searching = TRUE,
+      searching = FALSE,
       pageLength = 10,scrollX = T))
     
   })
