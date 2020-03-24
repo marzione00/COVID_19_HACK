@@ -14,6 +14,7 @@ get_countryTS <- function() {
 
   data$data <- as.Date(as.character(data$data), format = "%Y-%m-%d")
   data["data_seriale"] = c(1:length(data$data)-1)
-  return(data)
+  
+  return(list("Italy" = data))
 
 }

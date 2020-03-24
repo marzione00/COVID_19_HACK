@@ -153,12 +153,12 @@ dfita2 <- dfita2 %>%
 # plot growth monitoring --------------------------------------------------------------------
 out_growth <- country_growth
 
-growth <- data.frame(date=countryTS$data,
+growth <- data.frame(date=countryTS$Italy$data,
                      growth=out_growth$growth)
 
 growth_xts <- xts::xts(growth[,-1], order.by=growth[,1])
 
-growth_change <- data.frame(date=countryTS$data,
+growth_change <- data.frame(date=countryTS$Italy$data,
                             growth=out_growth$growth_change)
 
 growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
@@ -171,9 +171,9 @@ hc <- highcharter::highchart(type = "stock") %>%
 
 # tamponi graph -----------------------------------------------------------
 tamp_data <- tibble::tibble(
-  data=countryTS$data,
-  tamponi=countryTS$tamponi,
-  totale_casi=countryTS$totale_casi
+  data=countryTS$Italy$data,
+  tamponi=countryTS$Italy$tamponi,
+  totale_casi=countryTS$Italy$totale_casi
 ) %>% 
   dplyr::mutate(casi_giornalieri=totale_casi-dplyr::lag(totale_casi)) %>%
   dplyr::mutate(casi_giornalieri=ifelse(data==as.Date("2020-02-24"),totale_casi,casi_giornalieri)) %>% 
@@ -196,19 +196,28 @@ tamp_data_1 <- tamp_data %>% dplyr::select(1:3) %>%
 #====== MODULE 3 - ANALYSIS ====== 
 
 # Inital and final dates of samples
-init_date <- min(countryTS$data)
-fin_date <- max(countryTS$data)
+init_date <- min(countryTS$Italy$data)
+fin_date <- max(countryTS$Italy$data)
 
 # Total population sizes in 2020 winter
 country_tot_pop <- 6.048e+07
 region_tot_pop <- NULL
 
-
+countryNames <- names(countryTS)
 regNames <- names(regionTS)
 provNames <- names(provTS)
 
 # Time horizon of all graphs
-days <- (1:50)
+if(nrow(countryTS$Italy) > 50) {
+  days <- c(1:nrow(countryTS$Italy)+20)
+} else {
+  days <- c(1:50)
+}
 
+# Association of provinces to regions
+regAndProv <- data.frame("province" = provNames, "region" = NA, stringsAsFactors = FALSE)
+for(prov in provNames) {
+  regAndProv[regAndProv$province == prov, "region"] <- as.character(provTS[[prov]]$denominazione_regione[1])
+}
 
 #================================

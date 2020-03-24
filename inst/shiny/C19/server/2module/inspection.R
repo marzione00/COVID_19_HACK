@@ -4,7 +4,7 @@
 output$general_infos_plot <- highcharter::renderHighchart(
   
   
-  highcharter::hchart(countryTS,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE)
+  highcharter::hchart(countryTS$Italy,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE)
   %>% 
     
     highcharter::hc_chart(zoomType = "xy") %>%
@@ -13,19 +13,19 @@ output$general_infos_plot <- highcharter::renderHighchart(
       list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
     ) %>%
     
-    highcharter::hc_add_series(data = countryTS, type = "spline", 
+    highcharter::hc_add_series(data = countryTS$Italy, type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = terapia_intensiva),
                                name="Total Intesive care", color="red",showInLegend=TRUE)
   %>%
-    highcharter::hc_add_series(data = countryTS, type = "spline", 
+    highcharter::hc_add_series(data = countryTS$Italy, type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = ricoverati_con_sintomi),
                                name="Total Hospitalized", color="orange",showInLegend=TRUE)
   %>%
-    highcharter::hc_add_series(data = countryTS, type = "spline", 
+    highcharter::hc_add_series(data = countryTS$Italy, type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = deceduti),
                                name="Total Deaths", color="black",showInLegend=TRUE)
   %>%
-    highcharter::hc_add_series(data = countryTS, type = "spline", 
+    highcharter::hc_add_series(data = countryTS$Italy, type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = dimessi_guariti),
                                name="Total recovered", color="green",showInLegend=TRUE)
   %>%
@@ -44,10 +44,10 @@ output$rawData_input <- shiny::renderUI({
                     shiny::dateRangeInput(
                       inputId = "rawData_date",
                       label = "Select dates",
-                      start = countryTS$data[1],
-                      end = countryTS$data[nrow(countryTS)],
-                      min = countryTS$data[1], 
-                      max = countryTS$data[nrow(countryTS)]
+                      start = countryTS$Italy$data[1],
+                      end = countryTS$Italy$data[nrow(countryTS$Italy)],
+                      min = countryTS$Italy$data[1], 
+                      max = countryTS$Italy$data[nrow(countryTS$Italy)]
                     )
       ),
       shiny::column(3,
@@ -86,7 +86,7 @@ output$rawData_sel_input <- shiny::renderUI({
 #   output$rawData_table <- shiny::renderTable({
 #     
 #     switch(input$rawData_terr,
-#                "1" = countryTS %>% 
+#                "1" = countryTS$Italy %>% 
 #                  dplyr::select(-stato, -data_seriale) %>%
 #                  dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
 #                "2" = regionTS[[input$rawData_reg_sel]] %>%
@@ -107,7 +107,7 @@ shiny::observeEvent(input$rawData_go, {
     
     DT::datatable( 
       switch(input$rawData_terr,
-                          "1" = countryTS %>% 
+                          "1" = countryTS$Italy %>% 
                             dplyr::select(-stato, -data_seriale) %>%
                             dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
                           "2" = regionTS[[input$rawData_reg_sel]] %>%

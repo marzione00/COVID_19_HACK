@@ -1,7 +1,7 @@
 shinydashboard::tabItem(tabName = "tab_1",
                         shinydashboard::valueBox("Coronavirus in Italy", 
                  paste("Most recent update:",
-                       tail(countryTS$data,1)),
+                       tail(countryTS$Italy$data,1)),
                  icon=icon("history"),
                  color = "red", width = NULL),
         fluidRow(
@@ -77,15 +77,15 @@ shinydashboard::tabItem(tabName = "tab_1",
                  
                  
                  fluidRow(
-                   shinydashboard::valueBox(tail(countryTS$totale_casi,1), "Total cases", icon = icon("notes-medical"),
+                   shinydashboard::valueBox(tail(countryTS$Italy$totale_casi,1), "Total cases", icon = icon("notes-medical"),
                             color = "red", width = 6),
-                   shinydashboard::valueBox(tail(countryTS$terapia_intensiva,1), "Intensive care", icon = icon("procedures"),
+                   shinydashboard::valueBox(tail(countryTS$Italy$terapia_intensiva,1), "Intensive care", icon = icon("procedures"),
                             color = "orange", width = 6)
                  ),
                  fluidRow(
-                   shinydashboard::valueBox(tail(countryTS$totale_ospedalizzati,1), "Hospitalised", icon = icon("hospital"),
+                   shinydashboard::valueBox(tail(countryTS$Italy$totale_ospedalizzati,1), "Hospitalised", icon = icon("hospital"),
                             color = "yellow", width = 6),
-                   shinydashboard::valueBox(tail(countryTS$isolamento_domiciliare,1), "Home isolation", icon = icon("home"),
+                   shinydashboard::valueBox(tail(countryTS$Italy$isolamento_domiciliare,1), "Home isolation", icon = icon("home"),
                             color = "maroon", width = 6)
                  ),
                   
