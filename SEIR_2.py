@@ -105,7 +105,9 @@ def estimate_parameters(U, dU, **kwargs):
 
     return parameters, Rsq
 
-def solve_SEIR(U, dU, k=4):
+def solve_SEIR(U, k=4):
+    
+    dU = der(U)
     
     param, Rsq = estimate_parameters(U, dU)
     eval_time = range(k*len(U[0]))
