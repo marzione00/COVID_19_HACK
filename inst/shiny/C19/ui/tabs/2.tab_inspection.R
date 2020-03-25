@@ -53,6 +53,8 @@ shinydashboard::tabItem(tabName = "tab_2",
                                 )
                         ),
                         
+                        br(),
+                        br(),
                         shinydashboard::valueBox("Deeper inspection", "hospital occupancy, growth monitoring and test tracking",
                                                  icon=icon("chart-line"),
                                                  color = "yellow", width = NULL),
