@@ -116,7 +116,8 @@ output$fitInput <- shiny::renderUI({
 
 suggest_date <- function()
 {
-
+  wait <- waitLoading()
+  
   new = const_trim(eval(t$data)[[t$name]]$totale_casi,1)
   index = which(eval(t$data)[[t$name]]$totale_casi %in% new)
   newdates = eval(t$data)[[t$name]]$data[index]

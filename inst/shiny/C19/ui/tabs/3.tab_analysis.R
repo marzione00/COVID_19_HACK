@@ -27,7 +27,7 @@ shinydashboard::tabItem(
     "Logistic model",
     "Curve fitting on confirmed cases of infection's time series",
     icon = icon("analytics"),
-    color = "red",
+    color = "yellow",
     width = NULL
   ),
   
@@ -100,7 +100,7 @@ shinydashboard::tabItem(
     "ARIMA model",
     "ARIMA(p,i,q) on confirmed cases of infection's time series",
     icon = icon("analytics"),
-    color = "red",
+    color = "yellow",
     width = NULL
   ),
   

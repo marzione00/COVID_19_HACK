@@ -7,8 +7,8 @@ shinydashboard::tabItem(tabName = "tab_2",
                         
                         
                         shinydashboard::valueBox("Introduction", "Total cases, total deaths, total recovered, total hospitalised",
-                                                 icon=icon("search"),
-                                                 color = "red", width = NULL),
+                                                 icon=icon("chart-line"),
+                                                 color = "yellow", width = NULL),
                         fluidRow(
                                 # column(4,
                                 #        
@@ -52,6 +52,10 @@ shinydashboard::tabItem(tabName = "tab_2",
                                        
                                 )
                         ),
+                        
+                        shinydashboard::valueBox("Deeper inspection", "hospital occupancy, growth monitoring and test tracking",
+                                                 icon=icon("chart-line"),
+                                                 color = "yellow", width = NULL),
                         
                         fluidRow(
                                 column(6,
