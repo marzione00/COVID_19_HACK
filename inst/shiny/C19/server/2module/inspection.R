@@ -1,56 +1,71 @@
-# General info plot
+
+# Province input updater
+#shiny::observe({
+#  wait <- waitInput()
+#  if(input$regiontab2 != "default") {
+#    ch <- c("--- ALL ---" = "default", regAndProv[regAndProv$regiontab2 == input$regiontab2, "provincetab2"])
+#  } else {
+#    ch <- c("--- ALL ---" = "default", provNames)
+#  }
+#  shiny::updateSelectizeInput(session, inputId = "provincetab2", choices = ch, selected = NULL)
+#})
+
+
+# General info reactive dataset
 dataset = reactive({
+  
   
   if(input$regiontab2 == "default" && input$provincetab2 == "default") {
     name <- input$countrytab2
-    print(name)
     dataset <- countryTS$Italy
-    print(dataset)
-    
-  } else if(input$regiontab2 != "default") {
+
+  }
+   
+
+   else if(input$regiontab2 != "default" &&  input$provincetab2 == "default") {
     name <- input$regiontab2
-    print(name)
     dataset <- regionTS[[name]]
-    
-  } else {
-    print("OK")
+   }
+  
+  
+  #DA MODIFICARE ID INPUT IN TAB2
+   else if(input$regiontab2 != "default" &&  input$provincetab2 != "default"){
+    name <- input$provincetab2
+    dataset <- provTS[[name]]
     
   }
-  #return(dataset)
+  else
+  {
+    need(FALSE, "Wrong inputs")
+  }
 }
 
 )
 
-
+# General info reactive plot
 output$general_infos_plot <- highcharter::renderHighchart(
-  
-  highcharter::hchart(dataset(),"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE)
-  %>% 
-    
+
+  highcharter::hchart(dataset(),"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE) %>% 
     highcharter::hc_chart(zoomType = "xy") %>%
     highcharter::hc_yAxis_multiples(
       list(lineWidth = 3, title = list(text  =  '')),
       list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
-    ) %>%
-    
+    )  %>%
     highcharter::hc_add_series(data = dataset(), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = terapia_intensiva),
-                               name="Total Intesive care", color="red",showInLegend=TRUE)
-  %>%
+                               name="Total Intesive care", color="red",showInLegend=TRUE) %>%
     highcharter::hc_add_series(data =dataset(), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = ricoverati_con_sintomi),
-                               name="Total Hospitalized", color="orange",showInLegend=TRUE)
-  %>%
+                               name="Total Hospitalized", color="orange",showInLegend=TRUE)   %>%
     highcharter::hc_add_series(data =dataset(), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = deceduti),
-                               name="Total Deaths", color="black",showInLegend=TRUE)
-  %>%
+                               name="Total Deaths", color="black",showInLegend=TRUE)  %>%
     highcharter::hc_add_series(data =dataset(), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = dimessi_guariti),
-                               name="Total recovered", color="green",showInLegend=TRUE)
-  %>%
+                               name="Total recovered", color="green",showInLegend=TRUE)  %>%
     highcharter::hc_legend(align = "top", verticalAlign = "top",
                            layout = "vertical", x = 0, y = 100, enabled=TRUE) 
+    
 )
 
 
