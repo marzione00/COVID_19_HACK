@@ -26,6 +26,28 @@ waitInput <- shiny::reactive({
 })
 
 
+suggest_date <- function()
+{
+  wait <- waitLoading()
+  
+  new = const_trim(eval(t$data)[[t$name]]$totale_casi,1)
+  index = which(eval(t$data)[[t$name]]$totale_casi %in% new)
+  newdates = eval(t$data)[[t$name]]$data[index]
+  
+  return(c(newdates[1], newdates[length(newdates)]))
+}
+
+suggest_lags<- function()
+{
+  wait <- waitLoading()
+  if(is_ready(reac_ARIMA$sample_cases_trim)) {
+    sugg = toString(forecast::auto.arima(log(reac_ARIMA$sample_cases_trim)))
+    matches <- regmatches(sugg, gregexpr("[[:digit:]]+", sugg))
+    print(matches)
+    return(as.numeric(unlist(matches)))
+  }
+}
+
 output$terrInput <- shiny::renderUI({
   shiny::fluidPage(
     shiny::fluidRow(
@@ -114,16 +136,6 @@ output$fitInput <- shiny::renderUI({
   )
 })
 
-suggest_date <- function()
-{
-  wait <- waitLoading()
-  
-  new = const_trim(eval(t$data)[[t$name]]$totale_casi,1)
-  index = which(eval(t$data)[[t$name]]$totale_casi %in% new)
-  newdates = eval(t$data)[[t$name]]$data[index]
-  
-  return(c(newdates[1], newdates[length(newdates)]))
-}
 
 output$arimaInput <- shiny::renderUI({
   fluidRow(
@@ -139,11 +151,11 @@ output$arimaInput <- shiny::renderUI({
            hr(),
            
            shiny::sliderInput(inputId = "ARIMA_q", label = "Choose p",
-                              min = 0, max = 10,step = 1,value=0),
+                              min = 0, max = 10,step = 1,value=suggest_lags()[1]),
            shiny::sliderInput(inputId = "ARIMA_I", label = "Choose i",
-                              min = 0, max = 3,step = 1,value=1),
+                              min = 0, max = 3,step = 1,value=suggest_lags()[2]),
            shiny::sliderInput(inputId = "ARIMA_p", label = "Choose q",
-                              min = 0, max = 10,step = 1,value=1)
+                              min = 0, max = 10,step = 1,value=suggest_lags()[3])
            
     )
   )
@@ -425,7 +437,7 @@ shiny::observe({
   
   
   
-
+  
   reac_ARIMA$sample_date <- eval(t$data)[[t$name]]$data_seriale
   reac_ARIMA$sample_cases <- eval(t$data)[[t$name]]$totale_casi
   reac_ARIMA$sample_diff <-  c(NA,diff(reac_ARIMA$sample_cases))
@@ -444,7 +456,7 @@ shiny::observe({
   
   
   
-  reac_ARIMA$arima <- checkExp(  stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q)) , "There is not a suitable ARIMA model")
+  reac_ARIMA$arima <- checkExp(  stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_q,input$ARIMA_I,input$ARIMA_p)) , "There is not a suitable ARIMA model")
   
   #  reac_ARIMA$arima <- stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
 })
@@ -526,7 +538,7 @@ output$arima_coolplot1 <- plotly::renderPlotly({
       plotly::add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
     
     p <- p %>% plotly::layout(
-      title = paste0("ARIMA Forecast (",input$ARIMA_p,",",input$ARIMA_I,",",input$ARIMA_q,")"),
+      title = paste0("ARIMA Forecast (",input$ARIMA_q,",",input$ARIMA_I,",",input$ARIMA_p,")"),
       xaxis = list(title="Days"),
       yaxis = list(title="log cases")
     )
@@ -579,7 +591,7 @@ output$arima_shell_output <- shiny::renderPrint({
   wait <- waitLoading()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
     
-    result = checkExp(arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q)),"There is not a suitable ARIMA model")
+    result = checkExp(arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_q,input$ARIMA_I,input$ARIMA_p)),"There is not a suitable ARIMA model")
     result
   }
   
