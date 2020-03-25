@@ -114,6 +114,15 @@ output$fitInput <- shiny::renderUI({
   )
 })
 
+suggest_date <- function()
+{
+
+  new = const_trim(eval(t$data)[[t$name]]$totale_casi,1)
+  index = which(eval(t$data)[[t$name]]$totale_casi %in% new)
+  newdates = eval(t$data)[[t$name]]$data[index]
+  
+  return(c(newdates[1], newdates[length(newdates)]))
+}
 
 output$arimaInput <- shiny::renderUI({
   fluidRow(
@@ -121,7 +130,7 @@ output$arimaInput <- shiny::renderUI({
            
            shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
                               min = init_date, max = fin_date, timeFormat = "%d %b",
-                              step = 1, value = c(init_date, fin_date)),
+                              step = 1, value = suggest_date()),
            
            shiny::sliderInput(inputId = "forecast", label = "Choose forecast lags",
                               min = 1,  max = 40, value = 10),
