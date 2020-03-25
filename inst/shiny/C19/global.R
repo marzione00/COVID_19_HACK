@@ -211,6 +211,9 @@ tamp_data_1 <- tamp_data %>% dplyr::select(1:3) %>%
 
 # Inital and final dates of samples
 init_date <- min(countryTS$Italy$data)
+
+init_date_arima = init_date
+  
 fin_date <- max(countryTS$Italy$data)
 
 # Total population sizes in 2020 winter

@@ -396,22 +396,33 @@ output$plot_residual <- plotly::renderPlotly({
 })
 
 
+
 ##===================================== ARIMA SECTION =============================================##
 reac_ARIMA <- shiny::reactiveValues()
+
+#   shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
+# min = init_date, max = fin_date, timeFormat = "%d %b",
+# step = 1, value = c(init_date, fin_date)),
+
 
 ## HERE GOES ALL ARIMA IMPLEMENTATION COMMON TO ALL GRAPHS
 shiny::observe({
   wait <- waitLoading()
   
-  reac_ARIMA$logic_interval <- eval(t$data)[[t$name]]$data >= input$arima_interval[1] &
-    eval(t$data)[[t$name]]$data <= input$arima_interval[2]
   
+  reac_ARIMA$logic_interval <- eval(t$data)[[t$name]]$data >=  input$arima_interval[1]  &
+    eval(t$data)[[t$name]]$data <= input$arima_interval[2] 
+  
+  
+  
+
   reac_ARIMA$sample_date <- eval(t$data)[[t$name]]$data_seriale
   reac_ARIMA$sample_cases <- eval(t$data)[[t$name]]$totale_casi
   reac_ARIMA$sample_diff <-  c(NA,diff(reac_ARIMA$sample_cases))
   
+  
   reac_ARIMA$sample_date_trim <- reac_ARIMA$sample_date[reac_ARIMA$logic_interval]
-  reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]
+  reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]+1
   reac_ARIMA$sample_diff_trim <- reac_ARIMA$sample_diff[reac_ARIMA$logic_interval]
   
   reac_ARIMA$sample_date_rem <- reac_ARIMA$sample_date[!reac_ARIMA$logic_interval]
