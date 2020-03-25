@@ -15,7 +15,8 @@ shinydashboard::tabItem(
                         status= "danger",
                         solidHeader = FALSE,
                         title = "Territory selection",
-                        shiny::uiOutput("terrInput")
+                        shiny::uiOutput("terrInput"),
+                        shiny::htmlOutput("selected_info")
     )
   ),
   

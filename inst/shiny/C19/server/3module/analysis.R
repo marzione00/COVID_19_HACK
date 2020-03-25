@@ -1,6 +1,4 @@
 
-
-
 ## CHECKS FOR ERROR PREVENTING ##
 is_ready <- function(x) {
   if(( is.null(x) || length(x) == 0 ))
@@ -43,7 +41,6 @@ suggest_lags<- function()
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
     sugg = toString(forecast::auto.arima(log(reac_ARIMA$sample_cases_trim)))
     matches <- regmatches(sugg, gregexpr("[[:digit:]]+", sugg))
-    print(matches)
     return(as.numeric(unlist(matches)))
   }
 }
@@ -311,6 +308,18 @@ output$fit_smry <- shiny::renderPrint({
   summary(reac_general$model)
 })
 
+output$selected_terr <- shiny::renderPrint({
+})
+
+output$selected_info <- shiny::renderUI({
+  
+  if(is_ready(t$name))
+  {
+    
+    h3(paste("Selected territory:", t$name))
+  }
+  
+})
 
 output$resid_smry <- shiny::renderPrint({
   wait <- waitLoading()
@@ -460,16 +469,6 @@ shiny::observe({
   
   #  reac_ARIMA$arima <- stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
 })
-
-
-output$log <- renderText({
-  wait <- waitInput()
-  # paste("input$country = ", input$country, ",  input$region = ", input$region, 
-  #       "   input$province = ", input$province, "   t$c = ", t$c, "   t$r = ", t$r,
-  #       "   t$p = ", t$p)
-  paste(reac_ARIMA$sample_cases_trim, collapse = "; ")
-})
-
 
 
 
