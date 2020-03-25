@@ -1,10 +1,30 @@
 # General info plot
+dataset = reactive({
+  
+  if(input$regiontab2 == "default" && input$provincetab2 == "default") {
+    name <- input$countrytab2
+    print(name)
+    dataset <- countryTS$Italy
+    print(dataset)
+    
+  } else if(input$regiontab2 != "default") {
+    name <- input$regiontab2
+    print(name)
+    dataset <- regionTS[[name]]
+    
+  } else {
+    print("OK")
+    
+  }
+  #return(dataset)
+}
+
+)
 
 
 output$general_infos_plot <- highcharter::renderHighchart(
   
-  
-  highcharter::hchart(countryTS$Italy,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE)
+  highcharter::hchart(dataset(),"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE)
   %>% 
     
     highcharter::hc_chart(zoomType = "xy") %>%
@@ -13,25 +33,26 @@ output$general_infos_plot <- highcharter::renderHighchart(
       list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
     ) %>%
     
-    highcharter::hc_add_series(data = countryTS$Italy, type = "spline", 
+    highcharter::hc_add_series(data = dataset(), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = terapia_intensiva),
                                name="Total Intesive care", color="red",showInLegend=TRUE)
   %>%
-    highcharter::hc_add_series(data = countryTS$Italy, type = "spline", 
+    highcharter::hc_add_series(data =dataset(), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = ricoverati_con_sintomi),
                                name="Total Hospitalized", color="orange",showInLegend=TRUE)
   %>%
-    highcharter::hc_add_series(data = countryTS$Italy, type = "spline", 
+    highcharter::hc_add_series(data =dataset(), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = deceduti),
                                name="Total Deaths", color="black",showInLegend=TRUE)
   %>%
-    highcharter::hc_add_series(data = countryTS$Italy, type = "spline", 
+    highcharter::hc_add_series(data =dataset(), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = data, y = dimessi_guariti),
                                name="Total recovered", color="green",showInLegend=TRUE)
   %>%
     highcharter::hc_legend(align = "top", verticalAlign = "top",
-              layout = "vertical", x = 0, y = 100, enabled=TRUE) 
+                           layout = "vertical", x = 0, y = 100, enabled=TRUE) 
 )
+
 
 
 # General info raw data

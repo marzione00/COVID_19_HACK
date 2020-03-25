@@ -39,7 +39,28 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                            shinydashboard::tabBox(width = 12,
                                                                                   title = NULL,
                                                                                   tabPanel("Plot",
-                                                                                           highcharter::highchartOutput("general_infos_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
+                                                                                           
+                                                                                           
+                                                                                           shiny::fluidRow(
+                                                                                             shiny::column(2,
+                                                                                                           shiny::selectizeInput(
+                                                                                                             inputId = "countrytab2", label = "Country",
+                                                                                                             choices = countryNames, selected = "Italy"),
+                                                                                                           
+                                                                                                           shiny::selectizeInput(
+                                                                                                             inputId = "regiontab2", label = "Region",
+                                                                                                             choices = c("--- ALL ---" = "default", regNames), selected = NULL),
+                                                                                                           
+                                                                                                           shiny::selectizeInput(
+                                                                                                             inputId = "provincetab2", label = "Province",
+                                                                                                             choices = c("--- ALL ---" = "default", provNames), selected = NULL)
+                                                                                             ),
+                                                                                             shiny::column(10,
+                                                                                                           highcharter::highchartOutput("general_infos_plot")
+                                                                                                           
+                                                                                             )
+                                                                                           ),
+                                                                                           
                                                                                   ),
                                                                                   
                                                                                   tabPanel("Raw data",
