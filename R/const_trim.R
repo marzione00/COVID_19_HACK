@@ -15,9 +15,7 @@
 const_trim <- function(v,threshold) {
 	if(is.null(v) || length(v) == 0 || !is.numeric(v))
 		return(NULL)
-		
-	c <- v[1]
-	
+
 	i <- 1
 	while(i+1 <= length(v) && v[i+1]-v[i] <= threshold) {
 		v <- v[-i]
