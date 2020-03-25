@@ -20,6 +20,11 @@ checkExp <- function(expression, message) {
   
 }
 
+#=== Function to pass from log e to log 10
+toLog10<- function(num)
+{
+  return(log(num)/log(10))
+}
 
 #================================
 

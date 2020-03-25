@@ -470,6 +470,8 @@ shiny::observe({
   #  reac_ARIMA$arima <- stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
 })
 
+#Ln x = Log10 x / Log10 e
+
 
 
 ## Plot of autocorrelation function
@@ -480,8 +482,12 @@ output$arima_coolplot2 <- plotly::renderPlotly({
     
     p = checkExp(  forecast::autoplot(acf(log(reac_ARIMA$sample_cases_trim))) , "There is not a forecast for the ARIMA model")
     
-    plotly::ggplotly(p)
     
+    p = plotly::ggplotly(p)
+    
+    p <- p %>%plotly::layout(xaxis = list(title = "LAG"), yaxis = list(title = "ACF"), title="Autocorrelation", showlegend = TRUE, 
+                             plot_bgcolor = "rgb(255, 255, 255)")
+      
     
   }
   
@@ -494,10 +500,12 @@ output$arima_coolplot3 <- plotly::renderPlotly({
   if(is_ready(reac_ARIMA$sample_cases_trim)) {
     
     
-    p =     checkExp( forecast::autoplot(pacf(log(reac_ARIMA$sample_cases_trim)) ) , "There is not a forecast for the ARIMA model")
-    plotly::ggplotly(p)
+    p = checkExp( forecast::autoplot(pacf(log(reac_ARIMA$sample_cases_trim)) ) , "There is not a forecast for the ARIMA model")
+    p = plotly::ggplotly(p)
     
-    
+    p <- p %>%plotly::layout(xaxis = list(title = "LAG"), yaxis = list(title = "PACF"), title="Partial Autocorrelation", showlegend = TRUE, 
+                             plot_bgcolor = "rgb(255, 255, 255)")
+ 
   }
   
 })
@@ -521,20 +529,20 @@ output$arima_coolplot1 <- plotly::renderPlotly({
     
     p <-plotly::plot_ly() %>%
       plotly::add_ribbons(x = fore.dates,
-                          ymin = fore$mean,
-                          ymax = fore$upper[, 2],
+                          ymin = toLog10(fore$mean),
+                          ymax = toLog10(fore$upper[, 2]),
                           color = I("#17becf"),
                           name = "95% confidence") %>%
       plotly::add_ribbons(p,
                           x = fore.dates,
-                          ymin = fore$mean,
-                          ymax = fore$upper[, 1],
+                          ymin = toLog10(fore$mean),
+                          ymax = toLog10(fore$upper[, 1]),
                           color = I("#ed9dac"), name = "80% confidence")%>%
-      plotly::add_lines(x = sdt, y = log(reac_ARIMA$sample_cases_trim),
+      plotly::add_lines(x = sdt, y = toLog10(log(reac_ARIMA$sample_cases_trim)),
                         color = I("#037d50"),
                         name = "observed",
                         mode="lines")%>%
-      plotly::add_lines(x = fore.dates, y = fore$mean, color = I("#ee1147"), name = "prediction")
+      plotly::add_lines(x = fore.dates, y = toLog10(fore$mean), color = I("#ee1147"), name = "prediction")
     
     p <- p %>% plotly::layout(
       title = paste0("ARIMA Forecast (",input$ARIMA_q,",",input$ARIMA_I,",",input$ARIMA_p,")"),
