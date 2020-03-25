@@ -565,13 +565,3 @@ output$arima_shell_output <- shiny::renderPrint({
 })
 
 
-checkExp <- function(expression, message) {
-  
-  validate(
-    
-    need( try(expression), message)
-  )
-  
-  return(expression)
-  
-}

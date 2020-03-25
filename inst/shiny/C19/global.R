@@ -7,6 +7,20 @@ country_growth = covid19:::get_country_growth()
 intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
 
 
+
+#===  Global function to check error 
+checkExp <- function(expression, message) {
+  
+  validate(
+    
+    need( try(expression), message)
+  )
+  
+  return(expression)
+  
+}
+
+
 #================================
 
 #library(dplyr)
