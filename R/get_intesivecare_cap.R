@@ -12,11 +12,10 @@
 #' @export
 get_intensivecare_cap <- function(regionTS) {
   
-  readfile = as.data.frame(intensivecare_cap) 
+  readfile = as.data.frame(intensivecare_cap)
   colnames(readfile) = c("region","capacity")
-  readfile$capacity = as.numeric(readfile$capacity)
-  readfile$region = as.numeric(readfile$region)
-  
+
+#  readfile$region = split(as.character(readfile$region)," ")
   readfile = readfile[order(readfile$region),]
   
   sortedreg = regionTS[order(names(regionTS))]
@@ -24,7 +23,8 @@ get_intensivecare_cap <- function(regionTS) {
   newdf = data.frame()
   for(i in 1:length(readfile$region))
   {
-    date = sortedreg[[readfile$region[i]]]$data
+    reg = readfile$region[i]
+    date = sortedreg[[reg]]$data
     intensive = sortedreg[[readfile$region[i]]]$terapia_intensiva
     perc = intensive /readfile$capacity[i] * 100
     perc = round(perc ,digits = 2)
@@ -35,7 +35,6 @@ get_intensivecare_cap <- function(regionTS) {
   }
   colnames(newdf) = c("data","occupancy","capacity","perc","region")
   
-
   
   return(newdf)
 }
