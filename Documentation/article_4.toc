@@ -1,10 +1,12 @@
 \babel@toc {english}{}
 \contentsline {section}{\numberline {1}{Introduction}}{2}{section.1}% 
-\contentsline {section}{\numberline {2}{Theoretical Background}}{3}{section.2}% 
-\contentsline {section}{\numberline {3}{Data Origin}}{3}{section.3}% 
-\contentsline {section}{\numberline {4}{Panels}}{3}{section.4}% 
-\contentsline {subsection}{\numberline {4.1}{Home}}{3}{subsection.4.1}% 
-\contentsline {subsection}{\numberline {4.2}{Data Inspection}}{3}{subsection.4.2}% 
-\contentsline {subsection}{\numberline {4.3}{Data Analysis}}{3}{subsection.4.3}% 
-\contentsline {section}{\numberline {5}{Conclusions}}{3}{section.5}% 
-\contentsline {section}{\numberline {6}{Packages used}}{3}{section.6}% 
+\contentsline {paragraph}{{Background}}{2}{paragraph*.1}% 
+\contentsline {paragraph}{{Motivation}}{3}{paragraph*.3}% 
+\contentsline {section}{\numberline {2}{Theoretical Background}}{4}{section.2}% 
+\contentsline {section}{\numberline {3}{Data Origin}}{4}{section.3}% 
+\contentsline {section}{\numberline {4}{Panels}}{4}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}{Home}}{4}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}{Data Inspection}}{4}{subsection.4.2}% 
+\contentsline {subsection}{\numberline {4.3}{Data Analysis}}{4}{subsection.4.3}% 
+\contentsline {section}{\numberline {5}{Conclusions}}{4}{section.5}% 
+\contentsline {section}{\numberline {6}{Packages used}}{4}{section.6}% 

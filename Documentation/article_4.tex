@@ -29,6 +29,8 @@ BCOR5mm, % Binding correction
 ]{scrartcl}
 \usepackage[english]{babel}
 \usepackage{url}
+\usepackage{graphicx}
+\usepackage{subcaption}
 \input{structure.tex} % Include the structure.tex file which specified the document structure and layout
 
 \hyphenation{Fortran hy-phen-ation} % Specify custom hyphenation points in words with dashes where you would like hyphenation to occur, or alternatively, don't put any dashes in a word to stop hyphenation altogether
@@ -99,28 +101,69 @@ Andrea Ierardi, Federico Matteucci,\\
 %	INTRODUCTION
 %----------------------------------------------------------------------------------------
 
-\section{Introduction}
+\section{Introduction} \label{introduction}
 
-In December 2019 different cases of pneumonia were reported in Wuhan (China) \cite{huang2020clinical}. Their origin was later ascribed to a new virus classified as \textit{Severe acute respiratory syndrome coronavirus 2} (SARS-CoV-2). The origin of this virus is still subject of scientific debate between the scientific community, however one of the most common opinion is that this virus comes from bats, in particular the genus Rhinolophus \cite{zhou2020pneumonia}. The most compelling feature of this virus is that is its ability to spread also via coughing and sneezing \cite{ghinai2020first}, and also by touching infected surfaces \cite{chang2020protecting}. Differently with respect to the SARS-CoV the virus seems to have a lower mortality rate \cite{sorensen2006severe,weiss2020clinical}. In January the Chinese government imposed the quarantine for the city of Wuhan (almost 11M people); the quarantine was later expanded to the full province of Hubei (60M people) and then to the neighbour provinces Huanggang, Ezhou and Xianning. 
-The virus then spread in Canada, Germany, Thailand and Japan and then in other different countries included Italy \cite{timeline+web}. In Italy the first cases, two Chinese tourist from Hubei, were reported in Rome \cite{corr+roma}; then  other cases were reported in Codogno (Lodi,Lombardy). Later the virus spread almost in all regions of Italy with a higher density in Lombardy, Veneto, Emilia-Romagna, Piemonte and Marche. Starting from 22 of February, the Italian government started to impose the quarantine (red-zone) for 11 different municipalities, in particular Codogno, Casalpusterlengo, Lodi (included the neighbour municipalities) and Vo' Euganeo. Starting from this date different restrictive measures were imposted starting from the regions with the highest number of cases: public entrainment were almost suspended as well as schools and universities. Workers (in public and private sectors) were allowed, when possibile, to work at home (smart-working). Such measures culminated with a decree approved by the Italian government that divided Italy in three areas: the red zones in which the municipalities with highest number of cases in which all the population was subjected to quarantine, the yellow one (Lombardia, Veneto, Emilia Romagna) in which schools, universities and public events ,sports  as well cinemas were suspended and the rest of Italy in which no restrictive measures were adopted \cite{rep+dec1}; however 3 days later all schools and universities were suspended \cite{guard+01}
+\paragraph{Background} \label{Background}
+In December 2019 different cases of pneumonia were reported in Wuhan (China) \cite{huang2020clinical}. Their origin was later ascribed to a new virus classified as \textit{Severe acute respiratory syndrome coronavirus 2} (SARS-CoV-2) whose TEM and SEM pictures are reported in the Fig. \ref{coronavirus_picture} The origin of this virus is still subject of scientific debate between the scientific community, however one of the most common opinion is that this virus comes from bats, in particular the genus Rhinolophus \cite{zhou2020pneumonia}. The most compelling feature of this virus is that is its ability to spread also via coughing and sneezing \cite{ghinai2020first}, and also by touching infected surfaces \cite{chang2020protecting}. Differently with respect to the SARS-CoV the virus seems to have a lower mortality rate \cite{sorensen2006severe,weiss2020clinical}.
 
+
+
+\begin{figure}[ht]
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=.7\linewidth]{Figures/Coronavirus1.jpg}
+  \caption{Transmission electron microscope (TEM) image of SARS-CoV-2—also known as 2019-nCoV, emerging from the surface of cells cultured}
+  \label{fig:sub-first}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.7\linewidth]{Figures/Coronavirus2.jpg} 
+  \caption{Scanning electron microscope of the SARS-CoV-2 emerging from the surface of cells cultured}
+  \label{fig:sub-second}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.7\linewidth]{Figures/Coronavirus3.jpg} 
+  \caption{TEM image of SARS-CoV-2. Not the spikes that gives the name coronavirus to the virus }
+  \label{fig:sub-second}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.7\linewidth]{Figures/Coronavirus4.jpg} 
+  \caption{SEM image of the virus}
+  \label{fig:sub-second}
+\end{subfigure}
+\caption{Different pictures of the virus as reported by the NIAID’s Rocky Mountain Laboratories (RML) in Hamilton, Montana \cite{coronavirus+pictures}  }
+\label{coronavirus_picture}
+\end{figure}
+
+
+In January the Chinese government imposed the quarantine for the city of Wuhan (almost 11M people); the quarantine was later expanded to the full province of Hubei (60M people) and then to the neighbour provinces Huanggang, Ezhou and Xianning. 
+The virus then spread in Canada, Germany, Thailand and Japan and then in other different countries included Italy \cite{timeline+web}. In Italy the first cases, two Chinese tourist from Hubei, were reported in Rome \cite{corr+roma}; then  other cases were reported in Codogno (Lodi,Lombardy). Later the virus spread almost in all regions of Italy with a higher density in Lombardy, Veneto, Emilia-Romagna, Piemonte and Marche. Starting from 22 of February, the Italian government started to impose the quarantine (red-zone) for 11 different municipalities, in particular Codogno, Casalpusterlengo, Lodi (included the neighbour municipalities) and Vo' . Starting from this date different restrictive measures were imposted starting from the regions with the highest number of cases: public entrainment were almost suspended as well as schools and universities. Workers (in public and private sectors) were allowed, when possibile, to work at home (smart-working). Such measures culminated with a decree approved by the Italian government that divided Italy in three areas: the red zones in which the municipalities with highest number of cases in which all the population was subjected to quarantine, the yellow one (Lombardia, Veneto, Emilia Romagna) in which schools, universities and public events ,sports  as well cinemas were suspended and the rest of Italy in which no restrictive measures were adopted \cite{rep+dec1}; however 3 days later all schools and universities were suspended \cite{guard+01}. The restrictive measures were also extend up to all Italy with a further decree \cite{11marzo}. 
+
+\paragraph{Motivation} \label{Motivation}
+In order to have a better understanding about the spread and the effects on the population of the COVID19 disease, we propose a ShinyApp, called disCOVIDer19 , that gathers  the data , mostly provided by the Protezione Civile \cite{protezionecivile+git}, about the number of infections(current as well cumulative), hospitalized people as well in intensive care, deaths and recovered for Italy, its regions and provinces; more details will be discussed in sections \ref{Data Origin} and \ref{Panels}. Furthermore we fitted the cumulative cases for Italy and all its regions and provinces with a logistic curve, in order to get a bird-of-eye view on the trend followed as well on the effectiveness of the restrictive measures imposed by the Italian government. The theoretical foundations of this fit ,as well how to manage and use it, will be discussed in the section \ref{Theoretical Background}. Beside the logistic curve, we also considered a statistical approach, largely diffused among economists, that considers the number of cases in each day as a time series: on this basis we were able to make use of a particular tool, which will be briefly introduced in the section \ref{Theoretical Background}, that allowed us to  make a further forecast  about future cases.  This latter becomes useful in case of large deviations from logistic distribution. 
  
 %----------------------------------------------------------------------------------------
 %	METHODS
 %----------------------------------------------------------------------------------------
 
-\section{Theoretical Background}
+\section{Theoretical Background} \label{Theoretical Background}
 
 
 %------------------------------------------------
 
-\section{Data Origin}
+\section{Data Origin} \label{Data Origin}
 
 
 
 %------------------------------------------------
 
-\section{Panels}
+\section{Panels} \label{Panels}
 
 \subsection{Home}
 
@@ -132,7 +175,6 @@ The virus then spread in Canada, Germany, Thailand and Japan and then in other d
 
 \section{Packages used}
 
-A statement requiring citation \cite{Figueredo:2009dg}.
 
 %------------------------------------------------
 

@@ -1,5 +1,8 @@
 \begin{thebibliography}{10}
 
+\bibitem{coronavirus+pictures}
+\url{https://www.niaid.nih.gov/news-events/novel-coronavirus-sarscov2-images}.
+
 \bibitem{huang2020clinical}
 Chaolin Huang, Yeming Wang, Xingwang Li, Lili Ren, Jianping Zhao, Yi~Hu,
   Li~Zhang, Guohui Fan, Jiuyang Xu, Xiaoying Gu, et~al.
@@ -46,12 +49,20 @@ Paul Weiss and David~R Murdoch.
 \url{https://hgis.uw.edu/virus/}.
 
 \bibitem{corr+roma}
-\url{https://www.corriere.it/cronache/20_gennaio_31/virus-primi-due-casi-italia-due-cinesi-marito-moglie-italia-dieci-giorni-e365df1c-43b3-11ea-bdc8-faf1f56f19b7.shtml}.
+\url{https://www.corriere.it/cronache/20_gennaio_31/
+  virus-primi-due-casi-italia-due-cinesi-marito-moglie-italia-dieci-giorni-
+  e365df1c-43b3-11ea-bdc8-faf1f56f19b7.shtml}.
 
 \bibitem{rep+dec1}
 \url{https://www.repubblica.it/politica/2020/03/01/news/coronavirus_misure_governo-249980561/}.
 
 \bibitem{guard+01}
 \url{https://www.theguardian.com/world/2020/mar/04/italy-orders-closure-of-schools-and-universities-due-to-coronavirus}.
+
+\bibitem{11marzo}
+\url{http://www.salute.gov.it/portale/news/p3_2_1_1_1.jsp?lingua=italiano&menu=notizie&p=dalministero&id=4186}.
+
+\bibitem{protezionecivile+git}
+\url{https://github.com/pcm-dpc/COVID-19}.
 
 \end{thebibliography}
