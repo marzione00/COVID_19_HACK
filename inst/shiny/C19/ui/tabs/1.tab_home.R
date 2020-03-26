@@ -99,7 +99,8 @@ shinydashboard::tabItem(tabName = "tab_1",
                    HTML("We are a team of data science students from Universita' degli Studi di Milano. 
                             This project is aimed at tracking and modelling the Covid-19 spread in Italy.
                              The data is synchronised with the civil protection database. Each time the app is run it checks for
-                            updates in the civil protection database <br><br><hr>"),
+                            updates in the civil protection database <br><br><br><hr>"),
+                   br(),
                    back_content = tagList(
                      
                      
@@ -159,12 +160,7 @@ shinydashboard::tabItem(tabName = "tab_1",
                                   <img src="https://i.stack.imgur.com/tskMh.png" alt="github"> Github </a> &nbsp; 
                                                       '), 
                                   productPrice = NULL
-                                ),
-                               shinydashboardPlus::productListItem(
-                                  src = "https://media-exp1.licdn.com/dms/image/C4D03AQFqmoSKGgjkVQ/profile-displayphoto-shrink_800_800/0?e=1590019200&v=beta&t=itYf9YpkVI0j3N7CDn4wv0KSoZJJO06NnvrHBzf0c8Q", 
-                                  productTitle = HTML('<b><a href="https://www.linkedin.com/in/tommaso-pessina-754960181/">Tommaso Pessina</a></b>'), 
-                                  productPrice = NULL
-                                )
+                               )
                               )
                        )
                      )
