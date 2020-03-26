@@ -53,7 +53,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                                             p("For province, only total case data are available")
                                                                               ),
                                                                               shiny::column(10,
-                                                                                            highcharter::highchartOutput("general_infos_plot")
+                                                                                            highcharter::highchartOutput("general_infos_plot") %>% shinycssloaders::withSpinner( color="#dd4b39")
                                                                                             
                                                                               )
                                                                             )
@@ -76,13 +76,23 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                  color = "navy", width = NULL),
                         
                         fluidRow(
-                          column(6,
+                          shinydashboard::box(title="Intensive care information", solidHeader = T,
+                                              width = NULL,
+                                              color = "red",
+                                              status = "danger",
+                          column(2,
+                               
+                                                     selectInput("occupancy_date",
+                                                                 label = "Select date",
+                                                                 choices = seq(init_date,by=1,fin_date),
+                                                                 selected = fin_date),
+                                                     
+                                                     
                                  
                                  
                                  
-                                 shinydashboard::box(title="Intensive care", solidHeader = T,
-                                                     width = NULL,
-                                                     color = "red",
+                                 ),
+                          column(10,
                                                      
                                                      tags$head(tags$style(HTML('
                          /* tabBox background */
@@ -101,16 +111,19 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      
                                                      shinydashboard::tabBox(width = 12,
                                                                             title = NULL,
+                                                                            selected = "tab1",
                                                                             # The id lets us use input$tabset1 on the server to find the current tab
-                                                                            id = "tabset2",
-                                                                            tabPanel("% occupation/capacity",
+                                                                            id = "tabs",
+                                                                            tabPanel(value = "tab1",
+                                                                                     title = "% occupation/capacity",
                                                                                      plotly::plotlyOutput("intensivecare_cap_perc",
                                                                                                           width = "100%",
                                                                                                           height = "415px"
                                                                                      ) %>% 
                                                                                        shinycssloaders::withSpinner( color="#dd4b39")
                                                                             ),
-                                                                            tabPanel("capacity vs. occupation ",
+                                                                            tabPanel(value = "tab2",
+                                                                                     title = "capacity vs. occupation ",
                                                                                      plotly::plotlyOutput("intensivecare_cap",
                                                                                                           width = "100%",
                                                                                                           height = "415px"
@@ -120,7 +133,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      ),
                                                      
                                                      
-                                                     height=NULL, status="danger")
+
                                  
                                  
                                  
@@ -128,8 +141,9 @@ shinydashboard::tabItem(tabName = "tab_2",
                                  
                                  
                                  
-                                 
-                          ),
+                          ))),
+                        hr(),
+                        fluidRow(
                           column(6,
                                  
                                  
@@ -183,12 +197,13 @@ shinydashboard::tabItem(tabName = "tab_2",
                                  
                           ),
                           
-                          column(12,
+                          column(6,
                                  shinydashboard::box(title="Tests Tracking", status="danger", 
                                                      solidHeader = TRUE, 
+                                                     width=12,
                                                      highcharter::highchartOutput("tamp_plot")
                                  )
                           )
-                          
                         )
+                        
 )

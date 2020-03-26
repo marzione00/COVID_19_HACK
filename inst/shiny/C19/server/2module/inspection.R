@@ -66,8 +66,8 @@ shiny::observe({
       )  %>%
       highcharter::hc_legend(align = "top", verticalAlign = "top",
                              layout = "vertical", x = 0, y = 100, enabled=TRUE) %>%  highcharter::hc_title(text = paste0("General info for: ",reac_dataset$name),
-                            margin = 20, align = "left",
-                            style = list(useHTML = TRUE))
+                                                                                                           margin = 20, align = "left",
+                                                                                                           style = list(useHTML = TRUE))
     
   }
   else
@@ -127,140 +127,162 @@ output$rawData_input <- shiny::renderUI({
 output$rawData_sel_input <- shiny::renderUI({
   
   if(is_ready(input$rawData_terr))
-     {
-       
-       if(input$rawData_terr != 1) {
-         if(input$rawData_terr == 2)
-           shiny::selectInput(inputId = "rawData_reg_sel", label = NULL,
-                              choices = regNames, selected = "Lombardia")
-         else if(input$rawData_terr == 3)
-           shiny::selectInput(inputId = "rawData_prov_sel", label = NULL,
-                              choices = provNames, selected = "Milano")
-       }
+  {
+    
+    if(input$rawData_terr != 1) {
+      if(input$rawData_terr == 2)
+        shiny::selectInput(inputId = "rawData_reg_sel", label = NULL,
+                           choices = regNames, selected = "Lombardia")
+      else if(input$rawData_terr == 3)
+        shiny::selectInput(inputId = "rawData_prov_sel", label = NULL,
+                           choices = provNames, selected = "Milano")
+    }
   }
 })
-  
-  
-  # shiny::observeEvent(input$rawData_go, {
-  #   output$rawData_table <- shiny::renderTable({
-  #     
-  #     switch(input$rawData_terr,
-  #                "1" = countryTS$Italy %>% 
-  #                  dplyr::select(-stato, -data_seriale) %>%
-  #                  dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-  #                "2" = regionTS[[input$rawData_reg_sel]] %>%
-  #                  dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-  #                  dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-  #                "3" = provTS[[input$rawData_prov_sel]] %>%
-  #                 dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
-  #                               -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-  #                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
-  #            )
-  #   })
-  # })
-  
-  shiny::observeEvent(input$rawData_go, {
-    output$rawData_table <- DT::renderDataTable({
-      
-      
-      
-      DT::datatable( 
-        switch(input$rawData_terr,
-               "1" = countryTS$Italy %>% 
-                 dplyr::select(-stato, -data_seriale) %>%
-                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-               "2" = regionTS[[input$rawData_reg_sel]] %>%
-                 dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-               "3" = provTS[[input$rawData_prov_sel]] %>%
-                 dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
-                               -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
-        ), options = list(
-          searching = FALSE,
-          pageLength = 10,scrollX = T))
-      
-    })
-  })
-  
-  
-  
-  # tabbox selection
-  output$tabset2Selected <- renderText({
-    input$tabset2
-  })
-  
-  # plots
-  output$intensivecare_cap_perc <- plotly::renderPlotly({
+
+
+# shiny::observeEvent(input$rawData_go, {
+#   output$rawData_table <- shiny::renderTable({
+#     
+#     switch(input$rawData_terr,
+#                "1" = countryTS$Italy %>% 
+#                  dplyr::select(-stato, -data_seriale) %>%
+#                  dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+#                "2" = regionTS[[input$rawData_reg_sel]] %>%
+#                  dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+#                  dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+#                "3" = provTS[[input$rawData_prov_sel]] %>%
+#                 dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
+#                               -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+#                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
+#            )
+#   })
+# })
+
+shiny::observeEvent(input$rawData_go, {
+  output$rawData_table <- DT::renderDataTable({
     
     
-    fig <-plotly::plot_ly(type = 'bar', marker = list(color = intensivecare_capacity$perc, width=3,line = list(color = 'rgb(8,48,107)', width = 1.5)))
-    fig <- fig %>%plotly::add_bars(data = intensivecare_capacity, x =~region , y=~perc, name="percentage",
-                                   text = ~perc, textposition = 'auto' )
-    fig <- fig %>%plotly::layout(
-      xaxis = list(title = "Region"),
-      yaxis = list(title = "Percentage occupation/capacity"),
-      legend = list(x = 0.1, y = 0.9))
     
-    fig
-  })
-  
-  
-  
-  output$intensivecare_cap <- plotly::renderPlotly({
-    
-    df = intensivecare_capacity[order(intensivecare_capacity$occupation,decreasing = TRUE),]
-    
-    fig  =plotly::plot_ly(type="bar")
-    fig <- fig %>%plotly::add_trace(data = df, name = "capacity",x = ~region, y = ~capacity, type = 'bar',
-                                    text = ~capacity, textposition = 'auto',
-                                    marker = list(color = 'rgb(255,228,181)',
-                                                  line = list(color = 'rgb(8,48,107)', width = 1.5)))
-    
-    fig <- fig %>%plotly::add_trace(data = df,name = "occupation",x = ~region, y=~occupation, type = 'bar',
-                                    text = ~occupation, textposition = 'auto',
-                                    marker = list(color = 'rgb(220,20,60)',
-                                                  line = list(color = 'rgb(8,48,107)', width = 1.5)))
-    
-    
-    fig <- fig %>%plotly::layout(title = "Occupation vs Capacity",
-                                 barmode = 'group',
-                                 xaxis = list(title = "Region"),
-                                 yaxis = list(title = "Occupation vs Capacity"),
-                                 legend = list(x = 0.1, y = 0.9))
-    
-    fig
-    
-    
+    DT::datatable( 
+      switch(input$rawData_terr,
+             "1" = countryTS$Italy %>% 
+               dplyr::select(-stato, -data_seriale) %>%
+               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+             "2" = regionTS[[input$rawData_reg_sel]] %>%
+               dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+             "3" = provTS[[input$rawData_prov_sel]] %>%
+               dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
+                             -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
+      ), options = list(
+        searching = FALSE,
+        pageLength = 10,scrollX = T))
     
   })
+})
+
+
+
+# tabbox selection
+output$tabset2Selected <- renderText({
+  input$tabset2
+})
+
+# =============== INTENSIVE CARE PLOTS
+
+
+reac_intensive <- reactive({
+  
+  reac_intensive = intensivecare_capacity[intensivecare_capacity$data == input$occupancy_date,]
+  if(input$tabs== "tab1")
+  {
+    reac_intensive = reac_intensive[order(reac_intensive$perc,decreasing = TRUE),]
+    return(reac_intensive)
+    
+  }
+  else
+  {
+    reac_intensive = reac_intensive[order(reac_intensive$occupancy,decreasing = TRUE),]
+    return(reac_intensive)
+    
+  }
+  
+})
+
+
+# plots
+output$intensivecare_cap_perc <- plotly::renderPlotly({
+  
+  fig <-plotly::plot_ly(type = 'bar', marker = list(color = reac_intensive()$perc, width=3,line = list(color = 'rgb(8,48,107)', width = 1.5)))
+  fig <- fig %>%plotly::add_bars(data = reac_intensive(), x =~region , y=~perc, name="percentage",
+                                 text = ~perc, textposition = 'auto' )
+  fig <- fig %>%plotly::layout(
+    title=paste0("Day ",input$occupancy_date," - Percentage Occupancy with respect to the initial intensive care capacity at the start of the pandemic"),
+    xaxis = list(title = "Region"),
+    yaxis = list(title = "Percentage occupancy/capacity"),
+    legend = list(x = 0.1, y = 0.9))
+  
+  fig
+})
+
+
+
+output$intensivecare_cap <- plotly::renderPlotly({
   
   
-  # plot growth monitoring --------------------------------------------------------------------
+  fig  =plotly::plot_ly(type="bar")
+  fig <- fig %>%plotly::add_trace(data = reac_intensive(), name = "capacity",x = ~region, y = ~capacity, type = 'bar',
+                                  text = ~capacity, textposition = 'auto',
+                                  marker = list(color = 'rgb(255,228,181)',
+                                                line = list(color = 'rgb(8,48,107)', width = 1.5)))
   
-  hc <- highcharter::highchart(type = "stock") %>% 
-    highcharter::hc_title(text = "% growth and growth change of total cases") %>%
-    highcharter::hc_add_series(growth_xts, name="growth", color = "red", type = "spline") %>% 
-    highcharter::hc_add_series(growth_change_xts, name="growth_change", color = "orange", type = "spline")
-  
-  
-  output$plot_test <- highcharter::renderHighchart(
-    hc
-  )
-  
-  # tamponi graph -----------------------------------------------------------
+  fig <- fig %>%plotly::add_trace(data = reac_intensive(),name = "occupancy",x = ~region, y=~occupancy, type = 'bar',
+                                  text = ~occupancy, textposition = 'auto',
+                                  marker = list(color = 'rgb(220,20,60)',
+                                                line = list(color = 'rgb(8,48,107)', width = 1.5)))
   
   
-  output$tamp_plot <- highcharter::renderHighchart(
-    highcharter::hchart(tamp_data_1, "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
-      highcharter::hc_chart(zoomType = "xy") %>%
-      
-      highcharter::hc_yAxis_multiples(
-        list(lineWidth = 3, title = list(text  =  '')),
-        list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
-      ) %>%
-      highcharter::hc_add_series(data = tamp_data, type = "spline", 
-                                 yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
-                                 name="share_infected_discovered", color="#383838")
-  )
+  fig <- fig %>%plotly::layout(title = paste0("Occupancy vs initial capacity - day: ",input$occupancy_date),
+                               barmode = 'group',
+                               xaxis = list(title = "Region"),
+                               yaxis = list(title = "Occupancy vs Capacity"),
+                               legend = list(x = 0.1, y = 0.9))
   
+  fig
+  
+  
+  
+})
+
+
+
+# =========== plot growth monitoring --------------------------------------------------------------------
+
+hc <- highcharter::highchart(type = "stock") %>% 
+  highcharter::hc_chart(zoomType = "xy") %>%
+  highcharter::hc_title(text = "% growth and growth change of total cases") %>%
+  highcharter::hc_add_series(growth_xts, name="growth", color = "red", type = "spline") %>% 
+  highcharter::hc_add_series(growth_change_xts, name="growth_change", color = "orange", type = "spline")
+
+
+output$plot_test <- highcharter::renderHighchart(
+  hc
+)
+
+# tamponi graph -----------------------------------------------------------
+
+
+output$tamp_plot <- highcharter::renderHighchart(
+  highcharter::hchart(tamp_data_1, "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
+    highcharter::hc_chart(zoomType = "xy") %>%
+    
+    highcharter::hc_yAxis_multiples(
+      list(lineWidth = 3, title = list(text  =  '')),
+      list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
+    ) %>%
+    highcharter::hc_add_series(data = tamp_data, type = "spline", 
+                               yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
+                               name="share_infected_discovered", color="#383838")
+)

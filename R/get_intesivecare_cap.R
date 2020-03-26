@@ -18,23 +18,23 @@ get_intensivecare_cap <- function(regionTS) {
   colnames(readfile) = c("region","capacity")
   readfile = readfile[order(readfile$region),]
   
-  occupation =c()
- 
   sortedreg = regionTS[order(names(regionTS))]
-  for(index_region in 1:length(sortedreg)) 
-  {
-    
-    vector = as.numeric(as.character(sortedreg[[index_region]]$terapia_intensiva)) 
-    occupation[index_region] = tail(vector, n = 1)
-    
-  }
 
-  df = data.frame(readfile,occupation)
-  colnames(df)= c("region","capacity","occupation")
-  perc = c(as.integer(df$occupation/df$capacity*100))
-  df = data.frame(df,perc)
-  df = df[order(df$perc,decreasing = TRUE),]
-  rownames(df) <- 1:nrow(df)
+  newdf = data.frame()
+  for(i in 1:length(readfile$region))
+  {
+    date = sortedreg[[readfile$region[i]]]$data
+    intensive = sortedreg[[readfile$region[i]]]$terapia_intensiva
+    perc = intensive /readfile$capacity[i] * 100
+    perc = round(perc ,digits = 2)
+    v = data.frame(date, intensive, readfile$capacity[i],perc,readfile$region[i])
+    
+    names(v) = c("data","occupancy","capacity","perc","region")
+    newdf <- rbind(newdf, v)
+  }
+  colnames(newdf) = c("data","occupancy","capacity","perc","region")
   
-  return(df)
+
+  
+  return(newdf)
 }
