@@ -1,3 +1,11 @@
+## REACTIVES OF THIS CODE
+reac_ARIMA <- shiny::reactiveValues(arimaOK = FALSE)
+    
+    # THIS IS THE REACTIVE CONTAINER OF TERRITORY SELECTION VARIABLES.
+t <- shiny::reactiveValues()
+    
+    ## Reactive values for global storage 
+reac_general <- shiny::reactiveValues()
 
 ## CHECKS FOR ERROR PREVENTING ##
 is_ready <- function(x) {
@@ -7,7 +15,7 @@ is_ready <- function(x) {
   return(TRUE)
 }
 
-# Use this function waitLoading() to validate the content of input$region and prevent errors
+# Use this function waitLoading() to validate the content of t$r and prevent errors
 # (just use it at the beginning of each chunk of code)
 waitLoading <- shiny::reactive({
   shiny::validate(
@@ -23,11 +31,9 @@ waitInput <- shiny::reactive({
   return(input$region)
 })
 
-
-suggest_date <- function()
+# DEPENDS ON REACTIVE t
+suggest_dates <- function()
 {
-  wait <- waitLoading()
-  
   new = covid19:::const_trim(eval(t$data)[[t$name]]$totale_casi,1)
   index = which(eval(t$data)[[t$name]]$totale_casi %in% new)
   newdates = eval(t$data)[[t$name]]$data[index]
@@ -35,15 +41,17 @@ suggest_date <- function()
   return(c(newdates[1], newdates[length(newdates)]))
 }
 
-suggest_lags<- function()
+# DEPENDS ON REACTIVES t AND reac_ARIMA! (but not on reac_ARIMA$arima)
+suggest_lags <- function()
 {
-  wait <- waitLoading()
-  if(is_ready(reac_ARIMA$sample_cases_trim)) {
-    sugg = toString(forecast::auto.arima(log(reac_ARIMA$sample_cases_trim)))
+  checkExp({
+    sugg <- toString(forecast::auto.arima(log(reac_ARIMA$sample_cases_trim)))
     matches <- regmatches(sugg, gregexpr("[[:digit:]]+", sugg))
     return(as.numeric(unlist(matches)))
-  }
+  }, "There is no suitable ARIMA model")
 }
+
+
 
 output$terrInput <- shiny::renderUI({
   shiny::fluidPage(
@@ -56,17 +64,17 @@ output$terrInput <- shiny::renderUI({
       shiny::column(4,
                     shiny::selectizeInput(
                       inputId = "region", label = "Region",
-                      choices = c("--- ALL ---" = "default", regNames), selected = NULL)
+                      choices = c("--- ALL ---" = "", regNames), selected = NULL)
       ),
       shiny::column(4,
                     shiny::selectizeInput(
                       inputId = "province", label = "Province",
-                      choices = c("--- ALL ---" = "default", provNames), selected = NULL)
+                      choices = c("--- ALL ---" = "", provNames), selected = NULL)
       )
     ),
     shiny::fluidRow(
       column(12, align = "center",
-             shiny::actionButton(inputId = "terr_go", label = "Show!")
+             shiny::actionButton(inputId = "terr_go", label = "Submit")
       )
     )
   )
@@ -76,27 +84,26 @@ output$terrInput <- shiny::renderUI({
 # Province input updater
 shiny::observe({
   wait <- waitInput()
-  if(input$region != "default") {
-    ch <- c("--- ALL ---" = "default", regAndProv[regAndProv$region == input$region, "province"])
+  if(input$region != "") {
+    ch <- c("--- ALL ---" = "", regAndProv[regAndProv$region == input$region, "province"])
   } else {
-    ch <- c("--- ALL ---" = "default", provNames)
+    ch <- c("--- ALL ---" = "", provNames)
   }
   shiny::updateSelectizeInput(session, inputId = "province", choices = ch, selected = NULL)
 })
 
 
-# THIS IS THE REACTIVE CONTAINER OF TERRITORY SELECTION VARIABLES.
-t <- shiny::reactiveValues()
+
 
 # Assignment of territory variables when pressing action button
 shiny::observeEvent(input$terr_go, {
-  if(input$region == "default" && input$province == "default") {
+  if(input$region == "" && input$province == "") {
     t$name <- input$country
     t$data <- expression(countryTS)
     t$c <- TRUE
     t$r <- FALSE
     t$p <- FALSE
-  } else if(input$province != "default") {
+  } else if(input$province != "") {
     t$name <- input$province
     t$data <- expression(provTS)
     t$c <- FALSE
@@ -110,7 +117,6 @@ shiny::observeEvent(input$terr_go, {
     t$p <- FALSE
   }
 })
-
 
 
 
@@ -134,35 +140,7 @@ output$fitInput <- shiny::renderUI({
 })
 
 
-output$arimaInput <- shiny::renderUI({
-  fluidRow(
-    column(12,
-           
-           shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
-                              min = init_date, max = fin_date, timeFormat = "%d %b",
-                              step = 1, value = suggest_date()),
-           
-           shiny::sliderInput(inputId = "forecast", label = "Choose forecast lags",
-                              min = 1,  max = 40, value = 10),
-           
-           hr(),
-           
-           shiny::sliderInput(inputId = "ARIMA_q", label = "Choose p",
-                              min = 0, max = 10,step = 1,value=suggest_lags()[1]),
-           shiny::sliderInput(inputId = "ARIMA_I", label = "Choose i",
-                              min = 0, max = 3,step = 1,value=suggest_lags()[2]),
-           shiny::sliderInput(inputId = "ARIMA_p", label = "Choose q",
-                              min = 0, max = 10,step = 1,value=suggest_lags()[3])
-           
-    )
-  )
-})
 
-
-
-## Reactive values for global storage ##
-reac_general <- shiny::reactiveValues()
-reac_general_TS <- shiny::reactiveValues()
 
 ## REGION plot (currently date against total cases) ##
 
@@ -175,7 +153,7 @@ output$coolplot1 <- plotly::renderPlotly({
   logic_interval <- eval(t$data)[[t$name]]$data >= input$fitInterval[1] &
     eval(t$data)[[t$name]]$data <= input$fitInterval[2]
   
-  sample_date <- eval(t$data)[[t$name]]$data_seriale
+  sample_serial_date <- eval(t$data)[[t$name]]$data_seriale
   
   sample_cases <- eval(t$data)[[t$name]]$totale_casi
   sample_diff <-  c(NA,diff(sample_cases))
@@ -187,16 +165,16 @@ output$coolplot1 <- plotly::renderPlotly({
   }
   
   
-  sample_date_trim <- sample_date[logic_interval]
+  sample_serial_date_trim <- sample_serial_date[logic_interval]
   sample_cases_trim <- sample_cases[logic_interval]
   sample_diff_trim <- sample_diff[logic_interval]
   
-  sample_date_rem <- sample_date[!logic_interval]
+  sample_serial_date_rem <- sample_serial_date[!logic_interval]
   sample_cases_rem <- sample_cases[!logic_interval]
   sample_diff_rem <- sample_diff[!logic_interval]
   
   fit_data <- exe_fit(sample_cases = sample_cases_trim,
-                      sample_date = sample_date_trim,
+                      sample_date = sample_serial_date_trim,
                       days = days)
   
   reac_general$model <- fit_data$out_fit$model
@@ -205,19 +183,19 @@ output$coolplot1 <- plotly::renderPlotly({
   
   conf <- nlstools::confint2(level = 0.95, object = reac_general$model)
   
-  yConf_up <- (conf["n0",2]*conf["k",2])/(conf["n0",2] + (conf["k",2]-conf["n0",2]) * exp(-conf["r",2]*sample_date_trim))
-  yConf_down <- (conf["n0",1]*conf["k",1])/(conf["n0",1] + (conf["k",1]-conf["n0",1]) * exp(-conf["r",1]*sample_date_trim))
+  yConf_up <- (conf["n0",2]*conf["k",2])/(conf["n0",2] + (conf["k",2]-conf["n0",2]) * exp(-conf["r",2]*sample_serial_date_trim))
+  yConf_down <- (conf["n0",1]*conf["k",1])/(conf["n0",1] + (conf["k",1]-conf["n0",1]) * exp(-conf["r",1]*sample_serial_date_trim))
   
   
   
   # Conversion to real date and creation of fitted points #
-  points_trim <- data.frame("sample_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
+  points_trim <- data.frame("sample_serial_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
                             sample_cases_trim)
-  points_rem <- data.frame("sample_date_rem" = eval(t$data)[[t$name]]$data[!logic_interval],
+  points_rem <- data.frame("sample_serial_date_rem" = eval(t$data)[[t$name]]$data[!logic_interval],
                            sample_cases_rem)
-  points_diff_trim <- data.frame("sample_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
+  points_diff_trim <- data.frame("sample_serial_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
                                  sample_diff_trim)
-  points_diff_rem <- data.frame("sample_date_rem" = eval(t$data)[[t$name]]$data[!logic_interval],
+  points_diff_rem <- data.frame("sample_serial_date_rem" = eval(t$data)[[t$name]]$data[!logic_interval],
                                 sample_diff_rem)
   
   fittedPoints <- fit_data$fittedPoints
@@ -226,9 +204,9 @@ output$coolplot1 <- plotly::renderPlotly({
   fittedPoints$days <- seq_dates
   fittedPoints_der$days <- seq_dates
   
-  confPoints_up <- data.frame("sample_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
+  confPoints_up <- data.frame("sample_serial_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
                               yConf_up)
-  confPoints_down <- data.frame("sample_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
+  confPoints_down <- data.frame("sample_serial_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
                                 yConf_down)
   
   # PLOT with plotly #
@@ -238,9 +216,9 @@ output$coolplot1 <- plotly::renderPlotly({
   plot1  = function(fig)
   {
     
-    fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_date_trim, y = ~yConf_down, mode='none',hoverinfo='skip',fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
+    fig <- fig %>% plotly::add_trace(data = confPoints_down, x = ~sample_serial_date_trim, y = ~yConf_down, mode='none',hoverinfo='skip',fill = 'tozeroy', name="IGNORED_LEGEND", fillcolor="rgba(0,0,0,0)",showlegend = FALSE)
     
-    fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
+    fig <- fig %>% plotly::add_trace(data = confPoints_up, x = ~sample_serial_date_trim, y = ~yConf_up, mode='none', fill = 'tonexty' ,name="Confidence interval 95%", fillcolor="rgb(255,250,205)")
     
     hovlabels <- c("")
     for(i in c(1:n)) {
@@ -250,9 +228,9 @@ output$coolplot1 <- plotly::renderPlotly({
         hovlabels[i] <- paste(hovlabels[i], ", Tot swabs = ", swabs[i], sep = "")
     }
     
-    fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)",
+    fig <- fig %>% plotly::add_trace(data =  points_rem, x =~sample_serial_date_rem, y =~sample_cases_rem ,marker = list(color = "red"), mode = 'markers', name = "Total cases (excluded)",
                                      text = hovlabels[!logic_interval], hoverinfo = 'text')
-    fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)",
+    fig <- fig %>% plotly::add_trace(data = points_trim, x =~sample_serial_date_trim, y =~sample_cases_trim ,marker = list(color = "green"), mode = 'markers', name = "Total cases (fitting)",
                                      text = hovlabels[logic_interval], hoverinfo = 'text')
     fig <- fig %>% plotly::add_trace(data = fittedPoints, x = ~days, y = ~yFitted, line = list(color ='rgb(0,0,139)',width=2.5), mode='lines', name = "Fitted logistic curve" )
     
@@ -271,9 +249,9 @@ output$coolplot1 <- plotly::renderPlotly({
         hovlabels[i] <- paste(hovlabels[i], ", Swabs = ", swabs[i]-swabs[i-1], sep = "")
     }
     
-    fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)",
+    fig <- fig %>% plotly::add_bars(data =  points_diff_rem, x =~sample_serial_date_rem, y =~sample_diff_rem, marker = list(color = "red"), name = "New cases (excluded)",
                                     text = hovlabels[!logic_interval], hoverinfo = 'text')
-    fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)",
+    fig <- fig %>% plotly::add_bars(data =  points_diff_trim, x =~sample_serial_date_trim, y =~sample_diff_trim, marker = list(color = "green"), name = "New cases (fitting)",
                                     text = hovlabels[logic_interval], hoverinfo = 'text')
     fig <- fig %>% plotly::add_trace(data = fittedPoints_der, x = ~days, y = ~yFitted_der, line = list(color ='rgb(255,117,20)',width=2.5), mode='lines', name= "Fitted logistic distribution")
     
@@ -429,49 +407,120 @@ output$plot_residual <- plotly::renderPlotly({
 
 
 ##===================================== ARIMA SECTION =============================================##
-reac_ARIMA <- shiny::reactiveValues()
 
-#   shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
-# min = init_date, max = fin_date, timeFormat = "%d %b",
-# step = 1, value = c(init_date, fin_date)),
+output$arimaDatesInput <- shiny::renderUI({
+  wait <- waitLoading()
+  
+  reac_general$sugg_dates <- suggest_dates()
+  
+  shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
+                     min = init_date, max = fin_date, timeFormat = "%d %b",
+                     step = 1, value = reac_general$sugg_dates)
+})
 
+
+output$arimaLagsInput <- shiny::renderUI({
+  wait <- waitLoading()
+  
+  if(is_ready(reac_ARIMA$sugg_lags) && is_ready(reac_general$sugg_dates)) {
+    fluidRow(
+      column(12,
+             shiny::sliderInput(inputId = "forecast", label = "Choose forecast lags",
+                                min = 1,  max = 40, value = 10),
+             
+             hr(),
+             
+             shiny::sliderInput(inputId = "ARIMA_p", label = "Choose p",
+                                min = 0, max = 10,step = 1,value=reac_ARIMA$sugg_lags[1]),
+             shiny::sliderInput(inputId = "ARIMA_I", label = "Choose i",
+                                min = 0, max = 3,step = 1,value=reac_ARIMA$sugg_lags[2]),
+             shiny::sliderInput(inputId = "ARIMA_q", label = "Choose q",
+                                min = 0, max = 10,step = 1,value=reac_ARIMA$sugg_lags[3]))
+      
+    )
+
+  }
+})
+  
 
 ## HERE GOES ALL ARIMA IMPLEMENTATION COMMON TO ALL GRAPHS
 shiny::observe({
   wait <- waitLoading()
   
+  if(is_ready(input$arima_interval[1])) {
+    reac_ARIMA$logic_interval <- eval(t$data)[[t$name]]$data >=  input$arima_interval[1]  &
+      eval(t$data)[[t$name]]$data <= input$arima_interval[2] 
+    
+    reac_ARIMA$sample_date <- eval(t$data)[[t$name]]$data
+    reac_ARIMA$sample_cases <- eval(t$data)[[t$name]]$totale_casi
+    
+    reac_ARIMA$sample_date_trim <- reac_ARIMA$sample_date[reac_ARIMA$logic_interval]
+    reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]+1
+    
+    reac_ARIMA$sugg_lags <- suggest_lags()
+  }
   
-  reac_ARIMA$logic_interval <- eval(t$data)[[t$name]]$data >=  input$arima_interval[1]  &
-    eval(t$data)[[t$name]]$data <= input$arima_interval[2] 
-  
-  
-  
-  
-  reac_ARIMA$sample_date <- eval(t$data)[[t$name]]$data_seriale
-  reac_ARIMA$sample_cases <- eval(t$data)[[t$name]]$totale_casi
-  reac_ARIMA$sample_diff <-  c(NA,diff(reac_ARIMA$sample_cases))
-  
-  
-  reac_ARIMA$sample_date_trim <- reac_ARIMA$sample_date[reac_ARIMA$logic_interval]
-  reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]+1
-  reac_ARIMA$sample_diff_trim <- reac_ARIMA$sample_diff[reac_ARIMA$logic_interval]
-  
-  reac_ARIMA$sample_date_rem <- reac_ARIMA$sample_date[!reac_ARIMA$logic_interval]
-  reac_ARIMA$sample_cases_rem <- reac_ARIMA$sample_cases[!reac_ARIMA$logic_interval]
-  reac_ARIMA$sample_diff_rem <- reac_ARIMA$sample_diff[!reac_ARIMA$logic_interval]
-  
-  reac_ARIMA$points_trim <- data.frame("sample_date_trim" = eval(t$data)[[t$name]]$data[reac_ARIMA$logic_interval],
-                                       "sample_cases_trim" = reac_ARIMA$sample_cases_trim)
-  
-  
-  
-  reac_ARIMA$arima <- checkExp(  stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_q,input$ARIMA_I,input$ARIMA_p)) , "There is not a suitable ARIMA model")
-  
-  #  reac_ARIMA$arima <- stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q))
 })
+
+shiny::observe({
+  wait <- waitLoading()
+  
+  if(is_ready(input$ARIMA_p)) {
+    
+    reac_ARIMA$arima <- checkExp(  stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q)) , "There is not a suitable ARIMA model")
+    reac_ARIMA$arimaOK <- TRUE
+  }
+  
+})
+
 
 #Ln x = Log10 x / Log10 e
 
+
+## Plot of ARIMA Time Series and FORECAST
+output$arima_coolplot1 <- plotly::renderPlotly({
+  
+  wait <- waitLoading()
+  #acf(log(sample_cases_trim))
+  #pacf(log(sample_cases_trim))
+  if( reac_ARIMA$arimaOK ) {
+    
+    
+    fore = checkExp(forecast::forecast(reac_ARIMA$arima,input$forecast) , "There is not a forecast for the ARIMA model")
+    
+    sdt <- reac_ARIMA$sample_date_trim
+    
+    fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = input$forecast)
+    
+    p <-plotly::plot_ly() %>%
+      plotly::add_ribbons(x = fore.dates,
+                          ymin = exp(fore$mean),
+                          ymax = exp(fore$upper[, 2]),
+                          color = I("#17becf"),
+                          name = "95% confidence") %>%
+      plotly::add_ribbons(p,
+                          x = fore.dates,
+                          ymin = exp(fore$mean),
+                          ymax = exp(fore$upper[, 1]),
+                          color = I("#ed9dac"), name = "80% confidence")%>%
+      plotly::add_lines(x = sdt, y = reac_ARIMA$sample_cases_trim,
+                        color = I("#037d50"),
+                        name = "observed",
+                        mode="lines")%>%
+      plotly::add_lines(x = fore.dates, 
+                        y = exp(fore$mean),
+                        color = I("#ee1147"), 
+                        name = "prediction")
+    
+    p <- p %>% plotly::layout(
+      title = paste0("ARIMA Forecast (",input$ARIMA_p,",",input$ARIMA_I,",",input$ARIMA_q,")"),
+      xaxis = list(title="Days"),
+      yaxis = list(title="Total cases", type = "log")
+    )
+    
+    p
+  }
+})
 
 
 ## Plot of autocorrelation function
@@ -510,61 +559,13 @@ output$arima_coolplot3 <- plotly::renderPlotly({
   
 })
 
-## Plot of ARIMA Time Series and FORECAST
-output$arima_coolplot1 <- plotly::renderPlotly({
-  
-  wait <- waitLoading()
-  #acf(log(sample_cases_trim))
-  #pacf(log(sample_cases_trim))
-  
-  #print(reac_general_TS )
-  if(is_ready(reac_ARIMA$points_trim)) {
-    
-    
-    fore = checkExp(forecast::forecast(reac_ARIMA$arima,input$forecast) , "There is not a forecast for the ARIMA model")
-    
-    sdt <- reac_ARIMA$points_trim$sample_date_trim
-    
-    fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = input$forecast)
-    
-    p <-plotly::plot_ly() %>%
-      plotly::add_ribbons(x = fore.dates,
-                          ymin = toLog10(fore$mean),
-                          ymax = toLog10(fore$upper[, 2]),
-                          color = I("#17becf"),
-                          name = "95% confidence") %>%
-      plotly::add_ribbons(p,
-                          x = fore.dates,
-                          ymin = toLog10(fore$mean),
-                          ymax = toLog10(fore$upper[, 1]),
-                          color = I("#ed9dac"), name = "80% confidence")%>%
-      plotly::add_lines(x = sdt, y = toLog10(log(reac_ARIMA$sample_cases_trim)),
-                        color = I("#037d50"),
-                        name = "observed",
-                        mode="lines")%>%
-      plotly::add_lines(x = fore.dates, y = toLog10(fore$mean), color = I("#ee1147"), name = "prediction")
-    
-    p <- p %>% plotly::layout(
-      title = paste0("ARIMA Forecast (",input$ARIMA_q,",",input$ARIMA_I,",",input$ARIMA_p,")"),
-      xaxis = list(title="Days"),
-      yaxis = list(title="log cases")
-    )
-    
-    p
-    
-  }
-})
 
 ## Plot of ARIMA residuals
 output$arima_coolplot4 <- shiny::renderPlot({
   
   wait <- waitLoading()
-  if(is_ready(reac_ARIMA$sample_cases_trim)) {
-    
-    
-    result = checkExp(forecast::checkresiduals(reac_ARIMA$arima) , "There is not a suitable residuals for the ARIMA model")
-    result
-    #forecast::checkresiduals(reac_ARIMA$arima)
+  if(reac_ARIMA$arimaOK) {
+    checkExp(forecast::checkresiduals(reac_ARIMA$arima) , "There is not a suitable ARIMA model")
   }
   
 })
@@ -576,16 +577,16 @@ output$arima_coolplot4 <- shiny::renderPlot({
 output$parameters_sugg <- shiny::renderUI({
   
   wait <- waitLoading()
-  if(is_ready(reac_ARIMA$sample_cases_trim)) {
-    
-    
-    auto_arima = checkExp(forecast::auto.arima(log(reac_ARIMA$sample_cases_trim)),  "There is not a suitable ARIMA model")
-    
-    h3(paste("Suggested Parameters: ",toString(auto_arima)))
-    
-    
+  if( is_ready(reac_ARIMA$sugg_lags[1]) ) {
+    fluidPage(
+      fluidRow(
+        h3( paste("Suggested Parameters: ARIMA(", paste(reac_ARIMA$sugg_lags, collapse = ","), ")") )
+      ),
+      fluidRow(
+        h4(paste("Suggested initial date: ", reac_general$sugg_dates[1]))
+      )
+    )
   }
-  
 })
 
 # toString(reac_ARIMA$arima$coef)
@@ -596,10 +597,8 @@ output$parameters_sugg <- shiny::renderUI({
 output$arima_shell_output <- shiny::renderPrint({
   
   wait <- waitLoading()
-  if(is_ready(reac_ARIMA$sample_cases_trim)) {
-    
-    result = checkExp(arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_q,input$ARIMA_I,input$ARIMA_p)),"There is not a suitable ARIMA model")
-    result
+  if(reac_ARIMA$arimaOK) {
+    reac_ARIMA$arima
   }
   
 })
