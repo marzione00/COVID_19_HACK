@@ -8,7 +8,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                         
                         shinydashboard::valueBox("Introduction", "Total cases, total deaths, total recovered, total hospitalised",
                                                  icon=icon("chart-line"),
-                                                 color = "yellow", width = NULL),
+                                                 color = "navy", width = NULL),
                         
                         
                         shinydashboard::box(title="General info", solidHeader = T,
@@ -30,24 +30,27 @@ shinydashboard::tabItem(tabName = "tab_2",
                                             
                                             shinydashboard::tabBox(width = 12,
                                                                    title = NULL,
-                                                                   tabPanel("Plot",
+                                                                   tabPanel(h2("Plot"),
                                                                             
                                                                             
                                                                             shiny::fluidRow(
                                                                               shiny::column(2,
-                                                                                            shiny::selectizeInput(
+                                                                                            shiny::selectInput(
                                                                                               inputId = "countrytab2", label = "Country",
                                                                                               choices = countryNames, selected = "Italy"),
                                                                                             
-                                                                                            shiny::selectizeInput(
+                                                                                            shiny::selectInput(
                                                                                               inputId = "regiontab2", label = "Region",
                                                                                               choices = c("--- ALL ---" = "default", regNames), selected = NULL),
                                                                                             
-                                                                                               shiny::selectizeInput(
+                                                                                               shiny::selectInput(
                                                                                                inputId = "provincetab2", label = "Province",
                                                                                                choices = c("--- ALL ---" = "default"
-                                                                                                           #, provNames
-                                                                                                           ), selected = NULL)
+                                                                                                           , provNames
+                                                                                                           ), selected = NULL),
+                                                                                            
+                                                                                            hr(),
+                                                                                            p("For province, only total case data are available")
                                                                               ),
                                                                               shiny::column(10,
                                                                                             highcharter::highchartOutput("general_infos_plot")
@@ -57,7 +60,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                             
                                                                    ),
                                                                    
-                                                                   tabPanel("Raw data",
+                                                                   tabPanel(h2("Raw data"),
                                                                             shiny::uiOutput("rawData_input"),
                                                                             DT::dataTableOutput("rawData_table")
                                                                    )
@@ -70,7 +73,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                         br(),
                         shinydashboard::valueBox("Deeper inspection", "hospital occupancy, growth monitoring and test tracking",
                                                  icon=icon("chart-line"),
-                                                 color = "yellow", width = NULL),
+                                                 color = "navy", width = NULL),
                         
                         fluidRow(
                           column(6,
