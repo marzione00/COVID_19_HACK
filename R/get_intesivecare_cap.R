@@ -12,8 +12,11 @@
 #' @export
 get_intensivecare_cap <- function(regionTS) {
   
-  readfile = intensivecare_cap 
+  readfile = as.data.frame(intensivecare_cap) 
   colnames(readfile) = c("region","capacity")
+  readfile$capacity = as.numeric(readfile$capacity)
+  readfile$region = as.numeric(readfile$region)
+  
   readfile = readfile[order(readfile$region),]
   
   sortedreg = regionTS[order(names(regionTS))]
