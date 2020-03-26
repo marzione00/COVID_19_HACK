@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{huang2020clinical}
 Chaolin Huang, Yeming Wang, Xingwang Li, Lili Ren, Jianping Zhao, Yi~Hu,
@@ -44,5 +44,14 @@ Paul Weiss and David~R Murdoch.
 
 \bibitem{timeline+web}
 \url{https://hgis.uw.edu/virus/}.
+
+\bibitem{corr+roma}
+\url{https://www.corriere.it/cronache/20_gennaio_31/virus-primi-due-casi-italia-due-cinesi-marito-moglie-italia-dieci-giorni-e365df1c-43b3-11ea-bdc8-faf1f56f19b7.shtml}.
+
+\bibitem{rep+dec1}
+\url{https://www.repubblica.it/politica/2020/03/01/news/coronavirus_misure_governo-249980561/}.
+
+\bibitem{guard+01}
+\url{https://www.theguardian.com/world/2020/mar/04/italy-orders-closure-of-schools-and-universities-due-to-coronavirus}.
 
 \end{thebibliography}
