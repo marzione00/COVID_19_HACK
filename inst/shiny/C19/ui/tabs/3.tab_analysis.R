@@ -28,7 +28,7 @@ shinydashboard::tabItem(
     "Logistic model",
     "Curve fitting on confirmed cases of infection's time series",
     icon = icon("analytics"),
-    color = "yellow",
+    color = "navy",
     width = NULL
   ),
   
@@ -101,7 +101,7 @@ shinydashboard::tabItem(
     "ARIMA model",
     "ARIMA(p,i,q) on confirmed cases of infection's time series",
     icon = icon("analytics"),
-    color = "yellow",
+    color = "navy",
     width = NULL
   ),
   
@@ -114,7 +114,8 @@ shinydashboard::tabItem(
         status = "danger",
         solidHeader = TRUE,
         title = "Input",
-        shiny::uiOutput("arimaInput")
+        shiny::uiOutput("arimaDatesInput"),
+        shiny::uiOutput("arimaLagsInput")
       )
     ),
     column(
