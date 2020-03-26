@@ -12,7 +12,7 @@
 #' @export
 get_intensivecare_cap <- function(regionTS) {
   
-  readfile = intensivecare_capacity 
+  readfile = intensivecare_cap 
   colnames(readfile) = c("region","capacity")
   readfile = readfile[order(readfile$region),]
   
