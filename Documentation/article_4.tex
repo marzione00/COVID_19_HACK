@@ -195,6 +195,7 @@ P=\dfrac{KP_{0}e^{rt}}{K+P_{0}(e^{rt}-1)}
 In Fig. \ref{Malthusian_growth_vs_logistic_growth} this solution is compared to the Malthusian one: as one can point out the logistic growth has a saturation effect near the asymptote of carrying capacity. This represent the limit capacity that Malthus proposed to indicate as the intersection between the linear and exponential growth. It is worth nothing that near the origin the two growth are identical, then the logistic curve becomes linear up to the saturation region. 
 
 \begin{figure}
+ \centering
  \includegraphics[width=0.8\linewidth]{Figures/Malthusian_growth_vs_logistic_growth-2.jpg} 
  \caption{The Malthusian growth (red line) compared to the logistic growth (blue line). The carrying capacity is marked with a black dashed line. Image taken from \cite{malthus_vs_logistic}}
  \label{Malthusian_growth_vs_logistic_growth}
@@ -212,9 +213,56 @@ The dynamics of the two models described before can be used to shape the spread 
 
 %------------------------------------------------
 
+\clearpage
+
 \section{Panels} \label{Panels}
 
 \subsection{Home}
+
+The home panel provides an overview of the coronavirus spread in Italy. The data shown is synchronised with the civil protection database. Each time the app is run it checks for updates whose occurrence is indicated in the "most recent updates" section. The home panel consists of 2 main sections: the choropleth map and the summary statistics.
+
+The choropleth map (Fig \ref{Home_fig1}) is an interactive heat map with breakouts by region and by province tracking the number of Covid-19 cases. 
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=0.5\linewidth]{Figures/Home_figure_1.png} 
+ \caption{}
+ \label{Home_fig1}
+\end{figure}
+
+
+
+Beyond the raw absolute number of total cases by province/region we propose two other indicators which introduce some form of normalisation to improve the comparability of the different geographical areas. These indicators are percentage and density (Fig. \ref{Home_fig2}).
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=0.5\linewidth]{Figures/Home_figure_2.png} 
+ \caption{}
+ \label{Home_fig2}
+\end{figure}
+
+The percentage indicator is calculated dividing the total number of Covid cases by the population of the respective region/province (the latter retrieved from Istat).
+\begin{equation}
+percentage~cases = \frac{total~cases}{local~population} \dot 100
+\end{equation}
+This indicator ensures that the number of cases in more populated areas are not over-indexed compared to less populated ones. Similarly, it ensures less populated areas are not under-indexed.
+
+The density  indicator accounts for the territorial extension (in $km^2$) of regions/provinces expressed in parts per thousand (\textperthousand) and is calculated as follows:
+\begin{equation}
+density =  \dfrac{total~cases}{territorial~extension}\dot 1000
+\end{equation}
+This indicator ensures that we are not underestimating small regions/provinces with fewer cases than larger ones but with more concentrated cases per $Km^2$.
+
+The summary statistics section (Fig. \ref{Home_fig3}) provides some barometer level statistics regarding the current total number of Covid cases in Italy with three further breakouts: intensive care, hospitalised, and home isolation.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=0.5\linewidth]{Figures/Home_figure_3.png} 
+ \caption{}
+ \label{Home_fig3}
+\end{figure}
+
+
 
 \subsection{Data Inspection}
 
