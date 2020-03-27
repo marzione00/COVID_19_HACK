@@ -2,6 +2,11 @@
 
 The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 
+ <h1> ShinyApp.io    </h1>
+ <h2> Try the ShinyApp.io:  <a href= "https://andreaierardi.shinyapps.io/disCOVIDer19"> disCOVIDERer19 </a>   </h2>
+<br> 
+
+
 ## Lavora su
 Andrea: fixing analysis  <br>
 Fabio:  <br>
