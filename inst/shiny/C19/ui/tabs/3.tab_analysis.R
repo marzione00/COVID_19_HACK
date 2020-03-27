@@ -15,7 +15,26 @@ shinydashboard::tabItem(
                         status= "danger",
                         solidHeader = FALSE,
                         title = "Territory selection",
-                        shiny::uiOutput("terrInput"),
+                        shiny::fluidPage(
+                          shiny::fluidRow(
+                            shiny::column(4,
+                                          shiny::selectizeInput(
+                                            inputId = "country", label = "Country",
+                                            choices = countryNames, selected = "Italy")
+                            ),
+                            shiny::column(4,
+                                          shiny::selectizeInput(
+                                            inputId = "region", label = "Region",
+                                            choices = c("--- ALL ---" = "", regNames), selected = NULL)
+                            ),
+                            shiny::column(4,
+                                          shiny::selectizeInput(
+                                            inputId = "province", label = "Province",
+                                            choices = c("--- ALL ---" = "", provNames), selected = NULL)
+                            )
+                          ),
+                         
+                        ),
                         shiny::htmlOutput("selected_info")
     )
   ),
@@ -40,7 +59,22 @@ shinydashboard::tabItem(
         status = "danger",
         solidHeader = TRUE,
         title = "Input",
-        shiny::uiOutput("fitInput")
+        fluidRow(
+          column(12,
+                 
+                 shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
+                                    min = init_date, max = fin_date, timeFormat = "%d %b",
+                                    step = 1, value = c(init_date, fin_date)),
+                 shiny::checkboxInput(inputId = "swab_std", label = "Standardise positive cases by total swabs"),
+                 shiny::checkboxGroupInput(inputId = "plot_type", label = "Plot type",
+                                           choices = list("Cumulative cases" = 1, "New cases" = 2),
+                                           selected = 1),
+                 hr(),
+                 h3("Residuals"),
+                 shiny::selectInput(inputId = "plot_res_type", "Residuals plot type",choices =  c("Residuals","Residuals_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residuals")
+                 
+          )
+        )
       )
     ),
     column(
@@ -50,7 +84,7 @@ shinydashboard::tabItem(
         status = "danger",
         title = "Plot",
         plotly::plotlyOutput("coolplot1") %>% shinycssloaders::withSpinner(color =
-                                                                                   "#dd4b39"),
+                                                                             "#dd4b39"),
         width = 12
       )
     )
@@ -114,10 +148,27 @@ shinydashboard::tabItem(
         status = "danger",
         solidHeader = TRUE,
         title = "Input",
-        shiny::uiOutput("arimaDatesInput"),
-        shiny::uiOutput("arimaLagsInput")
-      )
-    ),
+        shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
+                           min = init_date, max = fin_date, timeFormat = "%d %b",
+                           step = 1, value = c(init_date,fin_date)),
+        
+        fluidRow(
+          column(12,
+                 shiny::sliderInput(inputId = "forecast", label = "Choose forecast lags",
+                                    min = 1,  max = 40, value = 10),
+                 
+                 hr(),
+                 
+                 shiny::sliderInput(inputId = "ARIMA_p", label = "Choose p",
+                                    min = 0, max = 10,step = 1,value=0),
+                 shiny::sliderInput(inputId = "ARIMA_I", label = "Choose i",
+                                    min = 0, max = 3,step = 1,value=0),
+                 shiny::sliderInput(inputId = "ARIMA_q", label = "Choose q",
+                                    min = 0, max = 10,step = 1,value=0)
+                 
+          )
+        )
+      )),
     column(
       8,
       
@@ -130,7 +181,7 @@ shinydashboard::tabItem(
         hr(),
         
         plotly::plotlyOutput("arima_coolplot1") %>% shinycssloaders::withSpinner(color =
-                                                                                  "#dd4b39"),
+                                                                                   "#dd4b39"),
         width = 12
       )
     )
@@ -156,7 +207,7 @@ shinydashboard::tabItem(
         status = "danger",
         title = "Partial autocorrelations",
         plotly::plotlyOutput("arima_coolplot3") %>% shinycssloaders::withSpinner(color =
-                                                                                    "#dd4b39"),
+                                                                                   "#dd4b39"),
         width = 12
       )
     ),

@@ -52,35 +52,6 @@ suggest_lags <- function()
 }
 
 
-
-output$terrInput <- shiny::renderUI({
-  shiny::fluidPage(
-    shiny::fluidRow(
-      shiny::column(4,
-                    shiny::selectizeInput(
-                      inputId = "country", label = "Country",
-                      choices = countryNames, selected = "Italy")
-      ),
-      shiny::column(4,
-                    shiny::selectizeInput(
-                      inputId = "region", label = "Region",
-                      choices = c("--- ALL ---" = "", regNames), selected = NULL)
-      ),
-      shiny::column(4,
-                    shiny::selectizeInput(
-                      inputId = "province", label = "Province",
-                      choices = c("--- ALL ---" = "", provNames), selected = NULL)
-      )
-    ),
-    shiny::fluidRow(
-      column(12, align = "center",
-             shiny::actionButton(inputId = "terr_go", label = "Submit")
-      )
-    )
-  )
-  
-})
-
 # Province input updater
 shiny::observe({
   wait <- waitInput()
@@ -96,7 +67,7 @@ shiny::observe({
 
 
 # Assignment of territory variables when pressing action button
-shiny::observeEvent(input$terr_go, {
+shiny::observe( {
   if(input$region == "" && input$province == "") {
     t$name <- input$country
     t$data <- expression(countryTS)
@@ -116,29 +87,11 @@ shiny::observeEvent(input$terr_go, {
     t$r <- TRUE
     t$p <- FALSE
   }
+  
+  reac_general$sugg_dates = suggest_dates()
+  updateSliderInput(session,"arima_interval",timeFormat = "%d %b", step = 1, min =  init_date,max =  fin_date,value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
+  
 })
-
-
-
-output$fitInput <- shiny::renderUI({
-  fluidRow(
-    column(12,
-           
-           shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
-                              min = init_date, max = fin_date, timeFormat = "%d %b",
-                              step = 1, value = c(init_date, fin_date)),
-           shiny::checkboxInput(inputId = "swab_std", label = "Standardise positive cases by total swabs"),
-           shiny::checkboxGroupInput(inputId = "plot_type", label = "Plot type",
-                                     choices = list("Cumulative cases" = 1, "New cases" = 2),
-                                     selected = 1),
-           hr(),
-           h3("Residuals"),
-           shiny::selectInput(inputId = "plot_res_type", "Residuals plot type",choices =  c("Residuals","Residuals_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residuals")
-           
-    )
-  )
-})
-
 
 
 
@@ -408,39 +361,6 @@ output$plot_residual <- plotly::renderPlotly({
 
 ##===================================== ARIMA SECTION =============================================##
 
-output$arimaDatesInput <- shiny::renderUI({
-  wait <- waitLoading()
-  
-  reac_general$sugg_dates <- suggest_dates()
-  
-  shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
-                     min = init_date, max = fin_date, timeFormat = "%d %b",
-                     step = 1, value = reac_general$sugg_dates)
-})
-
-
-output$arimaLagsInput <- shiny::renderUI({
-  wait <- waitLoading()
-  
-  if(is_ready(reac_ARIMA$sugg_lags) && is_ready(reac_general$sugg_dates)) {
-    fluidRow(
-      column(12,
-             shiny::sliderInput(inputId = "forecast", label = "Choose forecast lags",
-                                min = 1,  max = 40, value = 10),
-             
-             hr(),
-             
-             shiny::sliderInput(inputId = "ARIMA_p", label = "Choose p",
-                                min = 0, max = 10,step = 1,value=reac_ARIMA$sugg_lags[1]),
-             shiny::sliderInput(inputId = "ARIMA_I", label = "Choose i",
-                                min = 0, max = 3,step = 1,value=reac_ARIMA$sugg_lags[2]),
-             shiny::sliderInput(inputId = "ARIMA_q", label = "Choose q",
-                                min = 0, max = 10,step = 1,value=reac_ARIMA$sugg_lags[3]))
-      
-    )
-
-  }
-})
   
 
 ## HERE GOES ALL ARIMA IMPLEMENTATION COMMON TO ALL GRAPHS
@@ -458,6 +378,9 @@ shiny::observe({
     reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]+1
     
     reac_ARIMA$sugg_lags <- suggest_lags()
+    updateSliderInput(session,"ARIMA_p", value=  reac_ARIMA$sugg_lags[1])
+    updateSliderInput(session,"ARIMA_I", value =  reac_ARIMA$sugg_lags[2])
+    updateSliderInput(session,"ARIMA_q", value =  reac_ARIMA$sugg_lags[3])
   }
   
 })
@@ -583,7 +506,7 @@ output$parameters_sugg <- shiny::renderUI({
         h3( paste("Suggested Parameters: ARIMA(", paste(reac_ARIMA$sugg_lags, collapse = ","), ")") )
       ),
       fluidRow(
-        h4(paste("Suggested initial date: ", reac_general$sugg_dates[1]))
+        h4(paste("Suggested initial and final date: ", reac_general$sugg_dates[1]," - ", reac_general$sugg_dates[2]))
       )
     )
   }
