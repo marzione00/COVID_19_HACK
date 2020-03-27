@@ -1,10 +1,10 @@
 ## REACTIVES OF THIS CODE
 reac_ARIMA <- shiny::reactiveValues(arimaOK = FALSE)
-    
-    # THIS IS THE REACTIVE CONTAINER OF TERRITORY SELECTION VARIABLES.
+
+# THIS IS THE REACTIVE CONTAINER OF TERRITORY SELECTION VARIABLES.
 t <- shiny::reactiveValues()
-    
-    ## Reactive values for global storage 
+
+## Reactive values for global storage 
 reac_general <- shiny::reactiveValues()
 
 ## CHECKS FOR ERROR PREVENTING ##
@@ -34,6 +34,7 @@ waitInput <- shiny::reactive({
 # DEPENDS ON REACTIVE t
 suggest_dates <- function()
 {
+  
   new = covid19:::const_trim(eval(t$data)[[t$name]]$totale_casi,1)
   index = which(eval(t$data)[[t$name]]$totale_casi %in% new)
   newdates = eval(t$data)[[t$name]]$data[index]
@@ -42,44 +43,25 @@ suggest_dates <- function()
 }
 
 # DEPENDS ON REACTIVES t AND reac_ARIMA! (but not on reac_ARIMA$arima)
-suggest_lags <- function()
+suggest_lags <- function(dates)
 {
-  checkExp({
-    sugg <- toString(forecast::auto.arima(log(reac_ARIMA$sample_cases_trim)))
-    matches <- regmatches(sugg, gregexpr("[[:digit:]]+", sugg))
-    return(as.numeric(unlist(matches)))
-  }, "There is no suitable ARIMA model")
+  
+  logic_interval <- eval(t$data)[[t$name]]$data >=  dates[1]  &
+    eval(t$data)[[t$name]]$data <= dates[2]
+  
+  sample_date <- eval(t$data)[[t$name]]$data
+  sample_cases <- eval(t$data)[[t$name]]$totale_casi
+  
+  sample_date_trim <- sample_date[logic_interval]
+  sample_cases_trim <- sample_cases[logic_interval]+1
+  
+  sugg <- toString(forecast::auto.arima(log(sample_cases_trim)))
+  matches <- regmatches(sugg, gregexpr("[[:digit:]]+", sugg))
+  return(as.numeric(unlist(matches)))
+  
 }
 
 
-
-output$terrInput <- shiny::renderUI({
-  shiny::fluidPage(
-    shiny::fluidRow(
-      shiny::column(4,
-                    shiny::selectizeInput(
-                      inputId = "country", label = "Country",
-                      choices = countryNames, selected = "Italy")
-      ),
-      shiny::column(4,
-                    shiny::selectizeInput(
-                      inputId = "region", label = "Region",
-                      choices = c("--- ALL ---" = "", regNames), selected = NULL)
-      ),
-      shiny::column(4,
-                    shiny::selectizeInput(
-                      inputId = "province", label = "Province",
-                      choices = c("--- ALL ---" = "", provNames), selected = NULL)
-      )
-    ),
-    shiny::fluidRow(
-      column(12, align = "center",
-             shiny::actionButton(inputId = "terr_go", label = "Submit")
-      )
-    )
-  )
-  
-})
 
 # Province input updater
 shiny::observe({
@@ -96,49 +78,113 @@ shiny::observe({
 
 
 # Assignment of territory variables when pressing action button
-shiny::observeEvent(input$terr_go, {
-  if(input$region == "" && input$province == "") {
-    t$name <- input$country
-    t$data <- expression(countryTS)
-    t$c <- TRUE
-    t$r <- FALSE
-    t$p <- FALSE
-  } else if(input$province != "") {
-    t$name <- input$province
-    t$data <- expression(provTS)
-    t$c <- FALSE
-    t$r <- FALSE
-    t$p <- TRUE
-  } else {
-    t$name <- input$region
-    t$data <- expression(regionTS)
-    t$c <- FALSE
-    t$r <- TRUE
-    t$p <- FALSE
+shiny::observe({
+  if(is_ready(input$region) && is_ready(input$province))
+  {
+    
+    reac_ARIMA$arimaOK = FALSE
+    
+    if(input$region == "" && input$province == "") {
+      t$name <- input$country
+      t$data <- expression(countryTS)
+      t$c <- TRUE
+      t$r <- FALSE
+      t$p <- FALSE
+      
+      
+      
+      
+      
+    } else if(input$province != "") {
+      t$name <- input$province
+      t$data <- expression(provTS)
+      t$c <- FALSE
+      t$r <- FALSE
+      t$p <- TRUE
+    } else {
+      t$name <- input$region
+      t$data <- expression(regionTS)
+      t$c <- FALSE
+      t$r <- TRUE
+      t$p <- FALSE
+    }
+    dates = suggest_dates()
+    print(dates)
+    lags <- suggest_lags(dates)
+    updateSliderInput(session,"arima_interval",timeFormat = "%d %b", step = 1, min =  init_date,max =  fin_date,value = c(dates[1], dates[2]))
+    
+    updateSliderInput(session,"ARIMA_p", value=lags[1])
+    updateSliderInput(session,"ARIMA_I", value = lags[2])
+    updateSliderInput(session,"ARIMA_q", value = lags[3])
+    reac_ARIMA$arimaOK = TRUE
+    
   }
 })
 
+shiny::observe(
+  {
+    reac_ARIMA$arimaOK = FALSE
+    
+    reac_ARIMA$logic_interval <- eval(t$data)[[t$name]]$data >=  input$arima_interval[1]  &
+      eval(t$data)[[t$name]]$data <= input$arima_interval[2] 
+    
+    lags = suggest_lags(c(input$arima_interval[1],input$arima_interval[2]))
+    updateSliderInput(session,"ARIMA_p", value=lags[1])
+    updateSliderInput(session,"ARIMA_I", value = lags[2])
+    updateSliderInput(session,"ARIMA_q", value = lags[3])
+    
+    reac_ARIMA$sample_date <- eval(t$data)[[t$name]]$data
+    reac_ARIMA$sample_cases <- eval(t$data)[[t$name]]$totale_casi
+    
+    reac_ARIMA$sample_date_trim <- reac_ARIMA$sample_date[reac_ARIMA$logic_interval]
+    reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]+1
+    
+   # reac_ARIMA$arima <- stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q)) 
+    
+    reac_ARIMA$autofore = forecast::auto.arima(log(reac_ARIMA$sample_cases_trim))
+  #  reac_ARIMA$fore = forecast::forecast(reac_ARIMA$arima, input$forecast) 
+    
+    reac_ARIMA$arimaOK = TRUE
+    
+    
+  }
+)
 
 
-output$fitInput <- shiny::renderUI({
-  fluidRow(
-    column(12,
-           
-           shiny::sliderInput(inputId = "fitInterval", label = "Choose fitting interval",
-                              min = init_date, max = fin_date, timeFormat = "%d %b",
-                              step = 1, value = c(init_date, fin_date)),
-           shiny::checkboxInput(inputId = "swab_std", label = "Standardise positive cases by total swabs"),
-           shiny::checkboxGroupInput(inputId = "plot_type", label = "Plot type",
-                                     choices = list("Cumulative cases" = 1, "New cases" = 2),
-                                     selected = 1),
-           hr(),
-           h3("Residuals"),
-           shiny::selectInput(inputId = "plot_res_type", "Residuals plot type",choices =  c("Residuals","Residuals_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residuals")
-           
-    )
-  )
+# 
+# 
+#shiny::observe({
+#  
+#  
+#  if(is_ready(input$arima_interval))
+#  {
+#  reac_ARIMA$logic_interval <- eval(t$data)[[t$name]]$data >=  input$arima_interval[1]  &
+#    eval(t$data)[[t$name]]$data <= input$arima_interval[2] 
+#  
+#  reac_ARIMA$sample_date <- eval(t$data)[[t$name]]$data
+#  reac_ARIMA$sample_cases <- eval(t$data)[[t$name]]$totale_casi
+#  
+#  reac_ARIMA$sample_date_trim <- reac_ARIMA$sample_date[reac_ARIMA$logic_interval]
+#  reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]+1
+#  
+# # reac_ARIMA$sugg_lags <- suggest_lags()
+#  reac_ARIMA$fore = forecast::auto.arima(log(reac_ARIMA$sample_cases_trim))
+#  }
+#})
+
+shiny::observe({
+  
+  
+  if(reac_ARIMA$arimaOK)
+  {
+    reac_ARIMA$arima <- stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q)) 
+    reac_ARIMA$fore = forecast::forecast(reac_ARIMA$arima,input$forecast)
+    
+    #reac_ARIMA$arimaOK = TRUE
+    
+  }
+  
 })
-
 
 
 
@@ -408,74 +454,22 @@ output$plot_residual <- plotly::renderPlotly({
 
 ##===================================== ARIMA SECTION =============================================##
 
-output$arimaDatesInput <- shiny::renderUI({
-  wait <- waitLoading()
-  
-  reac_general$sugg_dates <- suggest_dates()
-  
-  shiny::sliderInput(inputId = "arima_interval", label = "Choose fitting interval",
-                     min = init_date, max = fin_date, timeFormat = "%d %b",
-                     step = 1, value = reac_general$sugg_dates)
-})
 
 
-output$arimaLagsInput <- shiny::renderUI({
-  wait <- waitLoading()
-  
-  if(is_ready(reac_ARIMA$sugg_lags) && is_ready(reac_general$sugg_dates)) {
-    fluidRow(
-      column(12,
-             shiny::sliderInput(inputId = "forecast", label = "Choose forecast lags",
-                                min = 1,  max = 40, value = 10),
-             
-             hr(),
-             
-             shiny::sliderInput(inputId = "ARIMA_p", label = "Choose p",
-                                min = 0, max = 10,step = 1,value=reac_ARIMA$sugg_lags[1]),
-             shiny::sliderInput(inputId = "ARIMA_I", label = "Choose i",
-                                min = 0, max = 3,step = 1,value=reac_ARIMA$sugg_lags[2]),
-             shiny::sliderInput(inputId = "ARIMA_q", label = "Choose q",
-                                min = 0, max = 10,step = 1,value=reac_ARIMA$sugg_lags[3]))
-      
-    )
-
-  }
-})
-  
 
 ## HERE GOES ALL ARIMA IMPLEMENTATION COMMON TO ALL GRAPHS
-shiny::observe({
-  wait <- waitLoading()
-  
-  if(is_ready(input$arima_interval[1])) {
-    reac_ARIMA$logic_interval <- eval(t$data)[[t$name]]$data >=  input$arima_interval[1]  &
-      eval(t$data)[[t$name]]$data <= input$arima_interval[2] 
-    
-    reac_ARIMA$sample_date <- eval(t$data)[[t$name]]$data
-    reac_ARIMA$sample_cases <- eval(t$data)[[t$name]]$totale_casi
-    
-    reac_ARIMA$sample_date_trim <- reac_ARIMA$sample_date[reac_ARIMA$logic_interval]
-    reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]+1
-    
-    reac_ARIMA$sugg_lags <- suggest_lags()
-  }
-  
-})
 
-shiny::observe({
-  wait <- waitLoading()
-  
-  if(is_ready(input$ARIMA_p)) {
-    
-    reac_ARIMA$arima <- checkExp(  stats::arima(log(reac_ARIMA$sample_cases_trim),order=c(input$ARIMA_p,input$ARIMA_I,input$ARIMA_q)) , "There is not a suitable ARIMA model")
-    reac_ARIMA$arimaOK <- TRUE
-  }
-  
-})
+
 
 
 #Ln x = Log10 x / Log10 e
 
+ fore_reac <- reactive (
+   {
+     fore_reac = reac_ARIMA$fore
+     
+   }
+ )
 
 ## Plot of ARIMA Time Series and FORECAST
 output$arima_coolplot1 <- plotly::renderPlotly({
@@ -483,11 +477,14 @@ output$arima_coolplot1 <- plotly::renderPlotly({
   wait <- waitLoading()
   #acf(log(sample_cases_trim))
   #pacf(log(sample_cases_trim))
-  if( reac_ARIMA$arimaOK ) {
+  # if( reac_ARIMA$arimaOK ) {
+#shinyjs::delay(500,
+  # fore = checkExp(forecast::forecast(reac_ARIMA$arima,input$forecast) , "There is not a forecast for the ARIMA model")
+  if(reac_ARIMA$arimaOK && is_ready(reac_ARIMA$fore) && is_ready(reac_ARIMA$sample_date_trim))
     
+  {
     
-    fore = checkExp(forecast::forecast(reac_ARIMA$arima,input$forecast) , "There is not a forecast for the ARIMA model")
-    
+    fore=  fore_reac()
     sdt <- reac_ARIMA$sample_date_trim
     
     fore.dates <- seq(from = sdt[length(sdt)], by = 1, len = input$forecast)
@@ -513,13 +510,14 @@ output$arima_coolplot1 <- plotly::renderPlotly({
                         name = "prediction")
     
     p <- p %>% plotly::layout(
-      title = paste0("ARIMA Forecast (",input$ARIMA_p,",",input$ARIMA_I,",",input$ARIMA_q,")"),
+      title = paste0("ARIMA Forecast :",substring(toString(fore),0,12)),
       xaxis = list(title="Days"),
       yaxis = list(title="Total cases", type = "log")
     )
     
     p
   }
+  #)
 })
 
 
@@ -527,7 +525,8 @@ output$arima_coolplot1 <- plotly::renderPlotly({
 output$arima_coolplot2 <- plotly::renderPlotly({
   
   wait <- waitLoading()
-  if(is_ready(reac_ARIMA$sample_cases_trim)) {
+  if(reac_ARIMA$arimaOK)
+  {
     
     p = checkExp(  forecast::autoplot(acf(log(reac_ARIMA$sample_cases_trim))) , "There is not a forecast for the ARIMA model")
     
@@ -536,7 +535,7 @@ output$arima_coolplot2 <- plotly::renderPlotly({
     
     p <- p %>%plotly::layout(xaxis = list(title = "LAG"), yaxis = list(title = "ACF"), title="Autocorrelation", showlegend = TRUE, 
                              plot_bgcolor = "rgb(255, 255, 255)")
-      
+    
     
   }
   
@@ -546,7 +545,8 @@ output$arima_coolplot2 <- plotly::renderPlotly({
 output$arima_coolplot3 <- plotly::renderPlotly({
   
   wait <- waitLoading()
-  if(is_ready(reac_ARIMA$sample_cases_trim)) {
+  if(reac_ARIMA$arimaOK)
+  {
     
     
     p = checkExp( forecast::autoplot(pacf(log(reac_ARIMA$sample_cases_trim)) ) , "There is not a forecast for the ARIMA model")
@@ -554,7 +554,7 @@ output$arima_coolplot3 <- plotly::renderPlotly({
     
     p <- p %>%plotly::layout(xaxis = list(title = "LAG"), yaxis = list(title = "PACF"), title="Partial Autocorrelation", showlegend = TRUE, 
                              plot_bgcolor = "rgb(255, 255, 255)")
- 
+    
   }
   
 })
@@ -564,9 +564,9 @@ output$arima_coolplot3 <- plotly::renderPlotly({
 output$arima_coolplot4 <- shiny::renderPlot({
   
   wait <- waitLoading()
-  if(reac_ARIMA$arimaOK) {
+  if(reac_ARIMA$arimaOK)
     checkExp(forecast::checkresiduals(reac_ARIMA$arima) , "There is not a suitable ARIMA model")
-  }
+  
   
 })
 
@@ -577,13 +577,13 @@ output$arima_coolplot4 <- shiny::renderPlot({
 output$parameters_sugg <- shiny::renderUI({
   
   wait <- waitLoading()
-  if( is_ready(reac_ARIMA$sugg_lags[1]) ) {
+  if(reac_ARIMA$arimaOK) {
     fluidPage(
       fluidRow(
-        h3( paste("Suggested Parameters: ARIMA(", paste(reac_ARIMA$sugg_lags, collapse = ","), ")") )
+        h3( paste("Suggested Parameters: ", paste(toString(reac_ARIMA$autofore))))
       ),
       fluidRow(
-        h4(paste("Suggested initial date: ", reac_general$sugg_dates[1]))
+        h4(paste("Suggested initial date: ",reac_ARIMA$sugg_date[1]))
       )
     )
   }
@@ -597,9 +597,9 @@ output$parameters_sugg <- shiny::renderUI({
 output$arima_shell_output <- shiny::renderPrint({
   
   wait <- waitLoading()
-  if(reac_ARIMA$arimaOK) {
+  if(reac_ARIMA$arimaOK)
     reac_ARIMA$arima
-  }
+  
   
 })
 
