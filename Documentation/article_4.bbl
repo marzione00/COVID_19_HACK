@@ -49,20 +49,36 @@ Paul Weiss and David~R Murdoch.
 \url{https://hgis.uw.edu/virus/}.
 
 \bibitem{corr+roma}
-\url{https://www.corriere.it/cronache/20_gennaio_31/
-  virus-primi-due-casi-italia-due-cinesi-marito-moglie-italia-dieci-giorni-
-  e365df1c-43b3-11ea-bdc8-faf1f56f19b7.shtml}.
+\url{https://www.wired.co.uk/article/coronavirus-italy}.
 
 \bibitem{rep+dec1}
 \url{https://www.repubblica.it/politica/2020/03/01/news/coronavirus_misure_governo-249980561/}.
 
 \bibitem{guard+01}
-\url{https://www.theguardian.com/world/2020/mar/04/italy-orders-closure-of-schools-and-universities-due-to-coronavirus}.
+\url{https://www.repubblica.it/politica/2020/03/04/news/coronavirus_governo_chiuse_le_scuole_in_tutta_italia_-250209485/}.
 
 \bibitem{11marzo}
 \url{http://www.salute.gov.it/portale/news/p3_2_1_1_1.jsp?lingua=italiano&menu=notizie&p=dalministero&id=4186}.
 
 \bibitem{protezionecivile+git}
 \url{https://github.com/pcm-dpc/COVID-19}.
+
+\bibitem{keeling2011modeling}
+Matt~J Keeling and Pejman Rohani.
+\newblock {\em Modeling infectious diseases in humans and animals}.
+\newblock Princeton University Press, 2011.
+
+\bibitem{malthus1817essay}
+Thomas~Robert Malthus.
+\newblock {\em An essay on the principle of population, as it affects the
+  future improvement of society. With remarks on the speculations of mr.
+  Godwin, m. Condorcet, and other writers. By TR Malthus}.
+\newblock 1817.
+
+\bibitem{verhulst1838notice}
+PF~Verhulst.
+\newblock Notice sur la loi que la population poursuit dans son accroissement
+  in: Correspondance math{\'e}matique et physique, vol. 10.
+\newblock 1838.
 
 \end{thebibliography}

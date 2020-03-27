@@ -153,7 +153,44 @@ In order to have a better understanding about the spread and the effects on the 
 %----------------------------------------------------------------------------------------
 
 \section{Theoretical Background} \label{Theoretical Background}
+Different models were proposed in the literature for modelling the spread of a disease \cite{keeling2011modeling}, here we are going to consider a relative simple model taken from the growth dynamics of populations.
 
+\paragraph{Population growth dynamics}
+The dynamics of population was founded by Thomas Malthus in 1817 \cite{malthus1817essay} with his well known equation: 
+
+\begin{equation}
+x_{n+1}=x_{n}(1+r)
+\end{equation}
+
+Where $x_{n}$ stands for the population at time and $r$ the growth rate. Thus the following discrete progression will be obtained: 
+
+\begin{equation}
+P_{n+1}=P_{0}(1+r)^{n+1}
+\end{equation}
+
+in which $P_{0}$ stands for the initial population. This discrete model can be reshaped in to a continuous one in the following way: 
+
+\begin{equation}
+\dot{P}(t)=rP(t)
+\end{equation}
+
+this is a relative simple differential equation with separable variable. Its integration gives:
+
+\begin{equation}
+P(t)=P_{0}(t)
+\end{equation}
+
+Malthus, of course, did not believed that the population could grow ad infinitum with an exponential growth, but since he estimated that the resources growth follows a linear path, he argued that, at the intersection of the two curves, a consistent part of the population will not have access to the resources. Thus  he expected that the exponential growth realizes only in the first part of the growth. Basing on these arguments, a Belgian mathematician Pierre-François Verhulst in 1838, proposed a model \cite{verhulst1838notice} in which the key point is the maximum number of people that the resources allows to live, usually called the carrying capacity here indicated as $K$ ($P$ and $r$ have the same meaning of the previous model):
+
+\begin{equation}
+\dot{P}=rP\left(1-\dfrac{P}{K} \right)
+\end{equation}
+
+that have the following analytic solution 
+
+\begin{equation}
+P=\dfrac{KP_{0}e^{rt}}{K+P_{0}(e^{rt}-1)}
+\end{equation}
 
 %------------------------------------------------
 

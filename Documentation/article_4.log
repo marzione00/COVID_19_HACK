@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.25)  26 MAR 2020 16:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.25)  27 MAR 2020 10:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1203,12 +1203,14 @@ Overfull \hbox (9.61697pt too wide) in paragraph at lines 149--150
 a bet-ter un-der-stand-ing about the spread
  []
 
+[3]
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/iwona/b/sc/12'.
 (microtype)             Ignoring protrusion settings for this character.
-(./article_4.bbl
+ (./article_4.bbl
 LaTeX Font Info:    Try loading font information for T1+fvm on input line 4.
- (/usr/local/texlive/2019/texmf-dist/tex/latex/bera/t1fvm.fd
+
+(/usr/local/texlive/2019/texmf-dist/tex/latex/bera/t1fvm.fd
 File: t1fvm.fd 2004/09/07 scalable font definitions for T1/fvm.
 )
 LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
@@ -1222,79 +1224,69 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--5
 [][][]$\T1/fvm/m/n/12 https : / / www . niaid . nih . gov / news-[]events /
  []
 
-[3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 54--55
-[][][]$\T1/fvm/m/n/12 https : / / www . corriere . it / cronache / 20 _ gennaio
- _ 31 /
- []
-
-
-Overfull \hbox (334.71532pt too wide) in paragraph at lines 54--55
-\T1/fvm/m/n/12 virus-[]primi-[]due-[]casi-[]italia-[]due-[]cinesi-[]marito-[]mo
-glie-[]italia-[]dieci-[]giorni-[]e365df1c-[]43b3-[]11ea-[]bdc8-[]faf1f56f19b7 .
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 57--58
+[4] [5]
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
 [][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
 / 01 / news /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 60--61
-[][][]$\T1/fvm/m/n/12 https : / / www . theguardian . com / world / 2020 / mar 
-/ 04 /
+Underfull \hbox (badness 10000) in paragraph at lines 58--59
+[][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
+/ 04 / news /
  []
 
 
-Overfull \hbox (72.67654pt too wide) in paragraph at lines 60--61
-\T1/fvm/m/n/12 italy-[]orders-[]closure-[]of-[]schools-[]and-[]universities-[]d
-ue-[]to-[]coronavirus$[][]\T1/pplj/m/n/12 . 
+Underfull \hbox (badness 10000) in paragraph at lines 58--59
+\T1/fvm/m/n/12 coronavirus _ governo _ chiuse _ le _ scuole _ in _ tutta _ ital
+ia _
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 63--64
+Underfull \hbox (badness 10000) in paragraph at lines 61--62
 [][][]$\T1/fvm/m/n/12 http : / / www . salute . gov . it / portale / news / p3 
 _ 2 _ 1 _ 1 _ 1 . jsp ?
  []
 
-) [5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 195.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 195.
+) [6]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 232.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 232.
  (./article_4.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 195.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 195.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 232.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 232.
 Package rerunfilecheck Info: File `article_4.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 195.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 232.
  ) 
 Here is how much of TeX's memory you used:
- 25390 strings out of 492616
- 478078 string characters out of 6129481
+ 25421 strings out of 492616
+ 478402 string characters out of 6129481
  845645 words of memory out of 5000000
- 28910 multiletter control sequences out of 15000+600000
- 639128 words of font info for 145 fonts, out of 8000000 for 9000
+ 28914 multiletter control sequences out of 15000+600000
+ 643416 words of font info for 161 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
- 68i,22n,94p,9115b,668s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,22n,94p,9115b,666s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
 exlive/2019/texmf-dist/fonts/enc/dvips/iwona/ec-iwona-sc.enc}{/usr/local/texliv
 e/2019/texmf-dist/fonts/enc/dvips/iwona/ec-iwona.enc}</usr/local/texlive/2019/t
-exmf-dist/fonts/type1/public/fpl/fplrc8a.pfb></usr/local/texlive/2019/texmf-dis
-t/fonts/type1/public/fpl/fplrij8a.pfb></usr/local/texlive/2019/texmf-dist/fonts
-/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/n
-owacki/iwona/iwonab.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/nowacki
-/iwona/iwonar.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/
-uplr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplri8a
-.pfb>
-Output written on article_4.pdf (5 pages, 9286079 bytes).
+exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2019/te
+xmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2019/
+texmf-dist/fonts/type1/public/amsfonts/euler/eurm10.pfb></usr/local/texlive/201
+9/texmf-dist/fonts/type1/public/fpl/fplrc8a.pfb></usr/local/texlive/2019/texmf-
+dist/fonts/type1/public/fpl/fplrij8a.pfb></usr/local/texlive/2019/texmf-dist/fo
+nts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type
+1/nowacki/iwona/iwonab.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/nowa
+cki/iwona/iwonar.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palati
+no/uplr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplr
+i8a.pfb>
+Output written on article_4.pdf (6 pages, 9305154 bytes).
 PDF statistics:
- 171 PDF objects out of 1000 (max. 8388607)
- 150 compressed objects within 2 object streams
- 31 named destinations out of 1000 (max. 500000)
+ 202 PDF objects out of 1000 (max. 8388607)
+ 177 compressed objects within 2 object streams
+ 42 named destinations out of 1000 (max. 500000)
  36445 words of extra memory for PDF output out of 42996 (max. 10000000)
 

@@ -3,10 +3,11 @@
 \contentsline {paragraph}{{Background}}{2}{paragraph*.1}% 
 \contentsline {paragraph}{{Motivation}}{3}{paragraph*.3}% 
 \contentsline {section}{\numberline {2}{Theoretical Background}}{4}{section.2}% 
-\contentsline {section}{\numberline {3}{Data Origin}}{4}{section.3}% 
-\contentsline {section}{\numberline {4}{Panels}}{4}{section.4}% 
-\contentsline {subsection}{\numberline {4.1}{Home}}{4}{subsection.4.1}% 
-\contentsline {subsection}{\numberline {4.2}{Data Inspection}}{4}{subsection.4.2}% 
-\contentsline {subsection}{\numberline {4.3}{Data Analysis}}{4}{subsection.4.3}% 
-\contentsline {section}{\numberline {5}{Conclusions}}{4}{section.5}% 
-\contentsline {section}{\numberline {6}{Packages used}}{4}{section.6}% 
+\contentsline {paragraph}{{Population growth dynamics}}{4}{paragraph*.4}% 
+\contentsline {section}{\numberline {3}{Data Origin}}{5}{section.3}% 
+\contentsline {section}{\numberline {4}{Panels}}{5}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}{Home}}{5}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}{Data Inspection}}{5}{subsection.4.2}% 
+\contentsline {subsection}{\numberline {4.3}{Data Analysis}}{5}{subsection.4.3}% 
+\contentsline {section}{\numberline {5}{Conclusions}}{5}{section.5}% 
+\contentsline {section}{\numberline {6}{Packages used}}{5}{section.6}% 
