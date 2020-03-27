@@ -1,13 +1,14 @@
 \babel@toc {english}{}
-\contentsline {section}{\numberline {1}{Introduction}}{2}{section.1}% 
-\contentsline {paragraph}{{Background}}{2}{paragraph*.1}% 
-\contentsline {paragraph}{{Motivation}}{3}{paragraph*.3}% 
-\contentsline {section}{\numberline {2}{Theoretical Background}}{4}{section.2}% 
-\contentsline {paragraph}{{Population growth dynamics}}{4}{paragraph*.4}% 
-\contentsline {section}{\numberline {3}{Data Origin}}{5}{section.3}% 
-\contentsline {section}{\numberline {4}{Panels}}{5}{section.4}% 
-\contentsline {subsection}{\numberline {4.1}{Home}}{5}{subsection.4.1}% 
-\contentsline {subsection}{\numberline {4.2}{Data Inspection}}{5}{subsection.4.2}% 
-\contentsline {subsection}{\numberline {4.3}{Data Analysis}}{5}{subsection.4.3}% 
-\contentsline {section}{\numberline {5}{Conclusions}}{5}{section.5}% 
-\contentsline {section}{\numberline {6}{Packages used}}{5}{section.6}% 
+\contentsline {section}{\numberline {1}{Introduction}}{3}{section.1}% 
+\contentsline {paragraph}{{Background}}{3}{paragraph*.1}% 
+\contentsline {paragraph}{{Motivation}}{4}{paragraph*.3}% 
+\contentsline {section}{\numberline {2}{Theoretical Background}}{5}{section.2}% 
+\contentsline {paragraph}{{Population growth dynamics}}{5}{paragraph*.4}% 
+\contentsline {paragraph}{{Application to the epidemiology}}{6}{paragraph*.6}% 
+\contentsline {section}{\numberline {3}{Data Origin}}{7}{section.3}% 
+\contentsline {section}{\numberline {4}{Panels}}{7}{section.4}% 
+\contentsline {subsection}{\numberline {4.1}{Home}}{7}{subsection.4.1}% 
+\contentsline {subsection}{\numberline {4.2}{Data Inspection}}{7}{subsection.4.2}% 
+\contentsline {subsection}{\numberline {4.3}{Data Analysis}}{7}{subsection.4.3}% 
+\contentsline {section}{\numberline {5}{Conclusions}}{7}{section.5}% 
+\contentsline {section}{\numberline {6}{Packages used}}{7}{section.6}% 

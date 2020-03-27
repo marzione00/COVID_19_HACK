@@ -3,6 +3,9 @@
 \bibitem{coronavirus+pictures}
 \url{https://www.niaid.nih.gov/news-events/novel-coronavirus-sarscov2-images}.
 
+\bibitem{malthus_vs_logistic}
+\url{https://commons.wikimedia.org/wiki/File:Malthusian_growth_vs_logistic_growth.png}.
+
 \bibitem{huang2020clinical}
 Chaolin Huang, Yeming Wang, Xingwang Li, Lili Ren, Jianping Zhao, Yi~Hu,
   Li~Zhang, Guohui Fan, Jiuyang Xu, Xiaoying Gu, et~al.
@@ -80,5 +83,15 @@ PF~Verhulst.
 \newblock Notice sur la loi que la population poursuit dans son accroissement
   in: Correspondance math{\'e}matique et physique, vol. 10.
 \newblock 1838.
+
+\bibitem{serfling1952historical}
+Robert~E Serfling.
+\newblock Historical review of epidemic theory.
+\newblock {\em Human biology}, 24(3):145--166, 1952.
+
+\bibitem{ma2014estimating}
+Junling Ma, Jonathan Dushoff, Benjamin~M Bolker, and David~JD Earn.
+\newblock Estimating initial epidemic growth rates.
+\newblock {\em Bulletin of mathematical biology}, 76(1):245--260, 2014.
 
 \end{thebibliography}

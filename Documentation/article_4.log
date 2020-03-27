@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.25)  27 MAR 2020 10:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.25)  27 MAR 2020 17:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1145,14 +1145,14 @@ Package tocbasic Info: character protrusion at lot deactivated on input line 78
  [1
 
 
-{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/iwona/m/sc/17.28'.
 (microtype)             Ignoring protrusion settings for this character.
 LaTeX Font Info:    Font shape `T1/iwona/bx/sc' in size <12> not available
 (Font)              Font shape `T1/iwona/b/sc' tried instead on input line 106.
 
-<Figures/Coronavirus1.jpg, id=43, 3071.475pt x 2398.9625pt>
+<Figures/Coronavirus1.jpg, id=51, 3071.475pt x 2398.9625pt>
 File: Figures/Coronavirus1.jpg Graphic file (type jpg)
 <use Figures/Coronavirus1.jpg>
 Package pdftex.def Info: Figures/Coronavirus1.jpg  used on input line 115.
@@ -1169,17 +1169,17 @@ Underfull \hbox (badness 2020) in paragraph at lines 116--116
 \T1/pplj/m/n/10 (TEM) im-age of SARS-CoV-2^^Valso
  []
 
-<Figures/Coronavirus2.jpg, id=44, 298.67836pt x 242.21742pt>
+<Figures/Coronavirus2.jpg, id=52, 298.67836pt x 242.21742pt>
 File: Figures/Coronavirus2.jpg Graphic file (type jpg)
 <use Figures/Coronavirus2.jpg>
 Package pdftex.def Info: Figures/Coronavirus2.jpg  used on input line 122.
 (pdftex.def)             Requested size: 129.49944pt x 105.01999pt.
-<Figures/Coronavirus3.jpg, id=45, 3071.475pt x 2398.9625pt>
+<Figures/Coronavirus3.jpg, id=53, 3071.475pt x 2398.9625pt>
 File: Figures/Coronavirus3.jpg Graphic file (type jpg)
 <use Figures/Coronavirus3.jpg>
 Package pdftex.def Info: Figures/Coronavirus3.jpg  used on input line 129.
 (pdftex.def)             Requested size: 129.49944pt x 101.14009pt.
-<Figures/Coronavirus4.jpg, id=46, 247.86351pt x 305.45367pt>
+<Figures/Coronavirus4.jpg, id=54, 247.86351pt x 305.45367pt>
 File: Figures/Coronavirus4.jpg Graphic file (type jpg)
 <use Figures/Coronavirus4.jpg>
 Package pdftex.def Info: Figures/Coronavirus4.jpg  used on input line 136.
@@ -1196,14 +1196,29 @@ Overfull \hbox (2.65201pt too wide) in paragraph at lines 112--140
 
 LaTeX Font Info:    Font shape `T1/iwona/bx/n' in size <10.95> not available
 (Font)              Font shape `T1/iwona/b/n' tried instead on input line 140.
-[2 <./Figures/Coronavirus1.jpg> <./Figures/Coronavirus2.jpg> <./Figures/Coronav
+[3 <./Figures/Coronavirus1.jpg> <./Figures/Coronavirus2.jpg> <./Figures/Coronav
 irus3.jpg> <./Figures/Coronavirus4.jpg>]
 Overfull \hbox (9.61697pt too wide) in paragraph at lines 149--150
 [] []\T1/iwona/bx/sc/12/80ls mo-ti-va-tion[] \T1/pplj/m/n/12 In or-der to have 
 a bet-ter un-der-stand-ing about the spread
  []
 
-[3]
+[4] [5]
+<Figures/Malthusian_growth_vs_logistic_growth-2.jpg, id=113, 1507.6325pt x 1059
+.96pt>
+File: Figures/Malthusian_growth_vs_logistic_growth-2.jpg Graphic file (type jpg
+)
+<use Figures/Malthusian_growth_vs_logistic_growth-2.jpg>
+Package pdftex.def Info: Figures/Malthusian_growth_vs_logistic_growth-2.jpg  us
+ed on input line 198.
+(pdftex.def)             Requested size: 296.00113pt x 208.10657pt.
+
+Overfull \hbox (0.86794pt too wide) in paragraph at lines 205--206
+[] []\T1/iwona/bx/sc/12/80ls ap-pli-ca-tion to the epi-demi-ol-ogy[] \T1/pplj/m
+/n/12 The dy-nam-ics of the two mod-
+ []
+
+[6 <./Figures/Malthusian_growth_vs_logistic_growth-2.jpg>]
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/iwona/b/sc/12'.
 (microtype)             Ignoring protrusion settings for this character.
@@ -1224,52 +1239,58 @@ Underfull \hbox (badness 10000) in paragraph at lines 4--5
 [][][]$\T1/fvm/m/n/12 https : / / www . niaid . nih . gov / news-[]events /
  []
 
-[4] [5]
-Underfull \hbox (badness 10000) in paragraph at lines 55--56
+
+Underfull \hbox (badness 10000) in paragraph at lines 7--8
+[][][]$\T1/fvm/m/n/12 https : / / commons . wikimedia . org / wiki / File : Mal
+thusian _
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 58--59
 [][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
 / 01 / news /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 58--59
+Underfull \hbox (badness 10000) in paragraph at lines 61--62
 [][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
 / 04 / news /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 58--59
+Underfull \hbox (badness 10000) in paragraph at lines 61--62
 \T1/fvm/m/n/12 coronavirus _ governo _ chiuse _ le _ scuole _ in _ tutta _ ital
 ia _
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 61--62
+Underfull \hbox (badness 10000) in paragraph at lines 64--65
 [][][]$\T1/fvm/m/n/12 http : / / www . salute . gov . it / portale / news / p3 
 _ 2 _ 1 _ 1 _ 1 . jsp ?
  []
 
-) [6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 232.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 232.
+) [8]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 244.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 244.
  (./article_4.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 232.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 232.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 244.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 244.
 Package rerunfilecheck Info: File `article_4.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 232.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 244.
  ) 
 Here is how much of TeX's memory you used:
- 25421 strings out of 492616
- 478402 string characters out of 6129481
+ 25439 strings out of 492616
+ 478902 string characters out of 6129481
  845645 words of memory out of 5000000
- 28914 multiletter control sequences out of 15000+600000
+ 28924 multiletter control sequences out of 15000+600000
  643416 words of font info for 161 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
- 68i,22n,94p,9115b,666s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,22n,94p,9115b,668s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
 exlive/2019/texmf-dist/fonts/enc/dvips/iwona/ec-iwona-sc.enc}{/usr/local/texliv
 e/2019/texmf-dist/fonts/enc/dvips/iwona/ec-iwona.enc}</usr/local/texlive/2019/t
@@ -1283,10 +1304,10 @@ nts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type
 cki/iwona/iwonar.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palati
 no/uplr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplr
 i8a.pfb>
-Output written on article_4.pdf (6 pages, 9305154 bytes).
+Output written on article_4.pdf (8 pages, 9420445 bytes).
 PDF statistics:
- 202 PDF objects out of 1000 (max. 8388607)
- 177 compressed objects within 2 object streams
- 42 named destinations out of 1000 (max. 500000)
- 36445 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 231 PDF objects out of 1000 (max. 8388607)
+ 201 compressed objects within 3 object streams
+ 49 named destinations out of 1000 (max. 500000)
+ 36450 words of extra memory for PDF output out of 42996 (max. 10000000)
 
