@@ -3,6 +3,6 @@ output$downloadDocument <- downloadHandler(
   
   
   content <- function(file) {
-    file.copy("documentation_29032020.pdf", file)
+    file.copy("www/documentation_29032020.pdf", file)
   },
 )
