@@ -311,7 +311,7 @@ output$plot_residual <- plotly::renderPlotly({
         xaxis = list(title="Fitted values"),
         yaxis = list(title="Standardized residuals")
       )
-      p <- p %>%plotly::add_trace(name="Residuals standardized",showlegend=FALSE,data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
+      p <- p %>%plotly::add_trace(name="Standardised residuals",showlegend=FALSE,data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
                                                                                                                                       color = 'rgba(255, 182, 193, .9)',
                                                                                                                                       line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                                                   width = 2)))
