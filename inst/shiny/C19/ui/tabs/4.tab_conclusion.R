@@ -108,6 +108,18 @@ shinydashboard::tabItem(tabName = "tab_4",
           width = NULL
         ),
         
+        shiny::fluidRow(
+          shiny::column(8,
+        shinydashboard::box(width = 12,
+                            status= "danger",
+                            solidHeader = FALSE,
+                            title = "Documentation",
+                            br(),
+                            h3("To be completed.."),
+                            hr(),
                             
+        tags$iframe(style="height:600px; width:100%", src="C:/Users/AndreDany/Desktop/GitHub/COVID_19_HACK/inst/shiny/C19/documentation/documentation_29032020.pdf")
+))
+        )
   
 )

@@ -19,6 +19,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      
                                                      .nav-tabs-custom > .nav-tabs > li.active {
                                                      border-top-color: red !important;
+                                                     float:left;
                                                      }
                                                      
                                                      .btn-default {

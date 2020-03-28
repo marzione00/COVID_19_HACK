@@ -2,7 +2,10 @@
 ## ui.R ##
 
 
-ui <- shinydashboardPlus::dashboardPagePlus(skin = "red", title = "Covid-19",
+ui <- fluidPage(
+  
+  HTML('<meta name="viewport" content="width=1024">'),
+   shinydashboardPlus::dashboardPagePlus(skin = "red", title = "Covid-19",
                         
                        shinydashboard::dashboardHeader(title = img(src = "coronavirus_white.png")),
                         
@@ -45,3 +48,4 @@ ui <- shinydashboardPlus::dashboardPagePlus(skin = "red", title = "Covid-19",
                         )
 )
 
+)
