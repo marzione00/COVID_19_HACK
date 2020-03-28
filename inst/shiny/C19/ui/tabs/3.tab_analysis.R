@@ -241,6 +241,17 @@ shinydashboard::tabItem(
                                                                                            "#dd4b39"),
         width = 12
       )
+    ),
+    column(
+      6,
+      shinydashboard::box(
+        color = "red",
+        status = "danger",
+        title = "Arima residuals output",
+        shiny::verbatimTextOutput("arima_shell_resid") %>% shinycssloaders::withSpinner(color =
+                                                                                           "#dd4b39"),
+        width = 12
+      )
     )
   )
 )

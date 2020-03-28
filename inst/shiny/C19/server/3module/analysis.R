@@ -525,4 +525,13 @@ output$arima_shell_output <- shiny::renderPrint({
   
 })
 
+output$arima_shell_resid <- shiny::renderPrint({
+  
+  wait <- waitLoading()
+  if(reac_ARIMA$arimaOK) {
+    checkExp(forecast::checkresiduals(reac_ARIMA$arima) , "There is not a suitable ARIMA model")
+  }
+  
+})
+
 
