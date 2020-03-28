@@ -293,7 +293,7 @@ output$plot_residual <- plotly::renderPlotly({
         xaxis = list(title="Fitted values",zeroline = FALSE),
         yaxis = list(title="Residuals")
       )
-      p= p %>%plotly::add_trace(name = "residual",data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 15,
+      p= p %>%plotly::add_trace(name = "residual",showlegend=FALSE,data=Res_DF_1,x=~Res_DF_1$fitted1,y=~Res_DF_1$res,marker = list(size = 15,
                                                                                                                   color = 'rgba(255, 182, 193, .9)',
                                                                                                                   line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                               width = 2)))
@@ -311,7 +311,7 @@ output$plot_residual <- plotly::renderPlotly({
         xaxis = list(title="Fitted values"),
         yaxis = list(title="Standardized residuals")
       )
-      p <- p %>%plotly::add_trace(name="Residuals standardized",data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
+      p <- p %>%plotly::add_trace(name="Residuals standardized",showlegend=FALSE,data=Res_DF_2,x=~Res_DF_2$fitted2,y=~Res_DF_2$res_stand,marker = list(size = 15,
                                                                                                                                       color = 'rgba(255, 182, 193, .9)',
                                                                                                                                       line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                                                   width = 2)))
@@ -328,7 +328,7 @@ output$plot_residual <- plotly::renderPlotly({
         xaxis = list(title="Residuals i"),
         yaxis = list(title="Residuals i+1"),
         title ="Autocorrelation")
-      p = p %>%plotly::add_trace(name = "Autocorrelation", data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 15,
+      p = p %>%plotly::add_trace(name = "Autocorrelation", showlegend=FALSE,data=Res_DF_3,x=~Res_DF_3$fitted3,y=~Res_DF_3$resiplus1,marker = list(size = 15,
                                                                                                                                  color = 'rgba(255, 182, 193, .9)',
                                                                                                                                  line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                                              width = 2)))
@@ -346,7 +346,7 @@ output$plot_residual <- plotly::renderPlotly({
         yaxis = list(title="Residuals")
       )
       colnames(Res_DF_4)=c("fitted4","qq")
-      p = p %>%plotly::add_trace(name="Sqrt of abs of res vs fitted",data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 15,
+      p = p %>%plotly::add_trace(name="Sqrt of abs of res vs fitted",showlegend=FALSE,data=Res_DF_4,x=~Res_DF_4$fitted4,y=~Res_DF_4$qq,marker = list(size = 15,
                                                                                                                                     color = 'rgba(255, 182, 193, .9)',
                                                                                                                                     line = list(color = 'rgba(152, 0, 0, .8)',
                                                                                                                                                 width = 2)))
