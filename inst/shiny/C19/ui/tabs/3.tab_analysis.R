@@ -71,7 +71,12 @@ shinydashboard::tabItem(
                                            selected = 1),
                  hr(),
                  h3("Residuals"),
-                 shiny::selectInput(inputId = "plot_res_type", "Residuals plot type",choices =  c("Residuals","Residuals_standardized","Autocorrelation","Sqrt of abs of res vs fitted"),selected = "Residuals")
+                 shiny::selectInput(inputId = "plot_res_type", "Residuals plot type",
+                                    choices =  c("Residuals" = "Residuals",
+                                                 "Standardised residuals" =  "Residuals_standardized",
+                                                 "Autocorrelation" = "Autocorrelation",
+                                                 "Square root of absolute residuals" = "Sqrt of abs of res vs fitted"),
+                                    selected = "Residuals")
                  
           )
         )
