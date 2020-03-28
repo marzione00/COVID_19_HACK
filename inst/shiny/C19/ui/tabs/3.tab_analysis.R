@@ -97,7 +97,7 @@ shinydashboard::tabItem(
       
       shinydashboard::tabBox(
         width = 12,
-        title = "Summary output",
+        title = "Output summary",
         id = "tech_tab",
         shiny::tabPanel(
           "Fitting output",
