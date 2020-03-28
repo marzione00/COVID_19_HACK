@@ -19,7 +19,6 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      
                                                      .nav-tabs-custom > .nav-tabs > li.active {
                                                      border-top-color: red !important;
-                                                     float:left;
                                                      }
                                                      
                                                      .btn-default {
@@ -76,12 +75,11 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                  icon=icon("chart-line"),
                                                  color = "navy", width = NULL),
                         
-                      
+                        fluidRow(
                           shinydashboard::box(title="Intensive care information", solidHeader = T,
                                               width = NULL,
                                               color = "red",
                                               status = "danger",
-                                              fluidRow(
                           column(2,
                                
                                                      selectInput("occupancy_date",
