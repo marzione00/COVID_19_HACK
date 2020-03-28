@@ -4,7 +4,9 @@
 \name{intensivecare_cap}
 \alias{intensivecare_cap}
 \title{Dataset intensive care capacity}
-\format{tibble}
+\format{
+tibble
+}
 \usage{
 intensivecare_cap
 }
