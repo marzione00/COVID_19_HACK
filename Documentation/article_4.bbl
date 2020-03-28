@@ -94,4 +94,10 @@ Junling Ma, Jonathan Dushoff, Benjamin~M Bolker, and David~JD Earn.
 \newblock Estimating initial epidemic growth rates.
 \newblock {\em Bulletin of mathematical biology}, 76(1):245--260, 2014.
 
+\bibitem{Istat+res0}
+\url{https://www.istat.it/it/files//2015/04/Superfici-delle-unit%C3%A0-amministrative-Dati-comunali-e-provinciali.zip}.
+
+\bibitem{Istat+res1}
+\url{http://dati.istat.it/Index.aspx?DataSetCode=DCIS_POPRES1}.
+
 \end{thebibliography}

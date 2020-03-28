@@ -9,6 +9,6 @@
 \contentsline {section}{\numberline {4}{Panels}}{8}{section.4}% 
 \contentsline {subsection}{\numberline {4.1}{Home}}{8}{subsection.4.1}% 
 \contentsline {subsection}{\numberline {4.2}{Data Inspection}}{9}{subsection.4.2}% 
-\contentsline {subsection}{\numberline {4.3}{Data Analysis}}{10}{subsection.4.3}% 
-\contentsline {section}{\numberline {5}{Conclusions}}{10}{section.5}% 
-\contentsline {section}{\numberline {6}{Packages used}}{10}{section.6}% 
+\contentsline {subsection}{\numberline {4.3}{Data Analysis}}{11}{subsection.4.3}% 
+\contentsline {section}{\numberline {5}{Conclusions}}{11}{section.5}% 
+\contentsline {section}{\numberline {6}{Packages used}}{11}{section.6}% 
