@@ -266,6 +266,73 @@ The summary statistics section (Fig. \ref{Home_fig3}) provides some barometer le
 
 \subsection{Data Inspection}
 
+The Data Inspection panel provides a data visualisation of the general information and a deeper inspection on the hospital occupancy, growth monitoring and test tracking for the coronavirus in Italy. It is divided in main two section: introduction and deeper inspection. In first chart \ref{fig:Inspection_general_info} of the introduction are presented the general information about the total cases, total recovered, total hospitalised and intensive care occupancy. It is possible to select the entire Italian country or a particular region or province. Moreover, it is possible to visualise and filter the raw data for country, region and province in the panel Raw Data \ref{fig:Inspection_rawdata} .In the deeper inspection there are 4 charts. The first two charts are in two different panels of a box and visualise information about intensive care occupancy in the Italian hospital in different regions, while the others represent the growth monitoring of total cases and test tracking . In the first chart \ref{fig:Inspection_perc_occupancy} is represented the percentage hospital occupancy in the selected day divided by capacity with respect to the initial intensive care capacity at the start of the pandemic.
+\begin{equation}
+percentage~occupancy = \dfrac{occupancy}{capacity} \times 100
+\end{equation}
+
+The second chart \ref{fig:Inspection_occupancy2} visualises a bar chart of the hospital occupancy and capacity of intensive care in different region of Italy at the selected day.The third chart \ref{fig:Inspection_growth_monitoring} represents the percentage growth and growth change of total cases day by day. The fifth chart \ref{fig:Inspection_test_tracking} visualises the daily cases with respect to the daily tests.
+
+\begin{figure}[h]
+\begin{subfigure}{.8\textwidth}
+  \centering
+  % include first image
+  \includegraphics[width=.8\linewidth]{Figures/Inspection_perc_occupancy.png}
+  \caption{}
+  \label{fig:Inspection_perc_occupancy}
+\end{subfigure} \hspace{0.3\textwidth}
+\begin{subfigure}{.8\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Figures/Inspection_rawdata.png} 
+  \caption{}
+  \label{fig:Inspection_rawdata}
+\end{subfigure} \hspace{0.3\textwidth}
+\begin{subfigure}{.8\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Figures/Inspection_test_tracking.png} 
+  \caption{}
+  \label{fig:Inspection_test_tracking}
+\end{subfigure} \hspace{0.3\textwidth}
+\begin{subfigure}{.8\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Figures/Inspection_Cattura.png} 
+  \caption{SEM image of the virus}
+  \label{fig:Inspection_Cattura}
+\end{subfigure} \hspace{0.3\textwidth}
+\caption{•}
+\end{figure}[h]
+
+\begin{figure}[h]
+\begin{subfigure}{.8\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Figures/Inspection_general_info.png} 
+  \caption{SEM image of the virus}
+  \label{fig:Inspection_general_info}
+\end{subfigure} \hspace{0.3\textwidth}
+\begin{subfigure}{.8\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Figures/Inspection_growth_monitoring.png} 
+  \caption{SEM image of the virus}
+  \label{fig:Inspection_growth_monitoring}
+\end{subfigure} \hspace{0.3\textwidth}
+\begin{subfigure}{.8\textwidth}
+  \centering
+  % include second image
+  \includegraphics[width=.8\linewidth]{Figures/Inspection_occupancy2.png} 
+  \caption{SEM image of the virus}
+  \label{fig:Inspection_occupancy2}
+\end{subfigure}\hspace{0.3\textwidth}
+\caption{ }
+\label{fig:Inspection_panels_2}
+\end{figure}
+
+
+
 \subsection{Data Analysis}
 
 \section{Conclusions}

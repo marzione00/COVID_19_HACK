@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.25)  27 MAR 2020 19:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.25)  28 MAR 2020 10:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1132,6 +1132,13 @@ Overfull \hbox (10.80678pt too wide) in paragraph at lines 3--3
  \T1/pplj/m/n/12 the NI-AID's Rocky Moun-tain Lab-o-ra-to-ries (RML) 
  []
 
+LaTeX Font Info:    Try loading font information for OMS+pplj on input line 8.
+LaTeX Font Info:    No file OMSpplj.fd. on input line 8.
+
+LaTeX Font Warning: Font shape `OMS/pplj/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbullet' on input line 8.
+
 )
 \tf@lof=\write5
 \openout5 = `article_4.lof'.
@@ -1154,7 +1161,7 @@ Package microtype Info: Character `029' is missing
 LaTeX Font Info:    Font shape `T1/iwona/bx/sc' in size <12> not available
 (Font)              Font shape `T1/iwona/b/sc' tried instead on input line 106.
 
-<Figures/Coronavirus1.jpg, id=57, 3071.475pt x 2398.9625pt>
+<Figures/Coronavirus1.jpg, id=62, 3071.475pt x 2398.9625pt>
 File: Figures/Coronavirus1.jpg Graphic file (type jpg)
 <use Figures/Coronavirus1.jpg>
 Package pdftex.def Info: Figures/Coronavirus1.jpg  used on input line 115.
@@ -1171,17 +1178,17 @@ Underfull \hbox (badness 2020) in paragraph at lines 116--116
 \T1/pplj/m/n/10 (TEM) im-age of SARS-CoV-2^^Valso
  []
 
-<Figures/Coronavirus2.jpg, id=58, 298.67836pt x 242.21742pt>
+<Figures/Coronavirus2.jpg, id=63, 298.67836pt x 242.21742pt>
 File: Figures/Coronavirus2.jpg Graphic file (type jpg)
 <use Figures/Coronavirus2.jpg>
 Package pdftex.def Info: Figures/Coronavirus2.jpg  used on input line 122.
 (pdftex.def)             Requested size: 129.49944pt x 105.01999pt.
-<Figures/Coronavirus3.jpg, id=59, 3071.475pt x 2398.9625pt>
+<Figures/Coronavirus3.jpg, id=64, 3071.475pt x 2398.9625pt>
 File: Figures/Coronavirus3.jpg Graphic file (type jpg)
 <use Figures/Coronavirus3.jpg>
 Package pdftex.def Info: Figures/Coronavirus3.jpg  used on input line 129.
 (pdftex.def)             Requested size: 129.49944pt x 101.14009pt.
-<Figures/Coronavirus4.jpg, id=60, 247.86351pt x 305.45367pt>
+<Figures/Coronavirus4.jpg, id=65, 247.86351pt x 305.45367pt>
 File: Figures/Coronavirus4.jpg Graphic file (type jpg)
 <use Figures/Coronavirus4.jpg>
 Package pdftex.def Info: Figures/Coronavirus4.jpg  used on input line 136.
@@ -1206,7 +1213,7 @@ a bet-ter un-der-stand-ing about the spread
  []
 
 [4] [5]
-<Figures/Malthusian_growth_vs_logistic_growth-2.jpg, id=119, 1507.6325pt x 1059
+<Figures/Malthusian_growth_vs_logistic_growth-2.jpg, id=124, 1507.6325pt x 1059
 .96pt>
 File: Figures/Malthusian_growth_vs_logistic_growth-2.jpg Graphic file (type jpg
 )
@@ -1230,12 +1237,12 @@ Overfull \hbox (7.35995pt too wide) in paragraph at lines 222--223
 tion database.
  []
 
-<Figures/Home_figure_1.png, id=138, 437.00766pt x 497.98547pt>
+<Figures/Home_figure_1.png, id=143, 437.00766pt x 497.98547pt>
 File: Figures/Home_figure_1.png Graphic file (type png)
 <use Figures/Home_figure_1.png>
 Package pdftex.def Info: Figures/Home_figure_1.png  used on input line 228.
 (pdftex.def)             Requested size: 185.0pt x 210.81657pt.
-<Figures/Home_figure_2.png, id=141, 140.39954pt x 105.01735pt>
+<Figures/Home_figure_2.png, id=146, 140.39954pt x 105.01735pt>
 File: Figures/Home_figure_2.png Graphic file (type png)
 <use Figures/Home_figure_2.png>
 Package pdftex.def Info: Figures/Home_figure_2.png  used on input line 239.
@@ -1248,11 +1255,105 @@ Overfull \hbox (49.2799pt too wide) in paragraph at lines 253--255
  small re-gions/provinces
  []
 
-<Figures/Home_figure_3.png, id=149, 442.27734pt x 181.80421pt>
+<Figures/Home_figure_3.png, id=154, 442.27734pt x 181.80421pt>
 File: Figures/Home_figure_3.png Graphic file (type png)
 <use Figures/Home_figure_3.png>
 Package pdftex.def Info: Figures/Home_figure_3.png  used on input line 260.
 (pdftex.def)             Requested size: 185.0pt x 76.04654pt.
+[9 <./Figures/Home_figure_3.png>]
+<Figures/Inspection_perc_occupancy.png, id=169, 881.2925pt x 302.12875pt>
+File: Figures/Inspection_perc_occupancy.png Graphic file (type png)
+<use Figures/Inspection_perc_occupancy.png>
+Package pdftex.def Info: Figures/Inspection_perc_occupancy.png  used on input l
+ine 280.
+(pdftex.def)             Requested size: 236.8018pt x 81.17938pt.
+<Figures/Inspection_rawdata.png, id=170, 825.0825pt x 469.755pt>
+File: Figures/Inspection_rawdata.png Graphic file (type png)
+<use Figures/Inspection_rawdata.png>
+Package pdftex.def Info: Figures/Inspection_rawdata.png  used on input line 287
+.
+(pdftex.def)             Requested size: 236.8018pt x 134.82056pt.
+<Figures/Inspection_test_tracking.png, id=171, 413.04312pt x 240.39813pt>
+File: Figures/Inspection_test_tracking.png Graphic file (type png)
+<use Figures/Inspection_test_tracking.png>
+Package pdftex.def Info: Figures/Inspection_test_tracking.png  used on input li
+ne 294.
+(pdftex.def)             Requested size: 236.8018pt x 137.82434pt.
+<Figures/Inspection_Cattura.png, id=172, 671.50874pt x 251.94125pt>
+File: Figures/Inspection_Cattura.png Graphic file (type png)
+<use Figures/Inspection_Cattura.png>
+Package pdftex.def Info: Figures/Inspection_Cattura.png  used on input line 301
+.
+(pdftex.def)             Requested size: 236.8018pt x 88.84581pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 277--305
+[]$[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 277--305
+[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 277--305
+[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 277--305
+[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 277--305
+
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<Figures/Inspection_general_info.png, id=173, 855.69687pt x 309.65688pt>
+File: Figures/Inspection_general_info.png Graphic file (type png)
+<use Figures/Inspection_general_info.png>
+Package pdftex.def Info: Figures/Inspection_general_info.png  used on input lin
+e 312.
+(pdftex.def)             Requested size: 236.8018pt x 85.69218pt.
+<Figures/Inspection_growth_monitoring.png, id=174, 434.12187pt x 300.62312pt>
+File: Figures/Inspection_growth_monitoring.png Graphic file (type png)
+<use Figures/Inspection_growth_monitoring.png>
+Package pdftex.def Info: Figures/Inspection_growth_monitoring.png  used on inpu
+t line 319.
+(pdftex.def)             Requested size: 236.8018pt x 163.98543pt.
+<Figures/Inspection_occupancy2.png, id=175, 878.78313pt x 301.62688pt>
+File: Figures/Inspection_occupancy2.png Graphic file (type png)
+<use Figures/Inspection_occupancy2.png>
+Package pdftex.def Info: Figures/Inspection_occupancy2.png  used on input line 
+326.
+(pdftex.def)             Requested size: 236.8018pt x 81.27925pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 309--330
+[]$[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 309--330
+[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 309--330
+[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 309--330
+
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 (./article_4.bbl
 LaTeX Font Info:    Try loading font information for T1+fvm on input line 4.
  (/usr/local/texlive/2019/texmf-dist/tex/latex/bera/t1fvm.fd
@@ -1275,7 +1376,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 7--8
 thusian _
  []
 
-[9 <./Figures/Home_figure_3.png>]
+[10]
 Underfull \hbox (badness 10000) in paragraph at lines 58--59
 [][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
 / 01 / news /
@@ -1299,45 +1400,52 @@ Underfull \hbox (badness 10000) in paragraph at lines 64--65
 _ 2 _ 1 _ 1 _ 1 . jsp ?
  []
 
-[10]) [11]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 292.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 292.
+) [11] [12 <./Figures/Inspection_perc_occupancy.png> <./Figures/Inspection_rawd
+ata.png> <./Figures/Inspection_test_tracking.png> <./Figures/Inspection_Cattura
+.png>] [13 <./Figures/Inspection_general_info.png> <./Figures/Inspection_growth
+_monitoring.png> <./Figures/Inspection_occupancy2.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 359.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 359.
  (./article_4.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 292.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 292.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 359.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 359.
 Package rerunfilecheck Info: File `article_4.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 292.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 359.
  ) 
 Here is how much of TeX's memory you used:
- 25470 strings out of 492616
- 479496 string characters out of 6129481
- 846645 words of memory out of 5000000
- 28943 multiletter control sequences out of 15000+600000
- 643416 words of font info for 161 fonts, out of 8000000 for 9000
+ 25539 strings out of 492616
+ 481500 string characters out of 6129481
+ 848645 words of memory out of 5000000
+ 28998 multiletter control sequences out of 15000+600000
+ 643673 words of font info for 162 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
- 67i,23n,93p,9115b,764s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 68i,23n,94p,9115b,668s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
 exlive/2019/texmf-dist/fonts/enc/dvips/iwona/ec-iwona-sc.enc}{/usr/local/texliv
 e/2019/texmf-dist/fonts/enc/dvips/iwona/ec-iwona.enc}</usr/local/texlive/2019/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2019/te
-xmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2019/
-texmf-dist/fonts/type1/public/amsfonts/euler/eurm10.pfb></usr/local/texlive/201
-9/texmf-dist/fonts/type1/public/fpl/fplrc8a.pfb></usr/local/texlive/2019/texmf-
-dist/fonts/type1/public/fpl/fplrij8a.pfb></usr/local/texlive/2019/texmf-dist/fo
-nts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type
-1/nowacki/iwona/iwonab.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/nowa
-cki/iwona/iwonar.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palati
-no/uplr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplr
-i8a.pfb>
-Output written on article_4.pdf (11 pages, 9562848 bytes).
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2019/tex
+mf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/public/amsfonts/euler/eurm10.pfb></usr/local/texlive/2019
+/texmf-dist/fonts/type1/public/fpl/fplrc8a.pfb></usr/local/texlive/2019/texmf-d
+ist/fonts/type1/public/fpl/fplrij8a.pfb></usr/local/texlive/2019/texmf-dist/fon
+ts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1
+/nowacki/iwona/iwonab.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/nowac
+ki/iwona/iwonar.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatin
+o/uplr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplri
+8a.pfb>
+Output written on article_4.pdf (13 pages, 9831227 bytes).
 PDF statistics:
- 262 PDF objects out of 1000 (max. 8388607)
- 223 compressed objects within 3 object streams
- 57 named destinations out of 1000 (max. 500000)
- 36465 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 301 PDF objects out of 1000 (max. 8388607)
+ 245 compressed objects within 3 object streams
+ 62 named destinations out of 1000 (max. 500000)
+ 36500 words of extra memory for PDF output out of 42996 (max. 10000000)
 
