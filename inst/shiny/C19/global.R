@@ -233,8 +233,8 @@ regNames <- as.character(sort(names(regionTS)))
 provNames <- as.character(sort(names(provTS)))
 
 # Time horizon of all graphs
-if(nrow(countryTS$Italy) > 50) {
-  days <- c(1:nrow(countryTS$Italy)+20)
+if(nrow(countryTS$Italy) > 30) {
+  days <- c(1:(nrow(countryTS$Italy)+20) )
 } else {
   days <- c(1:50)
 }
