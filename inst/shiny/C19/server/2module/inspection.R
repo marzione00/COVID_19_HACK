@@ -159,26 +159,36 @@ output$rawData_sel_input <- shiny::renderUI({
 #   })
 # })
 
+is_ready <- function(x) {
+  if(( is.null(x) || length(x) == 0 ))
+    return(FALSE)
+  
+  return(TRUE)
+}
+
 shiny::observeEvent(input$rawData_go, {
   output$rawData_table <- DT::renderDataTable({
     
     
-    
-    DT::datatable( 
-      switch(input$rawData_terr,
-             "1" = countryTS$Italy %>% 
-               dplyr::select(-stato, -data_seriale) %>%
-               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-             "2" = regionTS[[input$rawData_reg_sel]] %>%
-               dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-             "3" = provTS[[input$rawData_prov_sel]] %>%
-               dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
-                             -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
-      ), options = list(
-        searching = FALSE,
-        pageLength = 10,scrollX = T))
+    if(is_ready(input$rawData_terr))
+    {
+      DT::datatable( 
+        switch(input$rawData_terr,
+               "1" = countryTS$Italy %>% 
+                 dplyr::select(-stato, -data_seriale) %>%
+                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+               "2" = regionTS[[input$rawData_reg_sel]] %>%
+                 dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+               "3" = provTS[[input$rawData_prov_sel]] %>%
+                 dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
+                               -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
+        ), options = list(
+          searching = FALSE,
+          pageLength = 10,scrollX = T))
+    }
+  
     
   })
 })

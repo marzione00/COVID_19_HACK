@@ -75,11 +75,12 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                  icon=icon("chart-line"),
                                                  color = "navy", width = NULL),
                         
-                        fluidRow(
+                      
                           shinydashboard::box(title="Intensive care information", solidHeader = T,
                                               width = NULL,
                                               color = "red",
                                               status = "danger",
+                                              fluidRow(
                           column(2,
                                
                                                      selectInput("occupancy_date",
