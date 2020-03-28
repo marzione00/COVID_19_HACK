@@ -6,7 +6,7 @@
 #' @param v a numerical vector
 #' @param threshold the threshold used for cutting the vector
 #'
-#' @return the sliced initial vector
+#' @return the first index of the vector which entry grows more than \code{threshold}, starting from 1 to \code{length(v)}
 #'
 #' @examples
 #' \dontrun{
@@ -19,8 +19,10 @@ const_trim <- function(v,threshold) {
 
 	i <- 1
 	while(i+1 <= length(v) && v[i+1]-v[i] <= threshold) {
-		v <- v[-i]
+		# FIRST VERSION: v <- v[-i]
+	  i <- i+1
 	}
 	
-	return(v)
+	# FIRST VERSION: return(v)
+	return(i)
 }
