@@ -4,9 +4,7 @@
 \name{italy_ext}
 \alias{italy_ext}
 \title{Dataset Italy ext}
-\format{
-tibble
-}
+\format{tibble}
 \usage{
 italy_ext
 }

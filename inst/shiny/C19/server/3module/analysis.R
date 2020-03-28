@@ -34,11 +34,10 @@ waitInput <- shiny::reactive({
 # DEPENDS ON REACTIVE t
 suggest_dates <- function()
 {
-  new = covid19:::const_trim(eval(t$data)[[t$name]]$totale_casi,1)
-  index = which(eval(t$data)[[t$name]]$totale_casi %in% new)
-  newdates = eval(t$data)[[t$name]]$data[index]
+  index = covid19::const_trim(eval(t$data)[[t$name]]$totale_casi,1)
+  sugStart = eval(t$data)[[t$name]]$data[index]
   
-  return(c(newdates[1], newdates[length(newdates)]))
+  return(c(sugStart, fin_date))
 }
 
 # DEPENDS ON REACTIVES t AND reac_ARIMA! (but not on reac_ARIMA$arima)

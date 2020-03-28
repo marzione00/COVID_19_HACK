@@ -6,8 +6,9 @@ ui <-
  # fluidPage(
   
 #  HTML('<meta name="viewport" content="width=1024">'),
-   shinydashboardPlus::dashboardPagePlus(skin = "red", title = "Covid-19",
+   shinydashboardPlus::dashboardPagePlus( skin = "red", title = "DisCOVIDer19",
                                         
+
                        shinydashboard::dashboardHeader(title = img(src = "coronavirus_white.png")),
                         
                        shinydashboard::dashboardSidebar(collapsed = T,
@@ -49,6 +50,5 @@ ui <-
                             
                           )
                         )
-#)
-
 )
+
