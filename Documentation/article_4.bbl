@@ -100,4 +100,15 @@ Junling Ma, Jonathan Dushoff, Benjamin~M Bolker, and David~JD Earn.
 \bibitem{Istat+res1}
 \url{http://dati.istat.it/Index.aspx?DataSetCode=DCIS_POPRES1}.
 
+\bibitem{growthcurver}
+\url{https://cran.r-project.org/web/packages/growthcurver/index.html}.
+
+\bibitem{more1978levenberg}
+Jorge~J Mor{\'e}.
+\newblock The levenberg-marquardt algorithm: implementation and theory.
+\newblock In {\em Numerical analysis}, pages 105--116. Springer, 1978.
+
+\bibitem{nlsLM}
+\url{https://www.rdocumentation.org/packages/minpack.lm/versions/1.2-1/topics/nlsLM}.
+
 \end{thebibliography}
