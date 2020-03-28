@@ -229,8 +229,8 @@ country_tot_pop <- 6.048e+07
 region_tot_pop <- NULL
 
 countryNames <- names(countryTS)
-regNames <- names(regionTS)
-provNames <- names(provTS)
+regNames <- as.character(sort(names(regionTS)))
+provNames <- as.character(sort(names(provTS)))
 
 # Time horizon of all graphs
 if(nrow(countryTS$Italy) > 50) {
