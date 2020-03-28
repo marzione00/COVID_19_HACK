@@ -133,7 +133,7 @@ shinydashboard::tabItem(
   
   shinydashboard::valueBox(
     "ARIMA model",
-    "ARIMA(p,i,q) on confirmed cases of infection's time series",
+    "ARIMA(p,i,q) on log of confirmed cases of infection's time series",
     icon = icon("analytics"),
     color = "navy",
     width = NULL
