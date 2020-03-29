@@ -1,5 +1,8 @@
 SEIR_factotum documentation
 
+REQUIRED MODULES: numpy, sklearn, scipy
+
+
 Input Parameters:
     P : list of int
         time series of all positive tested cases. time range=(0, lenP).
