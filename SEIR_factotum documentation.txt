@@ -3,7 +3,7 @@ SEIR_factotum documentation
 REQUIRED MODULES: numpy, sklearn, scipy
 
 
-Input Parameters:
+Inputs:
     P : list of int
         time series of all positive tested cases. time range=(0, lenP).
         
@@ -29,7 +29,7 @@ Input Parameters:
         time difference (in days) between observations.
             
 
-Other input parameters:
+Other inputs:
     IT : list of float
         discrete probability distribution of random variable Incubation Time. 
         IT[tau] = Pr(Incubation time == tau)
@@ -47,7 +47,7 @@ Other input parameters:
         used ONLY if fit_data==False
         
         
-Output paramteters:
+Outputs:
     U : list of np.array    
         U=[S, E, I, R] datapoints corresponding to range(0, lenP-m, time_step).
         
@@ -63,3 +63,6 @@ Output paramteters:
     Rsq : tuple of floats
         R square of linear regressions performed in parameter estimation. 
         Naif rule of thumb: if Rsq<0.999 parameters do not model the data properly.
+
+    None : Nonetype
+        if any of the checks fails, the function will return None
