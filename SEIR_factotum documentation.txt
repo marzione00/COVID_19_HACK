@@ -6,6 +6,10 @@ CAUTIONS:
     This function does not take into account the last m observations of both P and R, in order to retrieve consistently E and I.
     m = max(len(IT), len(TT), len(IBST)), the last non-zero entry of the probability distributions. (reference to IT, TT, IBST later on     this documentation file.
 
+    The fitted SEIR will probably not match the datapoints due to biased observations. Refer to Rsq output: if Rsq[i]<0.995 for any i, 
+    the model won't fit (rule of thumb).
+       
+
 Inputs:
     P : list of int
         time series of all positive tested cases. time range=(0, lenP).
