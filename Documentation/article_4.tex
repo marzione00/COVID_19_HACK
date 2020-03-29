@@ -34,6 +34,7 @@ BCOR5mm, % Binding correction
 \usepackage{float}
 \usepackage{epigraph}
 \usepackage{mathcomp}
+\usepackage{textcomp}
 \input{structure.tex} % Include the structure.tex file which specified the document structure and layout
 \sloppy
 \hyphenation{Fortran hy-phen-ation} % Specify custom hyphenation points in words with dashes where you would like hyphenation to occur, or alternatively, don't put any dashes in a word to stop hyphenation altogether
@@ -343,42 +344,89 @@ The second chart (Fig. \ref{fig:Inspection_occupancy2}) visualises a bar chart o
 
 \subsection{Data Analysis}
 
-Panel \textit{Analysis} explores different mathematical models for shaping the infections time series, namely the ones introduced in \ref{Theoretical Background}. As previously argued, each of these models predictive power hinges on uncertain actual scenarios, such as the effectiveness of restrictive measures, the presence of several independent and spread outbreaks, and so on. Package \cite{growthcurver} has been used for growth curve fitting. This package provides function \textit{SummarizeGrowth}, which inputs the time series of sample data and outputs the model represented by the growth metrics. Such parameters include those of the logistic equation that best fit the data \ref{logistic_equation}. The reasons why this package was chosen are chiefly two: at the one hand, it performs non-linear curve fitting with the Levenberg-Marquardt algorithm \cite{more1978levenberg}, which happens to be one of the most robust non-linear least squares  (NLS) algorithms. For this step, function \cite{nlsLM} is used. On the other hand, the package is endowed with two methods for background correction.
+Panel \textit{Analysis} explores different mathematical models for shaping the infection\textquotesingle s time series, namely the ones introduced in Section \ref{Theoretical Background}. As previously argued, each of these model\textquotesingle s predictive power hinges on uncertain actual scenarios, such as the effectiveness of restrictive measures, the presence of several independent and spread outbreaks, and so on.
 
-At the top of analysis panel the user is allowed to pick one dataset among national, by region and by province. Hence, any following analysis will use the selected dataset as input (the user can browse the raw dataset in panel inspection, see \ref{Data Inspection} ). The first section is devoted to the logistic model. An input box \ref{fig:logistic_input} lists several dynamic inputs: 
-\begin{itemize}
+Package  \cite{growthcurver} has been used for growth curve fitting. This package provides function  \textit{SummarizeGrowth}, which inputs the time series of sample data and outputs the model represented by the growth metrics. Such parameters include those of the logistic equation that best fit the data, namely $K$, $P_0$ and $r$, as in Eq.\ref{logistic_equation}.
+The reasons why this package was chosen are chiefly two. At the one hand, it performs non-linear curve fitting with the Levenberg-Marquardt algorithm \cite{more1978levenberg} , which happens to be one of the most robust nls algorithms. For this step, function \cite{nlsLM}  is used. On the other hand, the package is endowed with methods for background correction.
 
-\item The date range that the calculator will use for curve fitting. The option to choose initial and final dates different from those at, resepectively, the beginning and the end of the dataset, is useful in two ways: first, it allows to cut initial dates which possibly correspond to zero or constant infections data, as a consequence of a delay in the outbreak in that territory; second, it allows to compute the availabe prediction n days ahead, by cutting the last n dates, and compare it to the real data. \item A check-box that, if selected, will use for computations and rendering the data of the share of infected among the tested, instead of the the infected themselves. That is, it will "standardise positive cases by total swabs". This may be useful to capture the "selection bias", but only in the scenario in which tests are randomly assigned to the population, or at least are assigned with a logic common to all dates and territories. This option is not currently available for provinces. \item Plot type selection boxes: should cumulative cases and fitted curve be plotted or new cases, or both (The user can always show and hide plots' components by clicking on their label in the legend).
-\item Residuals plot type. Four options for graphically rendering of the residuals are available: Residuals vs. fitted values; Standardized residuals vs. fitted values; Autocorrelation; Square root of absolute residuals vs. fitted values. Output is displayed within three boxes: Inside the \textit{Plot} box \ref{fig:logistic_plot1} the sample points, the fitted logistic curve and a confidence band at 95 \% level for the logistic curve are overlayed. The user can view the sample and fitted values by hovering over or touching (for touch-screen devices) them. In addition, if \textit{new cases} is selected, a plot of sample cases differences (which correspond to new cases, in fact) is shown over the logistic estimated distribution \ref{fig:logistic_plot2}. The latter is simply obtained by deriving the right hand side of formula \ref{logistic_equation}
+%----> add here packages and documentation for ARIMA <----
+
+At the top of analysis panel the user is allowed to pick one dataset among national, by region and by province. Hence, any following analysis will use the selected dataset as input (the user can browse the raw dataset in panel inspection, see paragraph \ref{Data Inspection} ).
+
+The first section is devoted to the logistic model. An input box (Fig.\ref{fig:logistic_input}) lists several dynamic inputs:
+\begin{enumerate}
+\item A date range that the calculator will use for curve fitting. The option to choose initial and final dates different from those at, respectively, the beginning and the end of the dataset, is useful in two ways: 
+\begin{itemize} 
+\item It allows to cut initial dates which possibly correspond to zero or constant infections data, as a consequence of a delay in the outbreak in that territory. Actually, an automatic process will do so after the choice of territory, adjusting the initial date to the first day whose new infections exceed a given threshold (currently set to 1). 
+\item It allows to compute the available prediction n days ahead, by cutting the last n dates, and compare it to the real data.
 \end{itemize}
+\item A check-box \emph{standardise positive cases by total swabs}. If selected, the share of infected among the tested, instead of the infected themselves, will be used for computations and rendering. This may be useful to capture the selection bias, but only in the scenario in which tests are randomly assigned to the population, or at least are assigned with a logic common to all dates and territories. This option is not currently available for provinces.
+\item Plot type selection boxes. The available plot types are cumulative cases and new cases. (The user can always show and hide plot\textquotesingle  s components by clicking on their label in the legend).
+\item Residuals plot type. Four options for graphically rendering the residuals: Residuals vs. fitted values; Standardized residuals vs. fitted values; Autocorrelation; Square root of absolute residuals vs. fitted values.
+\end{enumerate}
+
+The output is displayed within three boxes: 
+\begin{enumerate}
+\item Inside the \ref{fig:logistic_plot1} box the sample points, the fitted logistic curve and a confidence band at 95 \% level for the logistic curve are overlayed. The user can view the sample and fitted values by hovering over or touching (for touch-screen devices) them \ref{fig:logistic_plot1}. In addition, if \emph{new cases} is selected, a plot of sample cases differences (which correspond to new cases, in fact) is shown over the logistic estimated distribution \ref{fig:logistic_plot2}.. The latter is simply obtained by deriving the right hand side of formula $(4.3.1)$:
 \begin{equation}
-\dot{N}= \frac{(\frac{K-N_0}{N_0})Kre^{-rt}}{[1+(\frac{K-N_0}{N_0})e^{-rt}]^2}
+N'(t) = \frac{(\frac{K-N_0}{N_0})Kre^{-rt}}{[1+(\frac{K-N_0}{N_0})e^{-rt}]^2}
 \end{equation}
+The user is suggested to take full advantage of plotly features. Besides showing points labels when passing over it and enabling plot selection by clicking on label items, plotly charts are endowed with a sequence of tools shown at the top-right of the box \ref{fig:logistic_plot3}.
+\item Summary output box \ref{fig:logistic_smry1} contains principal information about the selected model and a list of goodness-of-fit tests on the residuals. 
+\item Residuals box contains the plots of residuals, rendered in the user-chosen fashion. (see Fig.\ref{fig:logistic_res1}).
+\end{enumerate}
 
 \begin{figure}[H]
   \centering
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_input.png} 
-  \caption{SEM image of the virus}
+  \caption{Set of useful tools for navigating into plots, by plotly.}
   \label{fig:logistic_input}
 \end{subfigure} 
 \hspace{5.5cm}
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_plot1.png} 
-  \caption{SEM image of the virus}
+  \caption{Summary output box of logistic section.}
   \label{fig:logistic_plot1}
 \end{subfigure} 
 \hspace{5.5cm}
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_plot2.png} 
-  \caption{SEM image of the virus}
+  \caption{One plot of nls residuals: square root of absolute residuals vs. fitted values.}
   \label{fig:logistic_plot2}
 \end{subfigure}
 \caption{ }
 \label{fig:logistic_plots_set}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+\begin{subfigure}{0.6\textwidth}
+  % include second image
+  \includegraphics[width=1\linewidth]{Figures/logistic_plot3.png} 
+  \caption{Set of useful tools for navigating into plots, by plotly.}
+  \label{fig:logistic_plot3}
+\end{subfigure} 
+\hspace{5.5cm}
+\begin{subfigure}{0.6\textwidth}
+  % include second image
+  \includegraphics[width=1\linewidth]{Figures/logistic_res1.png} 
+  \caption{Summary output box of logistic section.}
+  \label{fig:logistic_res1}
+\end{subfigure} 
+\hspace{5.5cm}
+\begin{subfigure}{0.6\textwidth}
+  % include second image
+  \includegraphics[width=1\linewidth]{Figures/logistic_smry1.png} 
+  \caption{One plot of nls residuals: square root of absolute residuals vs. fitted values.}
+  \label{fig:logistic_smry1}
+\end{subfigure}
+\caption{ }
+\label{fig:logistic_plots_set2}
 \end{figure}
 
 \clearpage
