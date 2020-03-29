@@ -2,6 +2,9 @@ SEIR_factotum documentation
 
 REQUIRED MODULES: numpy, sklearn, scipy
 
+CAUTIONS:
+    This function does not take into account the last m observations of both P and R, in order to retrieve consistently E and I.
+    m = max(len(IT), len(TT), len(IBST)), the last non-zero entry of the probability distributions. (reference to IT, TT, IBST later on     this documentation file.
 
 Inputs:
     P : list of int
