@@ -1,0 +1,62 @@
+SEIR_factotum documentation
+
+Input Parameters:
+    P : list of int
+        time series of all positive tested cases. time range=(0, lenP).
+        
+    R : list of int
+        time series of all removed cases (either dead or immune).
+        
+    N : int (default 0)
+        total population.    
+            
+    interest : string (default 'all')
+        specifies which SEIR parameters are to be estimated, determines inputs -> outputs
+        'all' : alpha, beta, gamma, epsilon 
+                P, R -> U, sol, param, Rsq 
+        'none': none 
+                P, R, alpha, beta, gamma, epsilon -> U, sol
+        'R0'  : beta (R0 = beta/gamma*N) 
+                P, R, alpha, gamma, epsilon -> U, sol, R0, Rsq
+        
+    future : int (default 1) 
+        rescaling factor of the time range of data to evaluate the SEIR solutions.
+        
+    time_step : int (default 1)
+        time difference (in days) between observations.
+            
+
+Other input parameters:
+    IT : list of float
+        discrete probability distribution of random variable Incubation Time. 
+        IT[tau] = Pr(Incubation time == tau)
+        
+    TT : list of float
+        discrete probability distribution of random variable Test Time. 
+        TT[tau] = Pr(Time span from symptomaticity to tested positive == tau)    
+        
+    IBST : list of float
+        discrete probability distribution of random variable Infective Before Symptoms Time.
+        IBST[tau] = Pr(Time span from infectivity to simptomaticity == tau)
+        
+    alpha, beta, gamma, epsilon : float
+        SEIR parameter alpha, beta, gamma, epsilon resp.
+        used ONLY if fit_data==False
+        
+        
+Output paramteters:
+    U : list of np.array    
+        U=[S, E, I, R] datapoints corresponding to range(0, lenP-m, time_step).
+        
+    sol : list of np.array
+        sol=[S_, E_, I_, R_] evaluation of SEIR in range(0, future*(lenP-m), time_step).
+        
+    param : list of float
+        param=[alpha, beta, gamma, epsilon] the estimated SEIR parameters.
+        
+    R0 : float
+        R0 = beta/gamma*N. gamma and N are supposed known, beta is estimated    
+    
+    Rsq : tuple of floats
+        R square of linear regressions performed in parameter estimation. 
+        Naif rule of thumb: if Rsq<0.999 parameters do not model the data properly.
