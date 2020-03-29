@@ -140,7 +140,7 @@ output$rawData_sel_input <- shiny::renderUI({
 
 output$rawData_table <- DT::renderDataTable({
     
-  if( input$rawData_terr == 1 || (input$rawData_terr == 2 && is_ready(input$rawData_reg_sel)) || (input$rawData_terr == 3 && is_ready(input$rawData_prov_sel)) ) {
+  if( is_ready(input$rawData_terr) && input$rawData_terr == 1 | (input$rawData_terr == 2 && is_ready(input$rawData_reg_sel)) | (input$rawData_terr == 3 && is_ready(input$rawData_prov_sel)) ) {
     DT::datatable( 
         switch(input$rawData_terr,
                "1" = countryTS$Italy %>% 
