@@ -196,7 +196,7 @@ def SEIR_factotum(P, R, N=0, interest='all', future=1, time_step=1, **kwargs):
         
         param, Rsq = estimate_parameters(U, dU, alpha=alpha, beta=beta, gamma=gamma, epsilon=epsilon)  
             
-        eval_time = range(0, future*len(U[0]), step=time_step)
+        eval_time = range(0, future*len(U[0]), time_step)
         U0 = [U[i][0] for i in range(len(U))]    
         
         sol = odeint(SEIR_model, U0, eval_time, args=(param,))    
