@@ -69,11 +69,11 @@ Output paramteters:
         Naif rule of thumb: if Rsq<0.999 parameters do not model the data properly. 
 """
 
-def SEIR_factotum(P, R, N=0, interest='all', future=1, time_step=1, **kwargs):
+def SEIR_factotum(P, R, N, interest='all', future=1, time_step=1, **kwargs):
 #%% ADDITIONAL MODULES   
     
     import numpy as np 
-    from sklearn.linear_model import LinearRegression
+    from statsmodels.regression.linear_model import OLS
     from scipy.integrate import odeint
     
 #%% INPUT TREATMENT & VARIABLES 
@@ -153,15 +153,15 @@ def SEIR_factotum(P, R, N=0, interest='all', future=1, time_step=1, **kwargs):
         if alpha==None and beta==None and gamma==None and epsilon==None:       #estimate all parameters
             x = np.array(list(zip(I, R)))
             y = dS + dE + dI
-            reg = LinearRegression(fit_intercept=False).fit(x, y)
-            gamma, alpha = [-reg.coef_[0], reg.coef_[1]]
-            Rsq_ga = reg.score(x, y)
+            reg = OLS(y, x).fit()
+            gamma, alpha = [-reg.params[0], reg.params[1]]
+            Rsq_ga = reg.rsquared
             
             x = np.array(list(zip(S*I,E)))
             y = dE
-            reg = LinearRegression(fit_intercept=False).fit(x, y)
-            beta, epsilon = [reg.coef_[0], -reg.coef_[1]]
-            Rsq_be = reg.score(x, y)
+            reg = OLS(y, x).fit()
+            beta, epsilon = [reg.params[0], -reg.params[1]]
+            Rsq_be = reg.rsquared
             
             Rsq = Rsq_ga, Rsq_be
             
@@ -169,16 +169,14 @@ def SEIR_factotum(P, R, N=0, interest='all', future=1, time_step=1, **kwargs):
             if beta==None:
                 x = S*I.reshape(-1, 1)
                 y = dE + epsilon*E       
-                reg = LinearRegression(fit_intercept=False).fit(x, y)
-                beta = reg.coef_[0]
-                Rsq = reg.score(x, y)
+                reg = OLS(y, x).fit()
+                beta = reg.params[0]
+                Rsq = reg.rsquared
             else:
                 Rsq = 1
      
         else:
             print('Enter all parameters, no parameters or alpha, gamma, epsilon\n')
-            param = None
-            Rsq = None 
             return 
         
         parameters = [alpha, beta, gamma, epsilon]
@@ -200,7 +198,6 @@ def SEIR_factotum(P, R, N=0, interest='all', future=1, time_step=1, **kwargs):
         U0 = [U[i][0] for i in range(len(U))]    
         
         sol = odeint(SEIR_model, U0, eval_time, args=(param,))    
-        
         S_ = sol[:,0]
         E_ = sol[:,1]
         I_ = sol[:,2]
@@ -240,13 +237,9 @@ def SEIR_factotum(P, R, N=0, interest='all', future=1, time_step=1, **kwargs):
     else: 
         print('ERROR: interest has to be set to either \'all\', \'none\' or \'R0\'')
         return None
-    
-    
 
-    
-    
-    
-    
+
+
     
     
     
