@@ -14,6 +14,11 @@ Federico: <br>
 Gregorio: <br>
 Marzio: <br>
 
+## bugs
+- Delay at first loading while scrolling page for iOS devices
+- Can't go back to HOME tab
+- Problem with the home tab's map
+
 
 # Contributors :busts_in_silhouette:
 - Andrea Ierardi   &nbsp; <a href="https://www.linkedin.com/in/andreaierardi/" rel="nofollow noreferrer">
