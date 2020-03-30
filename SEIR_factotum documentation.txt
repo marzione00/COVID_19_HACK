@@ -1,6 +1,6 @@
 SEIR_factotum documentation
 
-REQUIRED MODULES: numpy, sklearn, scipy
+REQUIRED MODULES: numpy, statsmodels, scipy
 
 CAUTIONS:
     This function does not take into account the last m observations of both P and R, in order to retrieve consistently E and I.
@@ -17,7 +17,7 @@ Inputs:
     R : list of int
         time series of all removed cases (either dead or immune).
         
-    N : int (default 0)
+    N : int 
         total population.    
             
     interest : string (default 'all')
