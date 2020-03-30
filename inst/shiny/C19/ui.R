@@ -8,15 +8,15 @@ ui <-
 #  HTML('<meta name="viewport" content="width=1024">'),
    shinydashboardPlus::dashboardPagePlus( skin = "red", title = "DisCOVIDer19",
                                         
+                       shinydashboard::dashboardHeader(title = img(src = "coronavirus_white.png","DisCOVIDer19")),
+                                                                          
 
-                       shinydashboard::dashboardHeader(title = img(src = "coronavirus_white.png")),
-                        
                        shinydashboard::dashboardSidebar(collapsed = T,
                                                         shinydashboard::sidebarMenuOutput("menu")
                         ),
                        shinydashboard::dashboardBody(
-                          
-                         tags$head( tags$meta(name = "viewport", content = "width=1024")),
+
+                         tags$head( tags$meta(name = "viewport", content = "width=device-width, target-densitydpi=device-dpi, user-scalable=no, initial-scale=.51, maximum-scale=0.51, minimum-scale=0.51")),
                          
                          #js
                           shinyjs::useShinyjs(),
