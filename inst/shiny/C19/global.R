@@ -58,11 +58,13 @@ pc_df$name
 # integrate population info
 pop_region <- italy_pop$region %>% 
   dplyr::rename(name=territorio,pop=valore) %>%
- dplyr::mutate(name=tolower(name))
+  dplyr::mutate(name=tolower(name)) %>%
+  dplyr::mutate(name=ifelse(name=="emilia romagna", "emilia-romagna", name))
 
 territory_region <- italy_ext$region %>%
   dplyr::rename(name=territorio,ext=valore) %>% 
- dplyr::mutate(name=tolower(name))
+  dplyr::mutate(name=tolower(name)) %>% 
+  dplyr::mutate(name=ifelse(name=="emilia romagna", "emilia-romagna", name))
 
 
 pc_df <- pc_df %>%
