@@ -1,4 +1,4 @@
-shinydashboard::tabItem(tabName = "tab_1",
+shinydashboard::tabItem(tabName = "home",
                         shinydashboard::valueBox("Coronavirus in Italy", 
                                                  paste("Most recent update:",
                                                        tail(countryTS$Italy$data,1)),
