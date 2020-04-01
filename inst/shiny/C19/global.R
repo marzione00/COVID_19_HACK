@@ -6,6 +6,7 @@ provTS = covid19:::get_provTS()
 country_growth = covid19:::get_country_growth()
 intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
 age_cases = get_agecases(as.character(sort(names(regionTS))))
+
 N <- nrow(countryTS)
 
 
