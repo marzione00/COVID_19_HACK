@@ -50,8 +50,14 @@ names(pc_data) <- tolower(names(pc_data))
 
 pc_df <- purrr::map_df(names(pc_data), function(x){
   casi <- tail(pc_data[[x]],1)$totale_casi
-  dplyr::data_frame(name=x,cases=casi)
+  casi_vecchi <- tail(pc_data[[x]],2)$totale_casi[[1]]
+  dplyr::data_frame(name=x,cases=casi, cases_old=casi_vecchi)
 })
+
+pc_df <- pc_df %>%
+  dplyr::ungroup() %>% 
+  dplyr::mutate(growth=round(((cases-cases_old)/cases_old)*100,2) ) %>% 
+  dplyr::select(-cases_old)
 
 pc_df$name
 
@@ -74,7 +80,8 @@ pc_df <- pc_df %>%
  dplyr::mutate(name=ifelse(name%in%c("trento","bolzano","p.a. trento","p.a. bolzano"),
                      "trentino-alto adige/sudtirol",name)) %>%
   dplyr::group_by(name) %>%
-  dplyr::summarise(cases=sum(cases), 
+  dplyr::summarise(cases=sum(cases),
+            growth=sum(growth),
             pop=sum(pop),
             ext=sum(ext)) %>%
  dplyr::mutate(name=ifelse(name=="emilia romagna","emilia-romagna",name))
@@ -99,15 +106,22 @@ dfita1 <- dfita1 %>%
 
 
 
+
 # --- province ---
 
 clean_prov <- purrr::map_df(names(provTS), function(x) {
   tail(provTS[[x]],1)$totale_casi
   dplyr::data_frame(
     name=x,
-    cases=tail(provTS[[x]],1)$totale_casi
+    cases=tail(provTS[[x]],1)$totale_casi,
+    cases_old=tail(provTS[[x]],2)$totale_casi[[1]]
   )
 })
+
+clean_prov <- clean_prov %>%
+  dplyr::ungroup() %>% 
+  dplyr::mutate(growth=round(((cases-cases_old)/cases_old)*100,2) ) %>% 
+  dplyr::select(-cases_old)
 
 
 url <- "http://code.highcharts.com/mapdata/countries/it/it-all.geo.json"
