@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.28)  2 APR 2020 16:31
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.28)  2 APR 2020 21:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1253,7 +1253,7 @@ Underfull \hbox (badness 1127) in paragraph at lines 7--11
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 18--19
+Underfull \hbox (badness 10000) in paragraph at lines 24--25
 [][][]$\T1/fvm/m/n/12 https : / / commons . wikimedia . org / wiki / File : Mal
 thusian _
  []
@@ -1261,25 +1261,25 @@ thusian _
 [21
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 69--70
+Underfull \hbox (badness 10000) in paragraph at lines 75--76
 [][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
 / 01 / news /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--73
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
 [][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
 / 04 / news /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--73
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
 \T1/fvm/m/n/12 coronavirus _ governo _ chiuse _ le _ scuole _ in _ tutta _ ital
 ia _
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 75--76
+Underfull \hbox (badness 10000) in paragraph at lines 81--82
 [][][]$\T1/fvm/m/n/12 http : / / www . salute . gov . it / portale / news / p3 
 _ 2 _ 1 _ 1 _ 1 . jsp ?
  []
@@ -1350,7 +1350,7 @@ nts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type
 cki/iwona/iwonar.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palati
 no/uplr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplr
 i8a.pfb>
-Output written on article_4.pdf (23 pages, 10540817 bytes).
+Output written on article_4.pdf (23 pages, 10540852 bytes).
 PDF statistics:
  482 PDF objects out of 1000 (max. 8388607)
  395 compressed objects within 4 object streams
