@@ -49,6 +49,10 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                                                            , provNames
                                                                                                            ), selected = NULL),
                                                                                             
+                                                                                            radioButtons("difference", label = "Select cumulative or difference plot",
+                                                                                                         choices = list("Choice 1" = 1, "Choice 2" = 2), 
+                                                                                                         selected = 1),
+                                                                                            
                                                                                             hr(),
                                                                                             p("For province, only total case data are available")
                                                                               ),

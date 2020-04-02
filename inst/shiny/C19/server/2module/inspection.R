@@ -12,7 +12,15 @@ shiny::observe({
 })
 
 
-
+shiny::observe(
+  {
+    if(input$difference == 2)
+    {
+      reac_dataset$dataset = diff(reac_dataset$dataset)
+      reac_dataset$name = paste0(reac_dataset$name, " difference")
+    }
+  }
+)
 # General info reactive dataset
 shiny::observe({
   
