@@ -38,7 +38,7 @@ shinydashboard::tabItem(tabName = "home",
                                                              
                                                              selectInput(inputId = "map_value",
                                                                          label = NULL,
-                                                                         choices = c("absolute", "percentage", "density"),
+                                                                         choices = c("absolute", "percentage", "density", "growth"),
                                                                          width="150px"),
                                                              
                                                              #   shinyWidgets::pickerInput(inputId = "map_value",
