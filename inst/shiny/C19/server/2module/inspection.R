@@ -16,6 +16,19 @@ shiny::observe({
 # General info reactive dataset
 shiny::observe({
 
+  if(input$difference ==1)
+  {
+    reac_dataset$plot_type = "spline"
+    reac_dataset$pointWidth = 0
+    reac_dataset$yAxis = 1
+  }
+  else 
+  {
+    reac_dataset$plot_type = "column"
+    reac_dataset$pointWidth = 30
+    reac_dataset$yAxis = 0
+  }
+  
   if(input$regiontab2 == "default" && input$provincetab2 == "default") {
     
     if(input$difference == 1)
@@ -63,26 +76,28 @@ shiny::observe({
   {
     
     
-    reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,type = "column",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE) %>% 
+    reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,type =reac_dataset$plot_type,title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth ,showInLegend=TRUE) %>% 
       highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_yAxis_multiples(
         list(lineWidth = 3, title = list(text  =  '')),
         list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
       )  %>%
-      highcharter::hc_add_series(data = reac_dataset$dataset, type = "column", 
-                                 yAxis = 1, highcharter::hcaes(x = data, y = terapia_intensiva),
-                                 name="Total Intesive care", color="red",showInLegend=TRUE) %>%
-      highcharter::hc_add_series(data =reac_dataset$dataset, type = "column", 
-                                 yAxis = 1, highcharter::hcaes(x = data, y = totale_ospedalizzati),
+      highcharter::hc_add_series(data =reac_dataset$dataset, type = reac_dataset$plot_type, 
+                                 yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth,  highcharter::hcaes(x = data, y = totale_ospedalizzati),
                                  name="Total symptomatic", color="orange",showInLegend=TRUE)   %>%
-      highcharter::hc_add_series(data =reac_dataset$dataset, type = "column", 
-                                 yAxis = 1, highcharter::hcaes(x = data, y = deceduti),
+    
+      highcharter::hc_add_series(data =reac_dataset$dataset, type =reac_dataset$plot_type, 
+                                 yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth,  highcharter::hcaes(x = data, y = dimessi_guariti),
+                                 name="Total recovered", color="green",showInLegend=TRUE)  %>%
+      highcharter::hc_add_series(data =reac_dataset$dataset, type = reac_dataset$plot_type, 
+                                 yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth, highcharter::hcaes(x = data, y = deceduti),
                                  name="Total Deaths", color="black",showInLegend=TRUE)  %>%
-      highcharter::hc_add_series(data =reac_dataset$dataset, type = "column", 
-                                 yAxis = 1, highcharter::hcaes(x = data, y = dimessi_guariti),
-                                 name="Total recovered", color="green",showInLegend=FALSE)  %>%
+      highcharter::hc_add_series(data = reac_dataset$dataset, type =reac_dataset$plot_type, 
+                                 yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth, highcharter::hcaes(x = data, y = terapia_intensiva),
+                                 name="Total Intesive care", color="red",showInLegend=TRUE) %>%
+      
       highcharter::hc_legend(align = "top", verticalAlign = "top",
-                             layout = "vertical", x = 0, y = 100, enabled=TRUE) %>%
+                             layout = "vertical", x = 30, y = 100, enabled=TRUE) %>%
       highcharter::hc_title(text = paste0("General info for: ",reac_dataset$name),
                             margin = 20, align = "left",
                             style = list(useHTML = TRUE))
@@ -104,16 +119,18 @@ shiny::observe({
     }    
     
     
-    reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE) %>% 
+    reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,type = reac_dataset$plot_type,title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue",    yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth,showInLegend=TRUE) %>% 
       highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_yAxis_multiples(
         list(lineWidth = 3, title = list(text  =  '')),
         list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
       )  %>%
+      
       highcharter::hc_legend(align = "top", verticalAlign = "top",
-                             layout = "vertical", x = 0, y = 100, enabled=TRUE) %>%  highcharter::hc_title(text = paste0("General info for: ",reac_dataset$name),
-                                                                                                           margin = 20, align = "left",
-                                                                                                           style = list(useHTML = TRUE))
+                             layout = "vertical", x = 30, y = 100, enabled=TRUE) %>%
+      highcharter::hc_title(text = paste0("General info for: ",reac_dataset$name),
+                            margin = 20, align = "left",
+                            style = list(useHTML = TRUE))
     
   }
   else
