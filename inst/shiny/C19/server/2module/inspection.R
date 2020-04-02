@@ -15,56 +15,72 @@ shiny::observe({
 
 # General info reactive dataset
 shiny::observe({
-  
+
   if(input$regiontab2 == "default" && input$provincetab2 == "default") {
     
-    reac_dataset$name <- input$countrytab2
-    reac_dataset$dataset <- countryTS$Italy
+    if(input$difference == 1)
+    {
+      reac_dataset$name <- input$countrytab2
+      reac_dataset$dataset <- countryTS$Italy 
+    }
+    else
+    {
+      reac_dataset$name <- paste0("diff ", input$countrytab2)
+      
+      reac_dataset$dataset$totale_casi = diff(c(NA,  countryTS$Italy$totale_casi))
+      reac_dataset$dataset$terapia_intensiva = diff( c(NA, countryTS$Italy$terapia_intensiva))
+      reac_dataset$dataset$totale_ospedalizzati = diff(c(NA,  countryTS$Italy$totale_ospedalizzati))
+      reac_dataset$dataset$deceduti = diff(c(NA,  countryTS$Italy$deceduti))
+      reac_dataset$dataset$dimessi_guariti = diff(c(NA,  countryTS$Italy$dimessi_guariti))
+    }
+    
     
   }
   
   
   else if(input$regiontab2 != "default" &&  input$provincetab2 == "default") {
-    reac_dataset$name <- input$regiontab2
-    reac_dataset$dataset <- regionTS[[input$regiontab2]]
+    
+    if(input$difference == 1)
+    {
+      reac_dataset$name <- input$regiontab2
+      
+      reac_dataset$dataset <- regionTS[[input$regiontab2]]
+    }
+    
+    else
+    {
+      reac_dataset$name <- paste0("diff ",input$regiontab2)
+      
+      reac_dataset$dataset$totale_casi = diff(c(NA, regionTS[[input$regiontab2]]$totale_casi))
+      reac_dataset$dataset$terapia_intensiva = diff( c(NA,regionTS[[input$regiontab2]]$terapia_intensiva))
+      reac_dataset$dataset$totale_ospedalizzati = diff(c(NA, regionTS[[input$regiontab2]]$totale_ospedalizzati))
+      reac_dataset$dataset$deceduti = diff(c(NA, regionTS[[input$regiontab2]]$deceduti))
+      reac_dataset$dataset$dimessi_guariti = diff(c(NA, regionTS[[input$regiontab2]]$dimessi_guariti))
+    }
   }
   
   if(input$provincetab2 == "default")
   {
     
-    if(is_ready(reac_dataset$totale_casi))
-    {
-      if(input$difference == 2)
-      {
-        reac_dataset$dataset$totale_casi = diff( reac_dataset$dataset$totale_casi)
-        reac_dataset$dataset$terapia_intensiva = diff( reac_dataset$dataset$terapia_intensiva)
-        reac_dataset$dataset$totale_ospedalizzati = diff( reac_dataset$dataset$totale_ospedalizzati)
-        reac_dataset$dataset$deceduti = diff( reac_dataset$dataset$deceduti)
-        reac_dataset$dataset$dimessi_guariti = diff( reac_dataset$dataset$dimessi_guariti)
-        
-        
-      }
-    }
     
-    
-    reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE) %>% 
+    reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,type = "column",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE) %>% 
       highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_yAxis_multiples(
         list(lineWidth = 3, title = list(text  =  '')),
         list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
       )  %>%
-      highcharter::hc_add_series(data = reac_dataset$dataset, type = "spline", 
+      highcharter::hc_add_series(data = reac_dataset$dataset, type = "column", 
                                  yAxis = 1, highcharter::hcaes(x = data, y = terapia_intensiva),
                                  name="Total Intesive care", color="red",showInLegend=TRUE) %>%
-      highcharter::hc_add_series(data =reac_dataset$dataset, type = "spline", 
+      highcharter::hc_add_series(data =reac_dataset$dataset, type = "column", 
                                  yAxis = 1, highcharter::hcaes(x = data, y = totale_ospedalizzati),
                                  name="Total symptomatic", color="orange",showInLegend=TRUE)   %>%
-      highcharter::hc_add_series(data =reac_dataset$dataset, type = "spline", 
+      highcharter::hc_add_series(data =reac_dataset$dataset, type = "column", 
                                  yAxis = 1, highcharter::hcaes(x = data, y = deceduti),
                                  name="Total Deaths", color="black",showInLegend=TRUE)  %>%
-      highcharter::hc_add_series(data =reac_dataset$dataset, type = "spline", 
+      highcharter::hc_add_series(data =reac_dataset$dataset, type = "column", 
                                  yAxis = 1, highcharter::hcaes(x = data, y = dimessi_guariti),
-                                 name="Total recovered", color="green",showInLegend=TRUE)  %>%
+                                 name="Total recovered", color="green",showInLegend=FALSE)  %>%
       highcharter::hc_legend(align = "top", verticalAlign = "top",
                              layout = "vertical", x = 0, y = 100, enabled=TRUE) %>%
       highcharter::hc_title(text = paste0("General info for: ",reac_dataset$name),
@@ -73,13 +89,21 @@ shiny::observe({
   }
   else if(input$provincetab2 != "default"){
     
-    if(is_ready(reac_dataset$totale_casi))
+    
+    if(input$difference==1)
     {
-      if(input$difference==2)
-        reac_dataset$dataset$totale_casi = diff( reac_dataset$dataset$totale_casi)
+      reac_dataset$dataset <- provTS[[input$provincetab2]]
+      reac_dataset$name <- input$provincetab2
+      
     }
-    reac_dataset$name <- input$provincetab2
-    reac_dataset$dataset <- provTS[[input$provincetab2]]
+    
+    else      
+    {
+      reac_dataset$dataset$totale_casi = diff(c(NA, provTS[[input$provincetab2]]$totale_casi))
+      reac_dataset$name <- paste0("diff ",input$provincetab2)
+    }    
+    
+    
     reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE) %>% 
       highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_yAxis_multiples(
