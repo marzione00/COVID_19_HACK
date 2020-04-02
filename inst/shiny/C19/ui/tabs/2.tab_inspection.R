@@ -50,7 +50,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                                                            ), selected = NULL),
                                                                                             
                                                                                             radioButtons("difference", label = "Select cumulative or difference plot",
-                                                                                                         choices = list("Choice 1" = 1, "Choice 2" = 2), 
+                                                                                                         choices = list("Cumulative" = 1, "Difference" = 2), 
                                                                                                          selected = 1),
                                                                                             
                                                                                             hr(),

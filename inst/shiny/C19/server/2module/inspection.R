@@ -12,19 +12,12 @@ shiny::observe({
 })
 
 
-shiny::observe(
-  {
-    if(input$difference == 2)
-    {
-      reac_dataset$dataset = diff(reac_dataset$dataset)
-      reac_dataset$name = paste0(reac_dataset$name, " difference")
-    }
-  }
-)
+
 # General info reactive dataset
 shiny::observe({
   
   if(input$regiontab2 == "default" && input$provincetab2 == "default") {
+    
     reac_dataset$name <- input$countrytab2
     reac_dataset$dataset <- countryTS$Italy
     
@@ -38,6 +31,22 @@ shiny::observe({
   
   if(input$provincetab2 == "default")
   {
+    
+    if(is_ready(reac_dataset$totale_casi))
+    {
+      if(input$difference == 2)
+      {
+        reac_dataset$dataset$totale_casi = diff( reac_dataset$dataset$totale_casi)
+        reac_dataset$dataset$terapia_intensiva = diff( reac_dataset$dataset$terapia_intensiva)
+        reac_dataset$dataset$totale_ospedalizzati = diff( reac_dataset$dataset$totale_ospedalizzati)
+        reac_dataset$dataset$deceduti = diff( reac_dataset$dataset$deceduti)
+        reac_dataset$dataset$dimessi_guariti = diff( reac_dataset$dataset$dimessi_guariti)
+        
+        
+      }
+    }
+    
+    
     reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE) %>% 
       highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_yAxis_multiples(
@@ -48,8 +57,8 @@ shiny::observe({
                                  yAxis = 1, highcharter::hcaes(x = data, y = terapia_intensiva),
                                  name="Total Intesive care", color="red",showInLegend=TRUE) %>%
       highcharter::hc_add_series(data =reac_dataset$dataset, type = "spline", 
-                                 yAxis = 1, highcharter::hcaes(x = data, y = ricoverati_con_sintomi),
-                                 name="Total Hospitalized", color="orange",showInLegend=TRUE)   %>%
+                                 yAxis = 1, highcharter::hcaes(x = data, y = totale_ospedalizzati),
+                                 name="Total symptomatic", color="orange",showInLegend=TRUE)   %>%
       highcharter::hc_add_series(data =reac_dataset$dataset, type = "spline", 
                                  yAxis = 1, highcharter::hcaes(x = data, y = deceduti),
                                  name="Total Deaths", color="black",showInLegend=TRUE)  %>%
@@ -63,6 +72,12 @@ shiny::observe({
                             style = list(useHTML = TRUE))
   }
   else if(input$provincetab2 != "default"){
+    
+    if(is_ready(reac_dataset$totale_casi))
+    {
+      if(input$difference==2)
+        reac_dataset$dataset$totale_casi = diff( reac_dataset$dataset$totale_casi)
+    }
     reac_dataset$name <- input$provincetab2
     reac_dataset$dataset <- provTS[[input$provincetab2]]
     reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,"spline",title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = 1,showInLegend=TRUE) %>% 
@@ -147,26 +162,26 @@ output$rawData_sel_input <- shiny::renderUI({
 
 
 output$rawData_table <- DT::renderDataTable({
-    
+  
   if( is_ready(input$rawData_terr) && input$rawData_terr == 1 | (input$rawData_terr == 2 && is_ready(input$rawData_reg_sel)) | (input$rawData_terr == 3 && is_ready(input$rawData_prov_sel)) ) {
     DT::datatable( 
-        switch(input$rawData_terr,
-               "1" = countryTS$Italy %>% 
-                 dplyr::select(-stato, -data_seriale) %>%
-                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-               "2" = regionTS[[input$rawData_reg_sel]] %>%
-                 dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-               "3" = provTS[[input$rawData_prov_sel]] %>%
-                 dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
-                               -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-                 dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
-        ), options = list(
-          searching = FALSE,
-          pageLength = 6, lengthMenu = c(6,10,14), scrollX = T)
-      )
+      switch(input$rawData_terr,
+             "1" = countryTS$Italy %>% 
+               dplyr::select(-stato, -data_seriale) %>%
+               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+             "2" = regionTS[[input$rawData_reg_sel]] %>%
+               dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+             "3" = provTS[[input$rawData_prov_sel]] %>%
+               dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
+                             -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
+               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
+      ), options = list(
+        searching = FALSE,
+        pageLength = 6, lengthMenu = c(6,10,14), scrollX = T)
+    )
   }
-
+  
 })
 
 
