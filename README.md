@@ -7,18 +7,6 @@ The package has a Shiny app to explore the Covid-19 outbreak in Italy.
 <br> 
 
 
-## Lavora su
-Andrea: fixing analysis  <br>
-Fabio:  <br>
-Federico: <br>
-Gregorio: <br>
-Marzio: <br>
-
-## bugs
-- Delay at first loading while scrolling page for iOS devices
-- Can't go back to HOME tab
-- Problem with the home tab's map
-
 
 # Contributors :busts_in_silhouette:
 - Andrea Ierardi   &nbsp; <a href="https://www.linkedin.com/in/andreaierardi/" rel="nofollow noreferrer">
@@ -69,49 +57,3 @@ The function of the package is `runC19()` and is run without arguments.
 runC19()
 ```
 
-## Folder structure
-```
-covid19 
-├── R
-|   ├── get_countryTS.R
-|   ├── get_provTS.R
-|   ├── get_regionTS.R
-|   └── runC19.R
-|
-├── inst
-│   └── shiny
-|         └── C19
-│              ├── server
-│              |     ├── 1module
-|              |     |      └── map.R
-│              |     ├── 2module
-│              |     ├── 3module
-│              |     ├── 4module
-│              │     └── global
-│              │            ├── shinyjs.R
-│              │            └── sidebar.R
-│              │   
-│              ├── ui
-│              |    ├── global
-│              |    │     └── css.R
-│              |    │       
-│              |    └── tabs
-│              |          ├── 1.tab_home.R
-│              |          ├── 2.tab_inspection.R
-│              |          ├── 3.tab_analysis.R
-|              |          └── 4.tab_conclusion.R
-|              ├── server.R
-|              └── ui.R
-├── man
-│    ├── get_countryTS.Rd
-│    ├── get_provTS.Rd
-│    ├── get_regionTS.Rd
-│    └── runC19.Rd
-├── .gitignore
-├── LICENSE
-├── .Rbuildignore
-├── .Covid_19.Rproj
-├── DESCRIPTION
-├── NAMESPACE
-└── README.md
-```
