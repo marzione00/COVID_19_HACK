@@ -225,6 +225,24 @@ tamp_data <- tibble::tibble(
 tamp_data_1 <- tamp_data %>% dplyr::select(1:3) %>%
   tidyr::gather(key="key",value="value",-date)
 
+
+
+# age_cases ---------------------------------------------------------------
+
+age_df <- purrr::map_df(names(age_cases), function(x) {
+  age_cases[[x]]$age_cases
+})
+
+age_df <- age_df %>%
+  dplyr::filter(!age_int=="Not known") %>%
+  dplyr::select(-perc_cases) %>%
+  dplyr::ungroup() %>% 
+  dplyr::group_by(age_int) %>%
+  dplyr::summarise(cases=sum(cases, na.rm=T)) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(perc_cases = round((cases/sum(cases))*100,2))
+
+
 #================================
 
 
