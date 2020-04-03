@@ -72,7 +72,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                         
                         # age distribution
                         shinydashboard::box(
-                          title="Age Distrbution", status = "danger", solidHeader = T,
+                          title="Infected Age Distribution", status = "danger", solidHeader = T,
                           width = NULL,
                           tags$head(tags$style(HTML('
                                                      /* background */
