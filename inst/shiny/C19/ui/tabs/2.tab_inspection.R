@@ -206,6 +206,12 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      width=12,
                                                      highcharter::highchartOutput("tamp_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
                                  )
+                          ),
+                          fluidRow(
+                            shinydashboard::box(
+                              title="Age Distribution", status="danger", solidHeader=T,
+                              highcharter::highchartOutput("age_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
+                            )
                           )
                         )
                         

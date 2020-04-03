@@ -334,3 +334,33 @@ output$tamp_plot <- highcharter::renderHighchart(
                                yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
                                name="share_infected_discovered", color="#383838")
 )
+
+
+# age distribution plot ---------------------------------------------------
+
+output$age_plot <- highcharter::renderHighchart(
+  highcharter::highchart() %>% 
+    # Data
+    highcharter::hc_add_series(age_df, "column",
+                               highcharter::hcaes(x = age_int, y = cases), name = "cases") %>%
+    highcharter::hc_add_series(age_df, "pie", 
+                               highcharter::hcaes(name = age_int, y = perc_cases), name = "% cases") %>%
+    # Optiosn for each type of series
+    highcharter::hc_plotOptions(
+      series = list(
+        showInLegend = FALSE,
+        pointFormat = "{point.y}%"
+      ),
+      column = list(
+        colorByPoint = TRUE
+      ),
+      pie = list(
+        colorByPoint = TRUE, center = c('30%', '10%'),
+        size = 120, dataLabels = list(enabled = FALSE)
+      )) %>%
+    # Axis
+    highcharter::hc_yAxis(
+      title = list(text = "cases")
+    ) %>%
+    highcharter::hc_xAxis(categories = age_df$age_int)
+)
