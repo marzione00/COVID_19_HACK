@@ -283,7 +283,7 @@ In fact, one can model a differential set of equation were the carrying capacity
 
 \subsection{Home}
 
-The home panel provides an overview of the COVID19 spread in Italy. The data shown are synchronised with the civil protection database. Whenever the App is started,  a check for the updates is performed and their occurrence is indicated in the \textit{ most recent updates }section. The home panel consists of two main sections: the choropleth map and the summary statistics.The choropleth map (Fig \ref{Home_fig1}) is an interactive heat map with breakouts by region and by province tracking the number of Covid-19 cases. 
+The home panel provides an overview of the COVID19 spread in Italy. The data shown are synchronised with the civil protection database. Whenever the App is started, a check for the updates is performed and their occurrence is indicated in the \textit{most recent updates }section. The home panel consists of two main sections: the choropleth map and the summary statistics. The choropleth map (Fig. \ref{Home_fig1}) is an interactive heat map with breakouts by region and by province tracking the number of Covid-19 cases. 
 
 \begin{figure}[h]
  \centering
@@ -305,11 +305,17 @@ The percentage indicator is calculated dividing the total number of COVID19 case
 \begin{equation}
 percentage~cases = \frac{total~cases}{local~population} \times 100
 \end{equation}
-This indicator ensures that the number of cases in more populated areas are not over-indexed compared to less populated ones. Similarly, it ensures less populated areas are not under-indexed. The density  indicator accounts for the territorial extension (in $km^2$) of regions/provinces expressed in parts per thousand (  \textperthousand ) and is calculated as follows:
+This indicator ensures that the number of cases in more populated areas are not over-indexed compared to less populated ones. Similarly, it ensures less populated areas are not under-indexed. 
+The density indicator accounts for the territorial extension (in $km^2$) of regions/provinces expressed in parts per thousand (\textperthousand ) and is calculated as follows:
 \begin{equation}
-density =  \dfrac{total~cases}{territorial~extension}\times 1000
+density~cases =  \dfrac{total~cases}{territorial~extension}\times 1000
 \end{equation}
-This indicator ensures that we are not underestimating small regions/provinces with fewer cases than larger ones but with more concentrated cases per $Km^2$. Finally, the summary statistics section (Fig. \ref{Home_fig3}) provides some barometer level statistics regarding the current total number of COVID19 cases in Italy with three further breakouts: intensive care, hospitalised, and home isolation.
+This indicator combines the population density with infection spread, offering a control over space. Indeed, it is directly proportional to population density and to percentage cases:
+\begin{equation}
+density~cases =  \dfrac{total~cases}{local~population} \cdot \dfrac{local~population}{territorial~extension} \times 1000 = percentage~cases \cdot density~population \times 1000
+\end{equation}
+It is enhanced by densely populated territories, which, by the way, may in turn enhance spread infection too.
+Finally, the summary statistics section (Fig. \ref{Home_fig3}) provides some barometer level statistics regarding the current total number of COVID19 cases in Italy with three further breakouts: intensive care, hospitalised, and home isolation.
 
 \begin{figure}[h]
  \centering
