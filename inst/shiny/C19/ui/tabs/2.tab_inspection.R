@@ -11,9 +11,8 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                  color = "navy", width = NULL),
                         
                         
-                        shinydashboard::box(title="General info", solidHeader = T,
+                        shinydashboard::box(title="General info", status = "danger", solidHeader = T,
                                             width = NULL,
-                                            color = "red",
                                             tags$head(tags$style(HTML('
                                                      /* tabBox background */
                                                      
@@ -30,7 +29,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                             
                                             shinydashboard::tabBox(width = 12,
                                                                    title = NULL,
-                                                                   tabPanel(h2("Plot"),
+                                                                   tabPanel(h3("Plot"),
                                                                             
                                                                             
                                                                             shiny::fluidRow(
@@ -64,7 +63,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                             
                                                                    ),
                                                                    
-                                                                   tabPanel(h2("Raw data"),
+                                                                   tabPanel(h3("Raw data"),
                                                                             shiny::uiOutput("rawData_input"),
                                                                             DT::dataTableOutput("rawData_table")
                                                                    )

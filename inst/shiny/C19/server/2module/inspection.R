@@ -305,6 +305,11 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 hc <- highcharter::highchart(type = "stock") %>% 
   highcharter::hc_chart(zoomType = "xy") %>%
+  highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wks"), 
+                                               list(type="week", count=3, text="3wks"), list(type="week", count=4, text="4wks"),
+                                               list(type="week", count=5, text="5wks"), list(type="week", count=6, text="6wks"),
+                                               list(type="all", count=1, text="All")), 
+                                selected = 7 ) %>%
   highcharter::hc_title(text = "% growth and growth change of total cases") %>%
   highcharter::hc_add_series(growth_xts, name="growth", color = "red", type = "spline") %>% 
   highcharter::hc_add_series(growth_change_xts, name="growth_change", color = "orange", type = "spline")
