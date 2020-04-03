@@ -48,12 +48,12 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                                                            , provNames
                                                                                                            ), selected = NULL),
                                                                                             
-                                                                                            radioButtons("difference", label = "Select cumulative or difference plot",
-                                                                                                         choices = list("Cumulative" = 1, "Difference" = 2), 
+                                                                                            radioButtons("difference", label = "Select one plot type",
+                                                                                                         choices = list("Cumulative" = 1, "Daily" = 2), 
                                                                                                          selected = 1),
                                                                                             
                                                                                             hr(),
-                                                                                            p("For province, only total case data are available")
+                                                                                            helpText("Total cases is the only available data for provinces")
                                                                               ),
                                                                               shiny::column(10,
                                                                                             highcharter::highchartOutput("general_infos_plot") %>% shinycssloaders::withSpinner( color="#dd4b39")

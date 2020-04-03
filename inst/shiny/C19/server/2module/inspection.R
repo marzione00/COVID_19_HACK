@@ -33,12 +33,12 @@ shiny::observe({
     
     if(input$difference == 1)
     {
-      reac_dataset$name <- input$countrytab2
+      reac_dataset$name <- paste0(input$countrytab2, ", cumulative")
       reac_dataset$dataset <- countryTS$Italy 
     }
     else
     {
-      reac_dataset$name <- paste0("diff ", input$countrytab2)
+      reac_dataset$name <- paste0(input$countrytab2, ", daily")
       
       reac_dataset$dataset$totale_casi = diff(c(NA,  countryTS$Italy$totale_casi))
       reac_dataset$dataset$terapia_intensiva = diff( c(NA, countryTS$Italy$terapia_intensiva))
@@ -55,14 +55,14 @@ shiny::observe({
     
     if(input$difference == 1)
     {
-      reac_dataset$name <- input$regiontab2
+      reac_dataset$name <-  paste0(input$regiontab2, ", cumulative")
       
       reac_dataset$dataset <- regionTS[[input$regiontab2]]
     }
     
     else
     {
-      reac_dataset$name <- paste0("diff ",input$regiontab2)
+      reac_dataset$name <- paste0(input$regiontab2, ", daily")
       
       reac_dataset$dataset$totale_casi = diff(c(NA, regionTS[[input$regiontab2]]$totale_casi))
       reac_dataset$dataset$terapia_intensiva = diff( c(NA,regionTS[[input$regiontab2]]$terapia_intensiva))
@@ -76,7 +76,7 @@ shiny::observe({
   {
     
     
-    reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,type =reac_dataset$plot_type,title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Total cases", color="blue", yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth ,showInLegend=TRUE) %>% 
+    reac_dataset$plot = highcharter::hchart(reac_dataset$dataset,type =reac_dataset$plot_type,title= "General info",highcharter::hcaes(x=data,y = totale_casi),  name="Cases", color="blue", yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth ,showInLegend=TRUE) %>% 
       highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_yAxis_multiples(
         list(lineWidth = 3, title = list(text  =  '')),
@@ -84,17 +84,17 @@ shiny::observe({
       )  %>%
       highcharter::hc_add_series(data =reac_dataset$dataset, type = reac_dataset$plot_type, 
                                  yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth,  highcharter::hcaes(x = data, y = totale_ospedalizzati),
-                                 name="Total symptomatic", color="orange",showInLegend=TRUE)   %>%
+                                 name="Symptomatic", color="orange",showInLegend=TRUE)   %>%
     
       highcharter::hc_add_series(data =reac_dataset$dataset, type =reac_dataset$plot_type, 
                                  yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth,  highcharter::hcaes(x = data, y = dimessi_guariti),
-                                 name="Total recovered", color="green",showInLegend=TRUE)  %>%
+                                 name="Recovered", color="green",showInLegend=TRUE)  %>%
       highcharter::hc_add_series(data =reac_dataset$dataset, type = reac_dataset$plot_type, 
                                  yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth, highcharter::hcaes(x = data, y = deceduti),
-                                 name="Total Deaths", color="black",showInLegend=TRUE)  %>%
+                                 name="Deaths", color="black",showInLegend=TRUE)  %>%
       highcharter::hc_add_series(data = reac_dataset$dataset, type =reac_dataset$plot_type, 
                                  yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth, highcharter::hcaes(x = data, y = terapia_intensiva),
-                                 name="Total Intesive care", color="red",showInLegend=TRUE) %>%
+                                 name="Intesive care", color="red",showInLegend=TRUE) %>%
       
       highcharter::hc_legend(align = "top", verticalAlign = "top",
                              layout = "vertical", x = 30, y = 100, enabled=TRUE) %>%
@@ -108,14 +108,14 @@ shiny::observe({
     if(input$difference==1)
     {
       reac_dataset$dataset <- provTS[[input$provincetab2]]
-      reac_dataset$name <- input$provincetab2
+      reac_dataset$name <- paste0(input$provincetab2, ", daily")
       
     }
     
     else      
     {
       reac_dataset$dataset$totale_casi = diff(c(NA, provTS[[input$provincetab2]]$totale_casi))
-      reac_dataset$name <- paste0("diff ",input$provincetab2)
+      reac_dataset$name <- paste0(input$provincetab2, ", cumulative")
     }    
     
     
