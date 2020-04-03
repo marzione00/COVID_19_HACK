@@ -65,7 +65,7 @@ shinydashboard::tabItem(tabName = "home",
                                                                 shinycssloaders::withSpinner(
                                                                   highcharter::highchartOutput('map_province',
                                                                                                width = "100%",
-                                                                                               height = "475px"),
+                                                                                               height = "510px"),
                                                                   color="#dd4b39"
                                                                 )
                                                        ),
@@ -73,7 +73,7 @@ shinydashboard::tabItem(tabName = "home",
                                                                 shinycssloaders::withSpinner(
                                                                   highcharter::highchartOutput('map_region',
                                                                                                width = "100%",
-                                                                                               height = "475px"
+                                                                                               height = "510px"
                                                                   ),
                                                                   color="#dd4b39"
                                                                 )
