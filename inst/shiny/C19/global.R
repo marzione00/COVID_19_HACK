@@ -240,8 +240,20 @@ age_df <- age_df %>%
   dplyr::group_by(age_int) %>%
   dplyr::summarise(cases=sum(cases, na.rm=T)) %>%
   dplyr::ungroup() %>%
-  dplyr::mutate(perc_cases = round((cases/sum(cases))*100,2))
+  dplyr::mutate(perc_cases = round((cases/sum(cases))*100,2)) %>% 
+  dplyr::mutate(region="--- ALL ---")
 
+age_df_region <- purrr::map_df(names(age_cases), function(x) {
+  age_cases[[x]]$age_cases %>%
+    dplyr::mutate(region=x) %>% 
+    dplyr::filter(!age_int=="Not known") %>% 
+    dplyr::select(-perc_cases) %>%
+    dplyr::ungroup() %>% 
+    dplyr::mutate(perc_cases = round((cases/sum(cases))*100,2))
+})
+
+age_df_final <- age_df %>% 
+  dplyr::bind_rows(age_df_region)
 
 #================================
 

@@ -339,28 +339,29 @@ output$tamp_plot <- highcharter::renderHighchart(
 # age distribution plot ---------------------------------------------------
 
 output$age_plot <- highcharter::renderHighchart(
-  highcharter::highchart() %>% 
-    # Data
-    highcharter::hc_add_series(age_df, "column",
-                               highcharter::hcaes(x = age_int, y = cases), name = "cases") %>%
-    highcharter::hc_add_series(age_df, "pie", 
-                               highcharter::hcaes(name = age_int, y = perc_cases), name = "% cases") %>%
-    # Optiosn for each type of series
-    highcharter::hc_plotOptions(
-      series = list(
-        showInLegend = FALSE,
-        pointFormat = "{point.y}%"
-      ),
-      column = list(
-        colorByPoint = TRUE
-      ),
-      pie = list(
-        colorByPoint = TRUE, center = c('30%', '10%'),
-        size = 120, dataLabels = list(enabled = FALSE)
-      )) %>%
-    # Axis
-    highcharter::hc_yAxis(
-      title = list(text = "cases")
-    ) %>%
-    highcharter::hc_xAxis(categories = age_df$age_int)
-)
+    highcharter::highchart() %>% 
+      # Data
+      highcharter::hc_add_series(dplyr::filter(age_df_final,region==input$regiontab3), "column",
+                                 highcharter::hcaes(x = age_int, y = cases), name = "cases") %>%
+      highcharter::hc_add_series(dplyr::filter(age_df_final,region==input$regiontab3), "pie", 
+                                 highcharter::hcaes(name = age_int, y = perc_cases), name = "% cases") %>%
+      # Optiosn for each type of series
+      highcharter::hc_plotOptions(
+        series = list(
+          showInLegend = FALSE,
+          pointFormat = "{point.y}%"
+        ),
+        column = list(
+          colorByPoint = TRUE
+        ),
+        pie = list(
+          colorByPoint = TRUE, center = c('15%', '20%'),
+          size = 150, dataLabels = list(enabled = FALSE)
+        )) %>%
+      # Axis
+      highcharter::hc_yAxis(
+        title = list(text = "cases")
+      ) %>%
+      highcharter::hc_xAxis(categories = dplyr::filter(age_df_final,region==input$regiontab3)$age_int)
+  )
+

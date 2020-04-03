@@ -70,6 +70,42 @@ shinydashboard::tabItem(tabName = "tab_2",
                                             )
                         ),
                         
+                        # age distribution
+                        shinydashboard::box(
+                          title="Age Distrbution", status = "danger", solidHeader = T,
+                          width = NULL,
+                          tags$head(tags$style(HTML('
+                                                     /* background */
+                                                     
+                                                     .nav-tabs-custom > .nav-tabs > li.active {
+                                                     border-top-color: red !important;
+                                                     }
+                                                     
+                                                     .btn-default {
+                                                     background-color: #dd4b39 !important;
+                                                     color: white !important;
+                                                     border-color: #dd4b39 !important;
+                                                     }
+                                                     '))),
+                          
+                          shiny::fluidRow(
+                            shiny::column(2,
+                                          shiny::selectInput(
+                                            inputId = "countrytab3", label = "Country",
+                                            choices = countryNames, selected = "Italy"),
+                                          
+                                          shiny::selectInput(
+                                            inputId = "regiontab3", label = "Region",
+                                            choices = unique(age_df_final$region), selected = "--- ALL ---")
+                            ),
+                            shiny::column(10,
+                                          highcharter::highchartOutput("age_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
+                                          
+                            )
+                          )
+                          
+                        ),
+                        
                         
                         
                         br(),
@@ -206,12 +242,6 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      width=12,
                                                      highcharter::highchartOutput("tamp_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
                                  )
-                          ),
-                          fluidRow(
-                            shinydashboard::box(
-                              title="Age Distribution", status="danger", solidHeader=T,
-                              highcharter::highchartOutput("age_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
-                            )
                           )
                         )
                         
