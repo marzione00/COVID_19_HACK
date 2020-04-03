@@ -209,7 +209,7 @@ Finally, we must remark that our approach is informational: we do limit ourselve
 %----------------------------------------------------------------------------------------
 
 \section{Theoretical Background} \label{Theoretical Background}
-Different models were proposed in the literature for modelling the spread of a disease \cite{keeling2011modeling}, here we are going to consider a relative simple model taken from the growth dynamics of populations.
+Several models were proposed in the literature for modelling the spread of a disease \cite{keeling2011modeling}: here, we are going to consider a relative simple model taken from the growth dynamics of populations.
 
 \subsection{Population growth dynamics}
 The dynamics of population was founded by Thomas Malthus in 1817 \cite{malthus1817essay} with his well known equation: 
@@ -218,38 +218,38 @@ The dynamics of population was founded by Thomas Malthus in 1817 \cite{malthus18
 x_{n+1}=x_{n}(1+r)
 \end{equation}
 
-Where $x_{n}$ stands for the population at time and $r$ the growth rate. Thus the following discrete progression will be obtained: 
+where $x_{n}$ stands for the population at time and $r$ the growth rate. Renaming $x$ to $P$ and applying recursive substitution, we get: 
 
 \begin{equation}
 P_{n+1}=P_{0}(1+r)^{n+1}
 \end{equation}
 
-in which $P_{0}$ stands for the initial population. This discrete model can be reshaped in to a continuous one in the following way: 
+in which $P_{0}$ represents the initial population. This discrete model can be reshaped in to a continuous one in the following way: 
 
 \begin{equation}
 \dot{P}(t)=rP(t)
 \end{equation}
 
-this is a relative simple differential equation with separable variable. Its integration gives:
+That's a first order ODE with separable variable. Integrating yields:
 
 \begin{equation}
-P(t)=P_{0}(t)
+P(t)=P_{0}e^{rt}
 \end{equation}
 
-Malthus, of course, did not believed that the population could grow ad infinitum with an exponential growth, but since he estimated that the resources growth follows a linear path, he argued that, at the intersection of the two curves, a consistent part of the population will not have access to the resources. Thus  he expected that the exponential growth realizes only in the first part of the growth. Basing on these arguments, a Belgian mathematician Pierre-François Verhulst in 1838, proposed a model \cite{verhulst1838notice} in which the key point is the maximum number of people that the resources allows to live, usually called the carrying capacity here indicated as $K$ ($P$ and $r$ have the same meaning of the previous model):
+Malthus, of course, did not believe that the population could grow ad infinitum with an exponential trend and, since he estimated that the resources growth follows a linear path, he argued that, at the intersection of the two curves, a consistent part of the population will not have access to the resources. Thus he expected that the exponential growth realizes only in the first part of the growth. Basing on these arguments, in 1838 Belgian mathematician Pierre-François Verhulst developed a model \cite{verhulst1838notice} whose new feature and key point was the maximum size of the population allowed by resources, that is the natural upper limit of coexisting individuals in a particular environment, usually called the \emph{carrying capacity}, here indicated as $K$ ($P$ and $r$ have the same meaning of the previous model):
 
 \begin{equation}
 \dot{P}=rP\left(1-\dfrac{P}{K} \right)
 \end{equation}
 
-that have the following analytic solution 
+that has the following analytic solution: 
 
 \begin{equation}
 P=\dfrac{KP_{0}e^{rt}}{K+P_{0}(e^{rt}-1)}
 \label{logistic_equation}
 \end{equation}
 
-In Fig. \ref{Malthusian_growth_vs_logistic_growth} this solution is compared to the Malthusian one: as one can point out the logistic growth has a saturation effect near the asymptote of carrying capacity. This represent the limit capacity that Malthus proposed to indicate as the intersection between the linear and exponential growth. It is worth nothing that near the origin the two growth are identical, then the logistic curve becomes linear up to the saturation region. 
+In Fig.\ref{Malthusian_growth_vs_logistic_growth} this solution is compared to the Malthusian one: as one can see, the logistic growth shows a saturation effect towards the asymptote of carrying capacity. This completes Malthus's intuition, as it represents population growth before and after the intersection between the linear resources curve and the natural exponential growth. It is worth noting that  in a neighbourhood of the origin the two curves are identical; later, the logistic curve bends down, still increasing, till it reaches the saturation region, in which it becomes almost flat. 
 
 \begin{figure}
  \centering
