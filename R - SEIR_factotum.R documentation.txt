@@ -1,0 +1,63 @@
+RFUNCTION
+SEIR_factotum.R documentation
+
+REQUIRED PACKAGES : deSolve
+
+CAUTIONS:
+    This function does not take into account the last m observations of both P and R, in order to retrieve consistently E and I.
+    m = max(len(IT), len(TT), len(IBST)), the last non-zero entry of the probability distributions. (reference to IT, TT, IBST later on     this documentation file.
+
+
+Inputs:
+    P : list of int
+        time series of all positive tested cases. time range=(0, lenP).
+        
+    R : list of int
+        time series of all removed cases (either dead or immune).
+        
+    N : int 
+        total population.    
+            
+    time_step : float (default 1)
+	integration step for ODE SEIR model
+            
+    normalise : bool (default TRUE)
+	if TRUE, S,E,I,R and predictions will be divided by N
+	rescale up after execution to retrieve correct data scale			
+
+Other inputs:
+    IT : list of float
+        discrete probability distribution of random variable Incubation Time. 
+        IT[tau] = Pr(Incubation time == tau-1)
+        
+    TT : list of float
+        discrete probability distribution of random variable Test Time. 
+        TT[tau] = Pr(Time span from symptomaticity to tested positive == tau-1)    
+        
+    IBST : list of float
+        discrete probability distribution of random variable Infective Before Symptoms Time.
+        IBST[tau] = Pr(Time span from infectivity to simptomaticity == tau-1)
+        
+    gamma : float (default 0.1 corresponding to 10 days of infectivity)
+        SEIR parameter gamma.
+        
+        
+Outputs:
+   
+    out : list
+	each item is explained below
+
+    out$S : list of float
+	data points of S (normalised if normalise=TRUE)
+	same for E, I, R
+
+    out$S_ : list fo float
+	SEIR prediction of S (normalised if normalise=TRUE)
+	same for E_, I_, R_
+	
+    out$time : list of float 
+	list of t at which the SEIR prediction is evalued
+
+    out$R0 : float
+	the R0 of the epidemics as estimated
+	
