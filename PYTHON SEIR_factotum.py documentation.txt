@@ -1,4 +1,5 @@
-SEIR_factotum documentation
+PYTHON FUNCTION
+SEIR_factotum.py documentation
 
 REQUIRED MODULES: numpy, statsmodels, scipy
 
