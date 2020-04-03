@@ -52,7 +52,7 @@ BCOR5mm, % Binding correction
 Andrea Ierardi, Federico Matteucci,\\
  Gregorio Saporito} % The article author(s) - author affiliations need to be specified in the AUTHOR AFFILIATIONS block
 
-\date{} % An optional date to appear under the author(s)
+\date{\today} % An optional date to appear under the author(s)
 
 %----------------------------------------------------------------------------------------
 
@@ -188,20 +188,28 @@ In the last centuries several cases of pandemic diseases were recorded: from our
 
 \paragraph{The Asian Influenza (H2N2)}
 
-In 1957 different cases another virus of influenza ( A/H2N2 ) spread in China. In this case, at difference with respect to the Spanish flu, the scholars were able to isolate the virus (the virus of the former was only isolated in 1933). It was proposed that the virus may be originated from mixing of avian and human influenza (see Fig. \ref{Mixing_Flu})
+In 1957 different cases another virus of influenza ( A/H2N2 ) spread in China starting from Guizhou \cite{strahan1994oriental} . In this case, at difference with respect to the Spanish flu, the scholars were able to isolate the virus (the virus of the former was only isolated in 1933). It was proposed that the virus may be originated from mixing of avian and human influenza (see Fig. \ref{Mixing_Flu}). The virus diffused in Hong Kong in April then in Singapore, Taiwan and Japan and then globally \cite{saunders2016reviewing} . While for the US a crucial role for the spread was supposed to be played by naval  bases \cite{henderson2016development,saunders2016reviewing}, for Europe the same role was played by the  land route trough Asia \cite{langmuir1961epidemiology,saunders2016reviewing}. Scholar also pointed out the role of a church conference in Iowa \cite{payne1958some} were almost 1600 people from all countries met. Furthermore the open of school in fall increased abruptly the spread of the virus (40-60 \% clinical attack rate) \cite{henderson2009public,saunders2016reviewing}. Also in this case it was reported a second wave (or perhaps others one, see Fig. \ref{Asiatic_HK_flu}) more lethal than the first one \cite{ebasianflu} . In this case, contrarily to the Spanish Flu a vaccine was developed although \cite{henderson2009public}, it was argued that its diffusion was not effective to diminish the effect of the pandemics \cite{jensen1958influenza}. It was nothing that according to scholars \cite{trotter1959asian} no effective measures of quarantine or other non-pharmacological one were undertaken by the authorities \cite{trotter1959asian} due to the mild symptoms \cite{saunders2016reviewing}. The total toll for this pandemic was from 1 to 1.4 million deaths according to the WHO \cite{who_influenza}: from our point of view this pandemic is a counterfactual teaching lesson about what happens when a pandemics is underestimated (and so no restrictive measure is taken)  due to its relative  mild synthoms 
 
 \begin{figure}[h]
  \centering
  \includegraphics[width=0.8\linewidth]{Figures/Mixing_Flu.jpg} 
- \caption{Wang-ShickRyu diagram for the explanantion of the Spanish, Asian flu and Honk-Kong flu .  Image source: Ref.  \cite{RYU2017195}}
+ \caption{Wang-ShickRyu diagram for the explanation of the Spanish, Asian flu and Honk-Kong flu .  Image source: Ref.  \cite{RYU2017195}}
  \label{Mixing_Flu}
 \end{figure}
 
+\begin{figure}[h]
+ \centering
+ \includegraphics[width=1\linewidth]{Figures/Asiatic_HK_flu.png} 
+ \caption{ Excess mortality due to respiratory disease from 1950 to 1970 as reported by Viboud et al. The dashed lines marks the timing of the Hong Kong flue. Image source: Ref.  \cite{viboud2016global}}
+ \label{Asiatic_HK_flu}
+\end{figure}
 
+
+\clearpage
 
 
 \paragraph{Motivation} \label{Motivation}
-In order to have a thorough insight of the spread of the COVID-19 disease and its effects on italian population, we propose a ShinyApp, called disCOVIDer19, that gathers, presents and analyzes the numbers of new and cumulative infections, hospitalized and intensive care patients, deaths and recoveries, over the whole country and over its individual regions and provinces. A detailed guide to the functioning of the App is available in sections \ref{Data Origin} and \ref{Panels}. As regards the analysis panel, we fitted the cumulative cases with a logistic curve, in order to get a bird-of-eye view on the general and specific trends as well as on the effectiveness of the restrictive measures imposed by the Italian government. The theoretical foundations of this fit and how to manage and use it will be discussed in the section \ref{Theoretical Background} and \ref{Data Analysis}. Beside the logistic curve, we also considered a statistical approach, largely diffused among economists, that considers the number of total cases in each day as a time series: on this basis we were able to make use of a particular tool, which will be briefly introduced in the section \ref{Theoretical Background}, that allowed us to make a further forecast about future cases. This latter becomes useful in case of large deviations from logistic distribution.
+In order to have a thorough insight of the spread of the COVID-19 disease and its effects on italian population, we propose a ShinyApp, called disCOVIDer19, that gathers, presents and analyzes the numbers of new and cumulative infections, hospitalized and intensive care patients, deaths and recoveries, over the whole country and over its individual regions and provinces. A detailed guide to the functioning of the App is available in sections \ref{Data Origin} and \ref{Panels}. As regards the analysis panel, we fitted the cumulative cases with a logistic curve, in order to get a bird-of-eye view on the general and specific trends as well as on the effectiveness of the restrictive measures imposed by the Italian government. The theoretical foundations of this fit and how to manage and use it will be discussed in the section \ref{Theoretical Background} and \ref{sub:Data Analysis}. Beside the logistic curve, we also considered a statistical approach, largely diffused among economists, that considers the number of total cases in each day as a time series: on this basis we were able to make use of a particular tool, which will be briefly introduced in the section \ref{Theoretical Background}, that allowed us to make a further forecast about future cases. This latter becomes useful in case of large deviations from logistic distribution.
 Finally, we must remark that our approach is informational: we do limit ourselves to list and comment our findings without claiming rather delicate conclusions, expecially about predictions, which many people hinge on nowadays and many lives too, unfortunately.
  
 %----------------------------------------------------------------------------------------
@@ -327,7 +335,7 @@ Finally, the summary statistics section (Fig. \ref{Home_fig3}) provides some bar
 
 \subsection{Data Inspection}\label{Data Inspection}
 
-The \textit{Data Inspection} panel provides a data visualisation of the general information and a deeper overview about the hospital occupancy, growth monitoring and test tracking for the COVID19 in Italy. It is divided in two main section: introduction and deeper inspection. In the first chart (Fig.\ref{fig:Inspection_general_info}) of the introduction section, general data of the total cases, total recovered, total hospitalised and intensive care occupancy is presented. It is possible to select the entire Italian country or a particular region or province. Moreover, it is possible to visualise and filter the raw data for country, region and province in the panel Raw Data (Fig. \ref{fig:Inspection_rawdata}). In the deeper inspection panel there are four charts: the first two charts are in two different panels of a box and visualise information about intensive care occupancy in the Italian hospital in different regions, while the others represent the growth monitoring of total cases and test tracking. It is worth nothing that the occupation may be higher than their total number, due to the fact that the places in intensive therapy that we considered may be upgraded (see the section \ref{Data Origin}). In the first chart \ref{fig:Inspection_perc_occupancy} is represented the percentage hospital occupancy in the selected day divided by capacity with respect to the initial intensive care capacity at the start of the pandemic.
+The \textit{Data Inspection} panel provides a data visualisation of the general information and a deeper overview about the hospital occupancy, growth monitoring and test tracking for the COVID19 in Italy. It is divided in main two section: introduction and deeper inspection. In first chart (Fig. \ref{fig:Inspection_general_info}) of the introduction are presented the general information about the total cases, total recovered, total hospitalised and intensive care occupancy. It is possible to select the entire Italian country or a particular region or province. Moreover, it is possible to visualise and filter the raw data for country, region and province in the panel Raw Data (Fig. \ref{fig:Inspection_rawdata}). In the deeper inspection panel there are four charts: the first two charts are in two different panels of a box and visualise information about intensive care occupancy in the Italian hospital in different regions, while the others represent the growth monitoring of total cases and test tracking. It is worth nothing that the occupation may be higher than their total number, due to the fact that the places in intensive therapy that we considered may be upgraded (see the section \ref{Data Origin}). In the first chart \ref{fig:Inspection_perc_occupancy} is represented the percentage hospital occupancy in the selected day divided by capacity with respect to the initial intensive care capacity at the start of the pandemic.
 \begin{equation}
 percentage~occupancy = \dfrac{occupancy}{capacity} \times 100
 \end{equation}
@@ -393,7 +401,7 @@ The second chart (Fig. \ref{fig:Inspection_occupancy2}) visualises a bar chart o
 
 
 
-\subsection{Data Analysis}
+\subsection{Data Analysis}\label{sub:Data Analysis}
 
 Panel \textit{Analysis} explores different mathematical models for shaping the infection\textquotesingle s time series, namely the ones introduced in Section \ref{Theoretical Background}. As previously argued, each of these model\textquotesingle s predictive power hinges on uncertain actual scenarios, such as the effectiveness of restrictive measures, the presence of several independent and spread outbreaks, and so on.
 
