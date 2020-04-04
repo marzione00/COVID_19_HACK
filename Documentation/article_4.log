@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.28)  4 APR 2020 10:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.28)  4 APR 2020 10:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1012,19 +1012,13 @@ Underfull \hbox (badness 1168) in paragraph at lines 3--3
  [][] []\T1/pplj/m/n/12 Different pic-tures of the virus as re-ported 
  []
 
-[3]
-LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
-12.
- (/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/ts1pplj.fd
-File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
-))
+[3])
 \tf@lof=\write5
 \openout5 = `article_4.lof'.
 
 Package tocbasic Info: character protrusion at lot deactivated on input line 92
 .
-
-(./article_4.lot)
+ (./article_4.lot)
 \tf@lot=\write6
 \openout6 = `article_4.lot'.
 
@@ -1075,8 +1069,12 @@ Overfull \hbox (2.65201pt too wide) in paragraph at lines 126--154
 []$ $[]$ 
  []
 
-[5 <./Figures/Coronavirus1.jpg> <./Figures/Coronavirus2.jpg> <./Figures/Coronav
-irus3.jpg> <./Figures/Coronavirus4.jpg>] [6]
+LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
+160.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/ts1pplj.fd
+File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
+) [5 <./Figures/Coronavirus1.jpg> <./Figures/Coronavirus2.jpg> <./Figures/Coron
+avirus3.jpg> <./Figures/Coronavirus4.jpg>] [6]
 <Figures/SpanishFLU.png, id=155, 1144.275pt x 687.56876pt>
 File: Figures/SpanishFLU.png Graphic file (type png)
 <use Figures/SpanishFLU.png>
@@ -1144,12 +1142,7 @@ File: Figures/Home_figure_3.png Graphic file (type png)
 <use Figures/Home_figure_3.png>
 Package pdftex.def Info: Figures/Home_figure_3.png  used on input line 332.
 (pdftex.def)             Requested size: 185.0pt x 76.04654pt.
- [15 <./Figures/Home_figure_2.png> <./Figures/Home_figure_3.png>]
-
-LaTeX Warning: Citation `fig:Age_distribution' on page 16 undefined on input li
-ne 345.
-
-[16]
+ [15 <./Figures/Home_figure_2.png> <./Figures/Home_figure_3.png>] [16]
 <Figures/Inspection_perc_occupancy.png, id=305, 881.2925pt x 302.12875pt>
 File: Figures/Inspection_perc_occupancy.png Graphic file (type png)
 <use Figures/Inspection_perc_occupancy.png>
@@ -1202,7 +1195,7 @@ File: Figures/Age_distribution.jpg Graphic file (type jpg)
 <use Figures/Age_distribution.jpg>
 Package pdftex.def Info: Figures/Age_distribution.jpg  used on input line 425.
 (pdftex.def)             Requested size: 296.00113pt x 126.95946pt.
- [20
+[20
 
  <./Figures/Age_distribution.jpg>]
 <Figures/logistic_input.png, id=356, 257.46187pt x 320.69812pt>
@@ -1221,24 +1214,28 @@ File: Figures/logistic_plot2.png Graphic file (type png)
 Package pdftex.def Info: Figures/logistic_plot2.png  used on input line 483.
 (pdftex.def)             Requested size: 222.00226pt x 139.45638pt.
  [21]
-<Figures/logistic_plot3.png, id=370, 293.59688pt x 53.44969pt>
+Overfull \vbox (18.96776pt too high) has occurred while \output is active []
+
+
+[22 <./Figures/logistic_input.png> <./Figures/logistic_plot1.png> <./Figures/lo
+gistic_plot2.png>]
+<Figures/logistic_plot3.png, id=377, 293.59688pt x 53.44969pt>
 File: Figures/logistic_plot3.png Graphic file (type png)
 <use Figures/logistic_plot3.png>
 Package pdftex.def Info: Figures/logistic_plot3.png  used on input line 496.
 (pdftex.def)             Requested size: 222.00226pt x 40.41582pt.
-<Figures/logistic_res1.png, id=371, 483.30562pt x 350.05782pt>
+<Figures/logistic_res1.png, id=378, 483.30562pt x 350.05782pt>
 File: Figures/logistic_res1.png Graphic file (type png)
 <use Figures/logistic_res1.png>
 Package pdftex.def Info: Figures/logistic_res1.png  used on input line 503.
 (pdftex.def)             Requested size: 222.00226pt x 160.79352pt.
-<Figures/logistic_smry1.png, id=372, 334.24875pt x 303.38344pt>
+<Figures/logistic_smry1.png, id=379, 334.24875pt x 303.38344pt>
 File: Figures/logistic_smry1.png Graphic file (type png)
 <use Figures/logistic_smry1.png>
 Package pdftex.def Info: Figures/logistic_smry1.png  used on input line 510.
 (pdftex.def)             Requested size: 222.00226pt x 201.50673pt.
- [22 <./Figures/logistic_input.png> <./Figures/logistic_plot1.png> <./Figures/l
-ogistic_plot2.png>] [23 <./Figures/logistic_plot3.png> <./Figures/logistic_res1
-.png> <./Figures/logistic_smry1.png>] (./article_4.bbl
+ [23 <./Figures/logistic_plot3.png> <./Figures/logistic_res1.png> <./Figures/lo
+gistic_smry1.png>] (./article_4.bbl
 LaTeX Font Info:    Trying to load font information for T1+fvm on input line 4.
 
 
@@ -1349,19 +1346,16 @@ Package rerunfilecheck Info: File `article_4.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
-LaTeX Warning: There were undefined references.
-
-
 LaTeX Warning: There were multiply-defined labels.
 
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 541.
  ) 
 Here is how much of TeX's memory you used:
- 18570 strings out of 480994
- 347962 string characters out of 5912142
+ 18564 strings out of 480994
+ 347886 string characters out of 5912142
  908181 words of memory out of 5000000
- 33459 multiletter control sequences out of 15000+600000
- 658190 words of font info for 206 fonts, out of 8000000 for 9000
+ 33456 multiletter control sequences out of 15000+600000
+ 656421 words of font info for 202 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  75i,23n,101p,10131b,859s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
@@ -1377,13 +1371,12 @@ dist/fonts/type1/public/fpl/fplrij8a.pfb></usr/local/texlive/2019/texmf-dist/fo
 nts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type
 1/nowacki/iwona/iwonab.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/nowa
 cki/iwona/iwonar.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palati
-no/uplb8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplr
-8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb
->
-Output written on article_4.pdf (27 pages, 12102106 bytes).
+no/uplr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplr
+i8a.pfb>
+Output written on article_4.pdf (27 pages, 12093405 bytes).
 PDF statistics:
- 554 PDF objects out of 1000 (max. 8388607)
- 457 compressed objects within 5 object streams
+ 551 PDF objects out of 1000 (max. 8388607)
+ 455 compressed objects within 5 object streams
  126 named destinations out of 1000 (max. 500000)
- 47355 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 46843 words of extra memory for PDF output out of 51595 (max. 10000000)
 

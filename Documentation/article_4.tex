@@ -96,7 +96,7 @@ count for more" (I.Asimov, Foundation and Empire) }
 %----------------------------------------------------------------------------------------
 
 \section*{Abstract} % This section will not appear in the table of contents due to the star (\section*)
-
+We developed a user-friendly environment, such a dashboard application,in order to monitor the development of the COVID19 case in Italy. We provided a bird of eye view about the total cases for Italy, its Region and Provinces; the data about the symptomatic,recovered and the deaths are also considered. Furthermore we provided a detailed overview about the intensive care capacity for each region as well as the overall trend of the test. In addition the data are fitted with the logistic curve and with a ARIMA model (in this case the log of the cumulative number is considered)
 
 
 %----------------------------------------------------------------------------------------
@@ -268,7 +268,7 @@ In Fig.\ref{Malthusian_growth_vs_logistic_growth} this solution is compared to t
 
 \subsection{Application to the epidemiology}
 
-The dynamics of the two models described before can be used to shape the spread of an infection \cite{serfling1952historical,ma2014estimating} in this case the population $P$ is replaced with the total number of infected people, $P_{0}$ with the number of initially infected people, $r$ with the spreading rate and the carrying capacity $K$ with the maximum number of people that can be infected. The latter is the key point for the modelling: in principle, this parameter would be equal to the population number; in practice, due to restrictive measures and, possibly, vaccines, a large share of the total population won't enter the computation, thus lowering the carrying capacity. So, we can argue that the effectiveness of the restrictive measures can be inferred from the behaviour of the cumulative curve (except, of course, if the number of infected people is close to the population size). It is worth noting that, for each non-quarantined infected, the carrying capacity is increased up according to the individuals that can be infected by these subjects. If this contribution is not negligible a new logistic growth may be found, with of course an exponential starting behaviour. Thus the prediction with the logistic curve should be taken as an evaluation of the impact of restrictive measures and as the \emph{best scenario} that may occur. For this reason it is advisable to see the logistic curve as a local (in time) estimator. 
+The dynamics of the model described before can be used to shape the spread of an infection  \cite{serfling1952historical,ma2014estimating}. In this case the population $P$ is replaced with the total number of infected people, $P_{0}$ with the number of initially infected people, $r$ with the spreading rate and the carrying capacity $K$ with the maximum number of people that can be infected. The latter is the key point for the modelling: in principle, this parameter would be equal to the population number; in practice, due to restrictive measures and, possibly, vaccines, a large share of the total population won't enter the computation, thus lowering the carrying capacity. So, we can argue that the effectiveness of the restrictive measures can be inferred from the behaviour of the cumulative curve (except, of course, if the number of infected people is close to the population size). It is worth noting that, for each non-quarantined infected, the carrying capacity is increased up according to the individuals that can be infected by these subjects. If this contribution is not negligible a new logistic growth may be found, with of course an exponential starting behaviour. Thus the prediction with the logistic curve should be taken as an evaluation of the impact of restrictive measures and as the \emph{best scenario} that may occur. For this reason it is advisable to see the logistic curve as a local (in time) estimator. 
 In fact, one can model a differential set of equation were the carrying capacity is time dependent. This possibility may be considered  by the authors in a future version of this App. Furthermore, we remind that other similar models such as Gopertz, Richards or Bertalanffy can be used to shape the COVID-19 outbreak\cite{ma2014estimating}: the authors may consider to include them in a future version of this App.
 
 
@@ -342,7 +342,7 @@ The \textit{Data Inspection} panel provides an exploratory analysis of the COVID
 The first section introduces the user to a higher-level time series with the daily frequency of the number of Covid-19 cases broken down into symptomatic, recovered, deaths, and intensive care (Fig. \ref{fig:Inspection_general_info} in the \textit{General info} box). The cumulative cases add up each day while the daily cases are obtained by taking the first difference of the cumulative series ( $y_t - y_{t-1}$ ). When these time series capture all the stages of the pandemic evolution, the daily data are expected to assume a bell-shaped curve with a peak while the cumulative series a shape that is more similar to a logistic curve. The user can select different options spanning from the macro-level country view to the more granular province-level. In the same \textit{General Info Box}, the second tab provides direct access to the raw data (Fig. \ref{fig:Inspection_rawdata}) which is behind most of the visualisation used in the \textit{Home} and \textit{Inspection} sections of the dashboard. Through some input selectors and buttons, the dataset can be queried to show the information that is of most interest for the user.
 The \textit{Infected Age Distribution} box 
 
-The next chart shows the age distribution of infected patients (Fig. \cite{fig:Age_distribution}) with a region selector that offers the possibility to further investigate local-level dynamics and spot regional differences. The data was retrieved from Istituto Superiore di Sanità (ISS) \cite{epicentro} which is the National Institute of health in Italy. The information dates back to the 30$^{th}$ of March 2020. The chart shows the age distribution of the population which is divided into 10 age bins each one representing a 10-year interval. In particular, the bar chart indicates the absolute number of infected people in the respective age category while the pie chart shows the percentage breakdown of cases.
+The next chart shows the age distribution of infected patients (Fig. \ref{fig:Age_distribution}) with a region selector that offers the possibility to further investigate local-level dynamics and spot regional differences. The data was retrieved from Istituto Superiore di Sanità (ISS) \cite{epicentro} which is the National Institute of health in Italy. The information dates back to the 30$^{th}$ of March 2020. The chart shows the age distribution of the population which is divided into 10 age bins each one representing a 10-year interval. In particular, the bar chart indicates the absolute number of infected people in the respective age category while the pie chart shows the percentage breakdown of cases.
 
 The \textit{Deeper Inspection } section consists of 4 different types of visualisations. The first two are located in the two tabs of the box called \textit{Intensive Care Information}. As the title suggests, these charts provide a comparative visualisation across regions of intensive care occupancy in hospitals. While one chart shows the occupancy/capacity index in percentage terms (Fig. \ref{fig:Inspection_perc_occupancy}), the other shows absolute figures of capacity and occupancy by region (Fig. \ref{fig:Inspection_occupancy2}). In particular, the occupancy index is calculated by dividing the percentage occupancy in the selected day by the hospital initial intensive care capacity at the start of the pandemic.
 
@@ -353,7 +353,7 @@ It is worth noting that occupancy may be higher than the total number of availab
 
 
 \begin{equation}
-growth = \frac{cases_t - cases_{t-1}}{cases_t} ~~~~ growth \Delta = growth_t - growth_{t-1}
+growth = \frac{cases_t - cases_{t-1}}{cases_t} ~~~~~ \Delta growth  = growth_t - growth_{t-1}
 \end{equation}
 
 Despite eventual growth in the number of infected people, a persistent negative $\Delta$ is a useful indicator to signal if the pandemic spread is slowing down. The fifth chart (\ref{fig:Inspection_test_tracking}) visualises the daily cases with respect to the daily tests. It is useful to discern if an increased number of cases is due to an endogenous increase in the number of tests or due to an exogenous increase in cases due to new outbreaks.
@@ -388,7 +388,7 @@ Despite eventual growth in the number of infected people, a persistent negative 
   \caption{SEM image of the virus}
   \label{fig:Inspection_Cattura}
 \end{subfigure} 
-\caption{•}
+\caption{Subpanels of Data Inspection panel }
 \end{figure}
 
 \begin{figure}[H]
@@ -414,8 +414,8 @@ Despite eventual growth in the number of infected people, a persistent negative 
   \caption{SEM image of the virus}
   \label{fig:Inspection_occupancy2}
 \end{subfigure}\hspace{0.3\textwidth}
-\caption{ }
 \label{fig:Inspection_panels_2}
+\caption{Subpanels of Data Inspection panel }
 \end{figure}
 
 \clearpage
@@ -430,7 +430,7 @@ Despite eventual growth in the number of infected people, a persistent negative 
 
 \subsection{Data Analysis}\label{sub:Data Analysis}
 
-Panel \textit{Analysis} explores different mathematical models for shaping the infection\textquotesingle s time series, namely the ones introduced in Section \ref{Theoretical Background}. As previously argued, each of these model\textquotesingle s predictive power hinges on uncertain actual scenarios, such as the effectiveness of restrictive measures, the presence of several independent and spread outbreaks, and so on.
+Panel \textit{Analysis} explores  several mathematical models for shaping the infection\textquotesingle s time series, namely the ones introduced in Section \ref{Theoretical Background}. As previously argued, each of these model\textquotesingle s predictive power hinges on uncertain actual scenarios, such as the effectiveness of restrictive measures, the presence of several independent and spread outbreaks, and so on.
 
 Package  \cite{growthcurver} has been used for growth curve fitting. This package provides function  \textit{SummarizeGrowth}, which inputs the time series of sample data and outputs the model represented by the growth metrics. Such parameters include those of the logistic equation that best fit the data, namely $K$, $P_0$ and $r$, as in Eq.\ref{logistic_equation}.
 The reasons why this package was chosen are chiefly two. At the one hand, it performs non-linear curve fitting with the Levenberg-Marquardt algorithm \cite{more1978levenberg} , which happens to be one of the most robust nls algorithms. For this step, function \cite{nlsLM}  is used. On the other hand, the package is endowed with methods for background correction.
@@ -467,25 +467,25 @@ The user is suggested to take full advantage of plotly features. Besides showing
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_input.png} 
-  \caption{Set of useful tools for navigating into plots, by plotly.}
+  \caption{Input box of the logistic curve section.}
   \label{fig:logistic_input}
 \end{subfigure} 
 \hspace{5.5cm}
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_plot1.png} 
-  \caption{Summary output box of logistic section.}
+  \caption{ Plot of fitted logistic curve over sample cumulative cases of infection, plus a 95 \% confidence band. Green points are the observed data used for fitting, red ones are the remaining. Hovering over any point or curve displays info such as x and y coordinates.}
   \label{fig:logistic_plot1}
 \end{subfigure} 
 \hspace{5.5cm}
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_plot2.png} 
-  \caption{One plot of nls residuals: square root of absolute residuals vs. fitted values.}
+  \caption{Plot of estimated logistic distribution over sample new cases of infection.}
   \label{fig:logistic_plot2}
 \end{subfigure}
-\caption{Subpanels of Data Analysis panel }
 \label{fig:logistic_plots_set}
+\caption{Subpanels of Data Analysis panel }
 \end{figure}
 
 
@@ -494,25 +494,25 @@ The user is suggested to take full advantage of plotly features. Besides showing
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_plot3.png} 
-  \caption{Set of useful tools for navigating into plots, by plotly.}
+  \caption{SSet of useful tools for navigating into plots, by plotly.}
   \label{fig:logistic_plot3}
 \end{subfigure} 
 \hspace{5.5cm}
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_res1.png} 
-  \caption{Summary output box of logistic section.}
+  \caption{One plot of nls residuals: square root of absolute residuals vs. fitted values.}
   \label{fig:logistic_res1}
 \end{subfigure} 
 \hspace{5.5cm}
 \begin{subfigure}{0.6\textwidth}
   % include second image
   \includegraphics[width=1\linewidth]{Figures/logistic_smry1.png} 
-  \caption{One plot of nls residuals: square root of absolute residuals vs. fitted values.}
+  \caption{Summary output box of logistic section.}
   \label{fig:logistic_smry1}
 \end{subfigure}
-\caption{Subpanels of Data Analysis panel}
 \label{fig:logistic_plots_set2}
+\caption{Subpanels of Data Analysis panel }
 \end{figure}
 
 \clearpage
