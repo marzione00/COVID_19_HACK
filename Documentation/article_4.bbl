@@ -14,6 +14,18 @@ Jeffery~K Taubenberger and David~M Morens.
 \newblock 1918 influenza: the mother of all pandemics.
 \newblock {\em Emerging infectious diseases}, 12(1):15, 2006.
 
+\bibitem{RYU2017195}
+Wang-Shick Ryu.
+\newblock Chapter 15 - influenza viruses.
+\newblock In Wang-Shick Ryu, editor, {\em Molecular Virology of Human
+  Pathogenic Viruses}, pages 195 -- 211. Academic Press, Boston, 2017.
+
+\bibitem{viboud2016global}
+C{\'e}cile Viboud, Lone Simonsen, Rodrigo Fuentes, Jose Flores, Mark~A Miller,
+  and Gerardo Chowell.
+\newblock Global mortality impact of the 1957--1959 influenza pandemic.
+\newblock {\em The Journal of infectious diseases}, 213(5):738--745, 2016.
+
 \bibitem{malthus_vs_logistic}
 \url{https://commons.wikimedia.org/wiki/File:Malthusian_growth_vs_logistic_growth.png}.
 
@@ -124,14 +136,58 @@ Philip~J Haythornthwaite.
 \newblock {\em The World War One Source Book}.
 \newblock Arms and Armour, 1996.
 
-\bibitem{RYU2017195}
-Wang-Shick Ryu.
-\newblock Chapter 15 - influenza viruses.
-\newblock In Wang-Shick Ryu, editor, {\em Molecular Virology of Human
-  Pathogenic Viruses}, pages 195 -- 211. Academic Press, Boston, 2017.
+\bibitem{strahan1994oriental}
+Lachlan~M Strahan.
+\newblock An oriental scourge: Australia and the asian flu epidemic of 1957.
+\newblock {\em Australian Historical Studies}, 26(103):182--201, 1994.
 
-\bibitem{protezionecivile+git}
-\url{https://github.com/pcm-dpc/COVID-19}.
+\bibitem{saunders2016reviewing}
+Patrick~R Saunders-Hastings and Daniel Krewski.
+\newblock Reviewing the history of pandemic influenza: understanding patterns
+  of emergence and transmission.
+\newblock {\em Pathogens}, 5(4):66, 2016.
+
+\bibitem{henderson2016development}
+DA~Henderson.
+\newblock The development of surveillance systems.
+\newblock {\em American journal of epidemiology}, 183(5):381--386, 2016.
+
+\bibitem{langmuir1961epidemiology}
+Alexander~D Langmuir.
+\newblock Epidemiology of asian influenza: with special emphasis on the united
+  states.
+\newblock {\em American Review of Respiratory Disease}, 83(2P2):2--14, 1961.
+
+\bibitem{payne1958some}
+AM~Payne.
+\newblock Some aspects of the epidemiology of the 1957 influenza pandemic.,
+  1958.
+
+\bibitem{henderson2009public}
+Donald~A Henderson, Brooke Courtney, Thomas~V Inglesby, Eric Toner, and
+  Jennifer~B Nuzzo.
+\newblock Public health and medical responses to the 1957-58 influenza
+  pandemic.
+\newblock {\em Biosecurity and bioterrorism: biodefense strategy, practice, and
+  science}, 7(3):265--273, 2009.
+
+\bibitem{ebasianflu}
+\url{http://www.britannica.com/event/Asian-flu-of-1957}.
+
+\bibitem{jensen1958influenza}
+KE~Jensen, FL~Dunn, and RQ~Robinson.
+\newblock Influenza, 1957: a variant and the pandemic.
+\newblock {\em Progress in medical virology. Fortschritte der medizinischen
+  Virusforschung. Progres en virologie medicale}, 1:165--209, 1958.
+
+\bibitem{trotter1959asian}
+YATES TROTTER~Jr, Frederick~L Dunn, Robert~H Drachman, Donald~A Henderson,
+  Mario Pizzi, Alexander~D Langmuir, et~al.
+\newblock Asian influenza in the united states, 1957-1958.
+\newblock {\em American journal of hygiene}, 70(1):34--50, 1959.
+
+\bibitem{who_influenza}
+\url{https://apps.who.int/gb/ebwha/pdf_files/WHA64/A64_10-en.pdf}.
 
 \bibitem{keeling2011modeling}
 Matt~J Keeling and Pejman Rohani.
@@ -166,6 +222,9 @@ Junling Ma, Jonathan Dushoff, Benjamin~M Bolker, and David~JD Earn.
 
 \bibitem{Istat+res1}
 \url{http://dati.istat.it/Index.aspx?DataSetCode=DCIS_POPRES1}.
+
+\bibitem{epicentro}
+\url{https://www.epicentro.iss.it/coronavirus/bollettino/Bolletino-sorveglianza-integrata-COVID-19_30-marzo-2020_appendix.pdf}.
 
 \bibitem{growthcurver}
 \url{https://cran.r-project.org/web/packages/growthcurver/index.html}.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.28)  2 APR 2020 16:31
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.28)  4 APR 2020 10:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1012,19 +1012,13 @@ Underfull \hbox (badness 1168) in paragraph at lines 3--3
  [][] []\T1/pplj/m/n/12 Different pic-tures of the virus as re-ported 
  []
 
-[3]
-LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
-11.
- (/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/ts1pplj.fd
-File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
-))
+[3])
 \tf@lof=\write5
 \openout5 = `article_4.lof'.
 
 Package tocbasic Info: character protrusion at lot deactivated on input line 92
 .
-
-(./article_4.lot)
+ (./article_4.lot)
 \tf@lot=\write6
 \openout6 = `article_4.lot'.
 
@@ -1035,7 +1029,7 @@ Package microtype Info: Character `029' is missing
 Package microtype Info: Character `029' is missing
 (microtype)             in font `T1/iwona/b/sc/12'.
 (microtype)             Ignoring protrusion settings for this character.
-<Figures/Coronavirus1.jpg, id=98, 3071.475pt x 2398.9625pt>
+<Figures/Coronavirus1.jpg, id=104, 3071.475pt x 2398.9625pt>
 File: Figures/Coronavirus1.jpg Graphic file (type jpg)
 <use Figures/Coronavirus1.jpg>
 Package pdftex.def Info: Figures/Coronavirus1.jpg  used on input line 129.
@@ -1050,17 +1044,17 @@ Underfull \hbox (badness 2020) in paragraph at lines 130--130
 \T1/pplj/m/n/10 (TEM) im-age of SARS-CoV-2^^Valso
  []
 
-<Figures/Coronavirus2.jpg, id=99, 298.67836pt x 242.21742pt>
+<Figures/Coronavirus2.jpg, id=105, 298.67836pt x 242.21742pt>
 File: Figures/Coronavirus2.jpg Graphic file (type jpg)
 <use Figures/Coronavirus2.jpg>
 Package pdftex.def Info: Figures/Coronavirus2.jpg  used on input line 136.
 (pdftex.def)             Requested size: 129.49944pt x 105.01999pt.
-<Figures/Coronavirus3.jpg, id=100, 3071.475pt x 2398.9625pt>
+<Figures/Coronavirus3.jpg, id=106, 3071.475pt x 2398.9625pt>
 File: Figures/Coronavirus3.jpg Graphic file (type jpg)
 <use Figures/Coronavirus3.jpg>
 Package pdftex.def Info: Figures/Coronavirus3.jpg  used on input line 143.
 (pdftex.def)             Requested size: 129.49944pt x 101.14009pt.
-<Figures/Coronavirus4.jpg, id=101, 247.86351pt x 305.45367pt>
+<Figures/Coronavirus4.jpg, id=107, 247.86351pt x 305.45367pt>
 File: Figures/Coronavirus4.jpg Graphic file (type jpg)
 <use Figures/Coronavirus4.jpg>
 Package pdftex.def Info: Figures/Coronavirus4.jpg  used on input line 150.
@@ -1075,14 +1069,18 @@ Overfull \hbox (2.65201pt too wide) in paragraph at lines 126--154
 []$ $[]$ 
  []
 
-[5 <./Figures/Coronavirus1.jpg> <./Figures/Coronavirus2.jpg> <./Figures/Coronav
-irus3.jpg> <./Figures/Coronavirus4.jpg>] [6]
-<Figures/SpanishFLU.png, id=149, 1144.275pt x 687.56876pt>
+LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
+160.
+(/usr/local/texlive/2019/texmf-dist/tex/latex/psnfss/ts1pplj.fd
+File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
+) [5 <./Figures/Coronavirus1.jpg> <./Figures/Coronavirus2.jpg> <./Figures/Coron
+avirus3.jpg> <./Figures/Coronavirus4.jpg>] [6]
+<Figures/SpanishFLU.png, id=155, 1144.275pt x 687.56876pt>
 File: Figures/SpanishFLU.png Graphic file (type png)
 <use Figures/SpanishFLU.png>
 Package pdftex.def Info: Figures/SpanishFLU.png  used on input line 175.
 (pdftex.def)             Requested size: 370.0pt x 222.32411pt.
-<Figures/Mortality_spanish_flu.png, id=153, 752.8125pt x 533.995pt>
+<Figures/Mortality_spanish_flu.png, id=159, 752.8125pt x 533.995pt>
 File: Figures/Mortality_spanish_flu.png Graphic file (type png)
 <use Figures/Mortality_spanish_flu.png>
 Package pdftex.def Info: Figures/Mortality_spanish_flu.png  used on input line 
@@ -1093,143 +1091,151 @@ Package pdftex.def Info: Figures/Mortality_spanish_flu.png  used on input line
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [7 <./Figures/SpanishFLU.png>] [8 <./Figures/Mortality_spanish_flu.png>]
-<Figures/Mixing_Flu.jpg, id=173, 1104.125pt x 735.74875pt>
+<Figures/Mixing_Flu.jpg, id=196, 1104.125pt x 735.74875pt>
 File: Figures/Mixing_Flu.jpg Graphic file (type jpg)
 <use Figures/Mixing_Flu.jpg>
 Package pdftex.def Info: Figures/Mixing_Flu.jpg  used on input line 195.
 (pdftex.def)             Requested size: 296.00113pt x 197.24026pt.
+<Figures/Asiatic_HK_flu.png, id=199, 624.3325pt x 628.3475pt>
+File: Figures/Asiatic_HK_flu.png Graphic file (type png)
+<use Figures/Asiatic_HK_flu.png>
+Package pdftex.def Info: Figures/Asiatic_HK_flu.png  used on input line 202.
+(pdftex.def)             Requested size: 370.0pt x 372.39009pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 [9
 
- <./Figures/Mixing_Flu.jpg>] [10]
-<Figures/Malthusian_growth_vs_logistic_growth-2.jpg, id=208, 1507.6325pt x 1059
+ <./Figures/Mixing_Flu.jpg>] [10 <./Figures/Asiatic_HK_flu.png>] [11
+
+]
+<Figures/Malthusian_growth_vs_logistic_growth-2.jpg, id=243, 1507.6325pt x 1059
 .96pt>
 File: Figures/Malthusian_growth_vs_logistic_growth-2.jpg Graphic file (type jpg
 )
 <use Figures/Malthusian_growth_vs_logistic_growth-2.jpg>
 Package pdftex.def Info: Figures/Malthusian_growth_vs_logistic_growth-2.jpg  us
-ed on input line 255.
+ed on input line 264.
 (pdftex.def)             Requested size: 296.00113pt x 208.10657pt.
- [11 <./Figures/Malthusian_growth_vs_logistic_growth-2.jpg>] [12]
-<Figures/Home_figure_1.png, id=225, 437.00766pt x 497.98547pt>
+
+[12] [13 <./Figures/Malthusian_growth_vs_logistic_growth-2.jpg>]
+<Figures/Home_figure_1.png, id=266, 437.00766pt x 497.98547pt>
 File: Figures/Home_figure_1.png Graphic file (type png)
 <use Figures/Home_figure_1.png>
-Package pdftex.def Info: Figures/Home_figure_1.png  used on input line 288.
+Package pdftex.def Info: Figures/Home_figure_1.png  used on input line 298.
 (pdftex.def)             Requested size: 185.0pt x 210.81657pt.
-<Figures/Home_figure_2.png, id=227, 140.39954pt x 105.01735pt>
+<Figures/Home_figure_2.png, id=268, 140.39954pt x 105.01735pt>
 File: Figures/Home_figure_2.png Graphic file (type png)
 <use Figures/Home_figure_2.png>
-Package pdftex.def Info: Figures/Home_figure_2.png  used on input line 297.
+Package pdftex.def Info: Figures/Home_figure_2.png  used on input line 307.
 (pdftex.def)             Requested size: 185.0pt x 138.38614pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[13
+[14
 
  <./Figures/Home_figure_1.png>]
-<Figures/Home_figure_3.png, id=241, 442.27734pt x 181.80421pt>
+<Figures/Home_figure_3.png, id=281, 442.27734pt x 181.80421pt>
 File: Figures/Home_figure_3.png Graphic file (type png)
 <use Figures/Home_figure_3.png>
-Package pdftex.def Info: Figures/Home_figure_3.png  used on input line 314.
+Package pdftex.def Info: Figures/Home_figure_3.png  used on input line 332.
 (pdftex.def)             Requested size: 185.0pt x 76.04654pt.
- [14 <./Figures/Home_figure_2.png> <./Figures/Home_figure_3.png>]
-<Figures/Inspection_perc_occupancy.png, id=256, 881.2925pt x 302.12875pt>
+ [15 <./Figures/Home_figure_2.png> <./Figures/Home_figure_3.png>] [16]
+<Figures/Inspection_perc_occupancy.png, id=305, 881.2925pt x 302.12875pt>
 File: Figures/Inspection_perc_occupancy.png Graphic file (type png)
 <use Figures/Inspection_perc_occupancy.png>
 Package pdftex.def Info: Figures/Inspection_perc_occupancy.png  used on input l
-ine 332.
-(pdftex.def)             Requested size: 185.0pt x 63.42123pt.
-<Figures/Inspection_rawdata.png, id=257, 825.0825pt x 469.755pt>
+ine 366.
+(pdftex.def)             Requested size: 296.00113pt x 101.47307pt.
+<Figures/Inspection_rawdata.png, id=306, 825.0825pt x 469.755pt>
 File: Figures/Inspection_rawdata.png Graphic file (type png)
 <use Figures/Inspection_rawdata.png>
-Package pdftex.def Info: Figures/Inspection_rawdata.png  used on input line 339
+Package pdftex.def Info: Figures/Inspection_rawdata.png  used on input line 373
 .
-(pdftex.def)             Requested size: 185.0pt x 105.32475pt.
-<Figures/Inspection_test_tracking.png, id=258, 413.04312pt x 240.39813pt>
+(pdftex.def)             Requested size: 296.00113pt x 168.52391pt.
+<Figures/Inspection_test_tracking.png, id=307, 413.04312pt x 240.39813pt>
 File: Figures/Inspection_test_tracking.png Graphic file (type png)
 <use Figures/Inspection_test_tracking.png>
 Package pdftex.def Info: Figures/Inspection_test_tracking.png  used on input li
-ne 346.
-(pdftex.def)             Requested size: 185.0pt x 107.67561pt.
-<Figures/Inspection_Cattura.png, id=259, 671.50874pt x 251.94125pt>
+ne 380.
+(pdftex.def)             Requested size: 296.00113pt x 172.27951pt.
+<Figures/Inspection_Cattura.png, id=308, 671.50874pt x 251.94125pt>
 File: Figures/Inspection_Cattura.png Graphic file (type png)
 <use Figures/Inspection_Cattura.png>
-Package pdftex.def Info: Figures/Inspection_Cattura.png  used on input line 353
+Package pdftex.def Info: Figures/Inspection_Cattura.png  used on input line 387
 .
-(pdftex.def)             Requested size: 185.0pt x 69.409pt.
-
-Overfull \hbox (2.65201pt too wide) in paragraph at lines 329--357
-[]$[]$ $[]$
- []
-
-
-Overfull \hbox (2.65201pt too wide) in paragraph at lines 329--357
-[]$ $[]$ 
- []
-
-<Figures/Inspection_general_info.png, id=260, 855.69687pt x 309.65688pt>
+(pdftex.def)             Requested size: 296.00113pt x 111.05438pt.
+ [17]
+<Figures/Inspection_general_info.png, id=314, 855.69687pt x 309.65688pt>
 File: Figures/Inspection_general_info.png Graphic file (type png)
 <use Figures/Inspection_general_info.png>
 Package pdftex.def Info: Figures/Inspection_general_info.png  used on input lin
-e 364.
-(pdftex.def)             Requested size: 185.0pt x 66.94347pt.
-<Figures/Inspection_growth_monitoring.png, id=261, 434.12187pt x 300.62312pt>
+e 399.
+(pdftex.def)             Requested size: 296.00113pt x 107.11523pt.
+<Figures/Inspection_growth_monitoring.png, id=315, 434.12187pt x 300.62312pt>
 File: Figures/Inspection_growth_monitoring.png Graphic file (type png)
 <use Figures/Inspection_growth_monitoring.png>
 Package pdftex.def Info: Figures/Inspection_growth_monitoring.png  used on inpu
-t line 371.
-(pdftex.def)             Requested size: 185.0pt x 128.10945pt.
-<Figures/Inspection_occupancy2.png, id=262, 878.78313pt x 301.62688pt>
+t line 406.
+(pdftex.def)             Requested size: 296.00113pt x 204.98523pt.
+<Figures/Inspection_occupancy2.png, id=316, 878.78313pt x 301.62688pt>
 File: Figures/Inspection_occupancy2.png Graphic file (type png)
 <use Figures/Inspection_occupancy2.png>
 Package pdftex.def Info: Figures/Inspection_occupancy2.png  used on input line 
-378.
-(pdftex.def)             Requested size: 185.0pt x 63.49539pt.
+413.
+(pdftex.def)             Requested size: 296.00113pt x 101.59906pt.
+ [18 <./Figures/Inspection_perc_occupancy.png> <./Figures/Inspection_rawdata.pn
+g> <./Figures/Inspection_test_tracking.png> <./Figures/Inspection_Cattura.png>]
+ [19 <./Figures/Inspection_general_info.png> <./Figures/Inspection_growth_monit
+oring.png> <./Figures/Inspection_occupancy2.png>]
+<Figures/Age_distribution.jpg, id=334, 642.4pt x 275.52937pt>
+File: Figures/Age_distribution.jpg Graphic file (type jpg)
+<use Figures/Age_distribution.jpg>
+Package pdftex.def Info: Figures/Age_distribution.jpg  used on input line 425.
+(pdftex.def)             Requested size: 296.00113pt x 126.95946pt.
+[20
 
-Overfull \hbox (2.65201pt too wide) in paragraph at lines 361--382
-[]$[]$ $[]$
- []
-
-[15 <./Figures/Inspection_perc_occupancy.png> <./Figures/Inspection_rawdata.png
-> <./Figures/Inspection_test_tracking.png> <./Figures/Inspection_Cattura.png>]
-[16 <./Figures/Inspection_general_info.png> <./Figures/Inspection_growth_monito
-ring.png> <./Figures/Inspection_occupancy2.png>] [17]
-<Figures/logistic_input.png, id=305, 257.46187pt x 320.69812pt>
+ <./Figures/Age_distribution.jpg>]
+<Figures/logistic_input.png, id=356, 257.46187pt x 320.69812pt>
 File: Figures/logistic_input.png Graphic file (type png)
 <use Figures/logistic_input.png>
-Package pdftex.def Info: Figures/logistic_input.png  used on input line 426.
+Package pdftex.def Info: Figures/logistic_input.png  used on input line 469.
 (pdftex.def)             Requested size: 222.00226pt x 276.5339pt.
-<Figures/logistic_plot1.png, id=306, 557.08125pt x 350.81062pt>
+<Figures/logistic_plot1.png, id=357, 557.08125pt x 350.81062pt>
 File: Figures/logistic_plot1.png Graphic file (type png)
 <use Figures/logistic_plot1.png>
-Package pdftex.def Info: Figures/logistic_plot1.png  used on input line 433.
+Package pdftex.def Info: Figures/logistic_plot1.png  used on input line 476.
 (pdftex.def)             Requested size: 222.00226pt x 139.79716pt.
-<Figures/logistic_plot2.png, id=307, 560.8453pt x 352.31625pt>
+<Figures/logistic_plot2.png, id=358, 560.8453pt x 352.31625pt>
 File: Figures/logistic_plot2.png Graphic file (type png)
 <use Figures/logistic_plot2.png>
-Package pdftex.def Info: Figures/logistic_plot2.png  used on input line 440.
+Package pdftex.def Info: Figures/logistic_plot2.png  used on input line 483.
 (pdftex.def)             Requested size: 222.00226pt x 139.45638pt.
- [18]
-<Figures/logistic_plot3.png, id=314, 293.59688pt x 53.44969pt>
+ [21]
+Overfull \vbox (18.96776pt too high) has occurred while \output is active []
+
+
+[22 <./Figures/logistic_input.png> <./Figures/logistic_plot1.png> <./Figures/lo
+gistic_plot2.png>]
+<Figures/logistic_plot3.png, id=377, 293.59688pt x 53.44969pt>
 File: Figures/logistic_plot3.png Graphic file (type png)
 <use Figures/logistic_plot3.png>
-Package pdftex.def Info: Figures/logistic_plot3.png  used on input line 453.
+Package pdftex.def Info: Figures/logistic_plot3.png  used on input line 496.
 (pdftex.def)             Requested size: 222.00226pt x 40.41582pt.
-<Figures/logistic_res1.png, id=315, 483.30562pt x 350.05782pt>
+<Figures/logistic_res1.png, id=378, 483.30562pt x 350.05782pt>
 File: Figures/logistic_res1.png Graphic file (type png)
 <use Figures/logistic_res1.png>
-Package pdftex.def Info: Figures/logistic_res1.png  used on input line 460.
+Package pdftex.def Info: Figures/logistic_res1.png  used on input line 503.
 (pdftex.def)             Requested size: 222.00226pt x 160.79352pt.
-<Figures/logistic_smry1.png, id=316, 334.24875pt x 303.38344pt>
+<Figures/logistic_smry1.png, id=379, 334.24875pt x 303.38344pt>
 File: Figures/logistic_smry1.png Graphic file (type png)
 <use Figures/logistic_smry1.png>
-Package pdftex.def Info: Figures/logistic_smry1.png  used on input line 467.
+Package pdftex.def Info: Figures/logistic_smry1.png  used on input line 510.
 (pdftex.def)             Requested size: 222.00226pt x 201.50673pt.
- [19 <./Figures/logistic_input.png> <./Figures/logistic_plot1.png> <./Figures/l
-ogistic_plot2.png>]
-[20 <./Figures/logistic_plot3.png> <./Figures/logistic_res1.png> <./Figures/log
-istic_smry1.png>] (./article_4.bbl
+ [23 <./Figures/logistic_plot3.png> <./Figures/logistic_res1.png> <./Figures/lo
+gistic_smry1.png>] (./article_4.bbl
 LaTeX Font Info:    Trying to load font information for T1+fvm on input line 4.
 
 
@@ -1253,86 +1259,103 @@ Underfull \hbox (badness 1127) in paragraph at lines 7--11
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 18--19
+Underfull \hbox (badness 10000) in paragraph at lines 30--31
 [][][]$\T1/fvm/m/n/12 https : / / commons . wikimedia . org / wiki / File : Mal
 thusian _
  []
 
-[21
+[24
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 69--70
+Underfull \hbox (badness 10000) in paragraph at lines 81--82
 [][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
 / 01 / news /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--73
+Underfull \hbox (badness 10000) in paragraph at lines 84--85
 [][][]$\T1/fvm/m/n/12 https : / / www . repubblica . it / politica / 2020 / 03 
 / 04 / news /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--73
+Underfull \hbox (badness 10000) in paragraph at lines 84--85
 \T1/fvm/m/n/12 coronavirus _ governo _ chiuse _ le _ scuole _ in _ tutta _ ital
 ia _
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 75--76
+Underfull \hbox (badness 10000) in paragraph at lines 87--88
 [][][]$\T1/fvm/m/n/12 http : / / www . salute . gov . it / portale / news / p3 
 _ 2 _ 1 _ 1 _ 1 . jsp ?
  []
 
-[22]
-Underfull \hbox (badness 10000) in paragraph at lines 165--166
+[25]
+Underfull \hbox (badness 10000) in paragraph at lines 190--191
+[][][]$\T1/fvm/m/n/12 https : / / apps . who . int / gb / ebwha / pdf _ files /
+ WHA64 / A64 _ 10-[]en .
+ []
+
+[26]
+Underfull \hbox (badness 10000) in paragraph at lines 221--222
 [][][]$\T1/fvm/m/n/12 https : / / www . istat . it / it / files / /2015 / 04 /
  []
 
 
-Overfull \hbox (84.90364pt too wide) in paragraph at lines 165--166
+Overfull \hbox (84.90364pt too wide) in paragraph at lines 221--222
 \T1/fvm/m/n/12 Superfici-[]delle-[]unit % C3 % A0-[]amministrative-[]Dati-[]com
 unali-[]e-[]provinciali .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 168--169
+Underfull \hbox (badness 10000) in paragraph at lines 224--225
 [][][]$\T1/fvm/m/n/12 http : / / dati . istat . it / Index . aspx ? DataSetCode
  = DCIS _
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 171--172
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
+[][][]$\T1/fvm/m/n/12 https : / / www . epicentro . iss . it / coronavirus / bo
+llettino /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
+\T1/fvm/m/n/12 Bolletino-[]sorveglianza-[]integrata-[]COVID-[]19 _
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 230--231
 [][][]$\T1/fvm/m/n/12 https : / / cran . r-[]project . org / web / packages / g
 rowthcurver /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 179--180
+Underfull \hbox (badness 10000) in paragraph at lines 238--239
 [][][]$\T1/fvm/m/n/12 https : / / www . rdocumentation . org / packages / minpa
 ck . lm /
  []
 
-) [23]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 498.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 498.
+) [27]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 541.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 541.
  (./article_4.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 498.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 498.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 541.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 541.
 Package rerunfilecheck Info: File `article_4.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
 
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 498.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 541.
  ) 
 Here is how much of TeX's memory you used:
- 18518 strings out of 480994
- 346954 string characters out of 5912142
+ 18564 strings out of 480994
+ 347886 string characters out of 5912142
  908181 words of memory out of 5000000
- 33431 multiletter control sequences out of 15000+600000
- 656734 words of font info for 203 fonts, out of 8000000 for 9000
+ 33456 multiletter control sequences out of 15000+600000
+ 656421 words of font info for 202 fonts, out of 8000000 for 9000
  1143 hyphenation exceptions out of 8191
  75i,23n,101p,10131b,859s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/t
@@ -1350,10 +1373,10 @@ nts/type1/public/bera/fvmr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type
 cki/iwona/iwonar.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palati
 no/uplr8a.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/urw/palatino/uplr
 i8a.pfb>
-Output written on article_4.pdf (23 pages, 10540817 bytes).
+Output written on article_4.pdf (27 pages, 12093405 bytes).
 PDF statistics:
- 482 PDF objects out of 1000 (max. 8388607)
- 395 compressed objects within 4 object streams
- 107 named destinations out of 1000 (max. 500000)
- 47345 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 551 PDF objects out of 1000 (max. 8388607)
+ 455 compressed objects within 5 object streams
+ 126 named destinations out of 1000 (max. 500000)
+ 46843 words of extra memory for PDF output out of 51595 (max. 10000000)
 
