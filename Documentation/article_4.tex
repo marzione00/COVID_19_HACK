@@ -337,35 +337,51 @@ Finally, the summary statistics section (Fig. \ref{Home_fig3}) provides some bar
 
 \subsection{Data Inspection}\label{Data Inspection}
 
-The \textit{Data Inspection} panel provides a data visualisation of the general information and a deeper overview about the hospital occupancy, growth monitoring and test tracking for the COVID19 in Italy. It is divided in main two section: introduction and deeper inspection. In first chart (Fig. \ref{fig:Inspection_general_info}) of the introduction are presented the general information about the total cases, total recovered, total hospitalised and intensive care occupancy. It is possible to select the entire Italian country or a particular region or province. Moreover, it is possible to visualise and filter the raw data for country, region and province in the panel Raw Data (Fig. \ref{fig:Inspection_rawdata}). In the deeper inspection panel there are four charts: the first two charts are in two different panels of a box and visualise information about intensive care occupancy in the Italian hospital in different regions, while the others represent the growth monitoring of total cases and test tracking. It is worth nothing that the occupation may be higher than their total number, due to the fact that the places in intensive therapy that we considered may be upgraded (see the section \ref{Data Origin}). In the first chart \ref{fig:Inspection_perc_occupancy} is represented the percentage hospital occupancy in the selected day divided by capacity with respect to the initial intensive care capacity at the start of the pandemic.
+The \textit{Data Inspection} panel provides an exploratory analysis of the COVID19 spread in Italy and it consists of 2 main sections: an introductory inspection followed by a deeper inspection.
+
+The first section introduces the user to a higher-level time series with the daily frequency of the number of Covid-19 cases broken down into symptomatic, recovered, deaths, and intensive care (Fig. \ref{fig:Inspection_general_info} in the \textit{General info} box). The cumulative cases add up each day while the daily cases are obtained by taking the first difference of the cumulative series ( $y_t - y_{t-1}$ ). When these time series capture all the stages of the pandemic evolution, the daily data are expected to assume a bell-shaped curve with a peak while the cumulative series a shape that is more similar to a logistic curve. The user can select different options spanning from the macro-level country view to the more granular province-level. In the same \textit{General Info Box}, the second tab provides direct access to the raw data (Fig. \ref{fig:Inspection_rawdata}) which is behind most of the visualisation used in the \textit{Home} and \textit{Inspection} sections of the dashboard. Through some input selectors and buttons, the dataset can be queried to show the information that is of most interest for the user.
+The \textit{Infected Age Distribution} box 
+
+The next chart shows the age distribution of infected patients (Fig. \cite{fig:Age_distribution}) with a region selector that offers the possibility to further investigate local-level dynamics and spot regional differences. The data was retrieved from Istituto Superiore di Sanità (ISS) \cite{epicentro} which is the National Institute of health in Italy. The information dates back to the 30$^{th}$ of March 2020. The chart shows the age distribution of the population which is divided into 10 age bins each one representing a 10-year interval. In particular, the bar chart indicates the absolute number of infected people in the respective age category while the pie chart shows the percentage breakdown of cases.
+
+The \textit{Deeper Inspection } section consists of 4 different types of visualisations. The first two are located in the two tabs of the box called \textit{Intensive Care Information}. As the title suggests, these charts provide a comparative visualisation across regions of intensive care occupancy in hospitals. While one chart shows the occupancy/capacity index in percentage terms (Fig. \ref{fig:Inspection_perc_occupancy}), the other shows absolute figures of capacity and occupancy by region (Fig. \ref{fig:Inspection_occupancy2}). In particular, the occupancy index is calculated by dividing the percentage occupancy in the selected day by the hospital initial intensive care capacity at the start of the pandemic.
+
 \begin{equation}
 percentage~occupancy = \dfrac{occupancy}{capacity} \times 100
 \end{equation}
-The second chart (Fig. \ref{fig:Inspection_occupancy2}) visualises a bar chart of the hospital occupancy and capacity of intensive care in different region of Italy at the selected day.The third chart (Fig. \ref{fig:Inspection_growth_monitoring}) represents the percentage growth and growth change of total cases day by day. The fifth chart (Fig. \ref{fig:Inspection_test_tracking}) visualises the daily cases with respect to the daily tests.
+It is worth noting that occupancy may be higher than the total number of available spots due to the fact that the beds in intensive care may have been more recently upgraded (see Sec. \ref{Data Origin}). The date selector, allows the user to explore the time evolution and variations of such quantities. The third chart (Fig.\ref{fig:Inspection_growth_monitoring})  represents the percentage growth and growth.
+
+
+\begin{equation}
+growth = \frac{cases_t - cases_{t-1}}{cases_t} ~~~~ growth \Delta = growth_t - growth_{t-1}
+\end{equation}
+
+Despite eventual growth in the number of infected people, a persistent negative $\Delta$ is a useful indicator to signal if the pandemic spread is slowing down. The fifth chart (\ref{fig:Inspection_test_tracking}) visualises the daily cases with respect to the daily tests. It is useful to discern if an increased number of cases is due to an endogenous increase in the number of tests or due to an exogenous increase in cases due to new outbreaks.
 
 \begin{figure}[H]
-\begin{subfigure}{.5\textwidth}
+  \centering
+\begin{subfigure}{.8\textwidth}
   \centering
   % include first image
   \includegraphics[width=1\linewidth]{Figures/Inspection_perc_occupancy.png}
   \caption{}
   \label{fig:Inspection_perc_occupancy}
 \end{subfigure} 
-\begin{subfigure}{.5\textwidth}
+\begin{subfigure}{.8\textwidth}
   \centering
   % include second image
   \includegraphics[width=1\linewidth]{Figures/Inspection_rawdata.png} 
   \caption{}
   \label{fig:Inspection_rawdata}
 \end{subfigure} 
-\begin{subfigure}{.5\textwidth}
+\begin{subfigure}{.8\textwidth}
   \centering
   % include second image
   \includegraphics[width=1\linewidth]{Figures/Inspection_test_tracking.png} 
   \caption{}
   \label{fig:Inspection_test_tracking}
 \end{subfigure} 
-\begin{subfigure}{.5\textwidth}
+\begin{subfigure}{.8\textwidth}
   \centering
   % include second image
   \includegraphics[width=1\linewidth]{Figures/Inspection_Cattura.png} 
@@ -376,21 +392,22 @@ The second chart (Fig. \ref{fig:Inspection_occupancy2}) visualises a bar chart o
 \end{figure}
 
 \begin{figure}[H]
-\begin{subfigure}{0.5\textwidth}
+  \centering
+\begin{subfigure}{0.8\textwidth}
   \centering
   % include second image
   \includegraphics[width=1\linewidth]{Figures/Inspection_general_info.png} 
   \caption{SEM image of the virus}
   \label{fig:Inspection_general_info}
 \end{subfigure} 
-\begin{subfigure}{0.5\textwidth}
+\begin{subfigure}{0.8\textwidth}
   \centering
   % include second image
   \includegraphics[width=1\linewidth]{Figures/Inspection_growth_monitoring.png} 
   \caption{SEM image of the virus}
   \label{fig:Inspection_growth_monitoring}
 \end{subfigure} 
-\begin{subfigure}{0.5\textwidth}
+\begin{subfigure}{0.8\textwidth}
   \centering
   % include second image
   \includegraphics[width=1\linewidth]{Figures/Inspection_occupancy2.png} 
@@ -401,6 +418,14 @@ The second chart (Fig. \ref{fig:Inspection_occupancy2}) visualises a bar chart o
 \label{fig:Inspection_panels_2}
 \end{figure}
 
+\clearpage
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\linewidth]{Figures/Age_distribution.jpg} 
+  \caption{The age distribution for the recovered people}
+  \label{fig:Age_distribution}
+\end{figure}\hspace{0.3\textwidth}
 
 
 \subsection{Data Analysis}\label{sub:Data Analysis}
@@ -459,7 +484,7 @@ The user is suggested to take full advantage of plotly features. Besides showing
   \caption{One plot of nls residuals: square root of absolute residuals vs. fitted values.}
   \label{fig:logistic_plot2}
 \end{subfigure}
-\caption{ }
+\caption{Subpanels of Data Analysis panel }
 \label{fig:logistic_plots_set}
 \end{figure}
 
@@ -486,7 +511,7 @@ The user is suggested to take full advantage of plotly features. Besides showing
   \caption{One plot of nls residuals: square root of absolute residuals vs. fitted values.}
   \label{fig:logistic_smry1}
 \end{subfigure}
-\caption{ }
+\caption{Subpanels of Data Analysis panel}
 \label{fig:logistic_plots_set2}
 \end{figure}
 

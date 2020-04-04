@@ -3,47 +3,48 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: article_4.aux
 The style file: unsrt.bst
 Database file #1: sample.bib
+Warning--I didn't find a database entry for "fig:Age_distribution"
 Warning--empty publisher in malthus1817essay
 Warning--empty journal in verhulst1838notice
-You've used 46 entries,
+You've used 47 entries,
             1791 wiz_defined-function locations,
-            684 strings with 11103 characters,
-and the built_in function-call counts, 8973 in all, are:
-= -- 760
-> -- 392
+            688 strings with 11278 characters,
+and the built_in function-call counts, 9063 in all, are:
+= -- 766
+> -- 393
 < -- 3
-+ -- 155
++ -- 156
 - -- 109
 * -- 578
-:= -- 1347
-add.period$ -- 113
-call.type$ -- 46
+:= -- 1353
+add.period$ -- 114
+call.type$ -- 47
 change.case$ -- 30
 chr.to.int$ -- 0
-cite$ -- 48
-duplicate$ -- 392
-empty$ -- 978
+cite$ -- 49
+duplicate$ -- 397
+empty$ -- 996
 format.name$ -- 109
-if$ -- 2018
+if$ -- 2043
 int.to.chr$ -- 0
-int.to.str$ -- 46
+int.to.str$ -- 47
 missing$ -- 36
-newline$ -- 206
+newline$ -- 209
 num.names$ -- 35
-pop$ -- 160
+pop$ -- 166
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 235
+skip$ -- 243
 stack$ -- 0
 substring$ -- 549
-swap$ -- 70
+swap$ -- 71
 text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 2
 while$ -- 82
-width$ -- 48
-write$ -- 422
-(There were 2 warnings)
+width$ -- 49
+write$ -- 427
+(There were 3 warnings)

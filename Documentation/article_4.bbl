@@ -223,6 +223,9 @@ Junling Ma, Jonathan Dushoff, Benjamin~M Bolker, and David~JD Earn.
 \bibitem{Istat+res1}
 \url{http://dati.istat.it/Index.aspx?DataSetCode=DCIS_POPRES1}.
 
+\bibitem{epicentro}
+\url{https://www.epicentro.iss.it/coronavirus/bollettino/Bolletino-sorveglianza-integrata-COVID-19_30-marzo-2020_appendix.pdf}.
+
 \bibitem{growthcurver}
 \url{https://cran.r-project.org/web/packages/growthcurver/index.html}.
 
