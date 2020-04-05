@@ -6,9 +6,30 @@
 
 # SRT symptoms to removal (hospitalisation) time
 
-SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_IT=1, mean_SRT=5, std_SRT=1, mean_IBST=1, std_IBST=1, R0_time_start, R0_time_end) {
+SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, 
+					distr_IT='norm', distr_SRT='norm', distr_IBST='norm',
+					par_IT=list('mean'=6, 'std'=1), par_SRT=list('mean'=5, 'std'=1), par_IBST=list('mean'=1, 'std'=1), 
+					R0_time_start, R0_time_end) {
 	#### Functions ####
-	
+	# Generate distribution without outliers (Q3+1.5(IQR))
+	generate <- function(distr, parameters){
+		if(distr=='norm'){
+			mean <- parameters$mean
+			std <- parameters$std
+			sup <- floor(mean+3.4*std)
+			out <- dnorm(seq(0,sup), mean, std)
+		}
+		else if(distr=='exp'){
+			rate <- parameters$rate
+			sup <- floor(log(4)/rate + 1.5*log(3)/rate)
+			out <- dexp(seq(0, sup), rate)
+		}
+		else{
+			out <- NULL
+		}
+		
+		return(out)
+	}
 	# Extract S, E, I, R from P, R. population is normalised to N=1
 	refine_data <- function(P, R, IT, SRT, IBST, normalise=TRUE) {
 	
@@ -32,8 +53,10 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_I
 			I[t] <- ((IBST_temp+SRT_temp)/2) %*% P[t:n_obs]
 		}
 		
+		S = N-E-I-R
+		
 		if(normalise){
-			S = (N-E-I-R)/N
+			S = S/N
 			E = E/N
 			I = I/N
 			R = R/N
@@ -41,6 +64,22 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_I
 		
 		return(data.frame(S, E, I, R))
 	
+	}
+	# Calculate sigma and gamma
+	calculate_sigma_gamma <- function(IT, SRT, IBST){
+		#### Functions ####
+		expected_value <- function(X){
+			out <- (1:length(X)-1) %*% X
+	 		return(out)
+		}
+		
+		#### Operations ####
+		sigma <- 1/expected_value(IT)
+		gamma <- 1/(expected_value(SRT)+expected_value(IBST))
+		
+		out <- list('sigma'=sigma, 'gamma'=gamma)
+	
+		return(out)	
 	}
 	# Estimate R0 using I and its exponential properties
 	estimate_R0 <- function(sigma, gamma, I, time_start, time_end){
@@ -73,7 +112,7 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_I
 			return(out)
 		}
 		
-		#### Operate ####
+		#### Operations ####
 		if(missing(time_start) & missing(time_end)) {
 			period<-exp_period(I); start<-period[1]; end<-period[2]
 		}	
@@ -93,6 +132,10 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_I
 		
 		I <- I[t]
 		R0 = optimise(sqdist_log, sigma=sigma, gamma=gamma, I=I, interval=c(0,20))$minimum
+		
+		out <- list('start'=start, 'end'=end, 'R0'=R0)
+
+		return(out)
 	}
 	# SEIR differential equations
 	SEIR_model <- function(t, state, parameters){
@@ -117,31 +160,18 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_I
 	}
 	
 	####Operations ####
+	# Generate distribution without outliers (Q3+1.5(IQR))
+	IT <- generate(distr_IT, par_IT)
+	SRT <- generate(distr_SRT, par_SRT)
+	IBST <- generate(distr_IBST, par_IBST)
 	
-	# Generate IT ~ N(mean_IT, std_IT) without outliers. Same for SRT, IBST
-	inf_IT <- ceiling(mean_IT-3.4*std_IT)
-	sup_IT <- floor(mean_IT+3.4*std_IT)
-	IT <- dnorm(seq(0,sup_IT), mean_IT, std_IT)
-		
-	inf_SRT <- ceiling(mean_SRT-3.4*std_SRT)
-	sup_SRT <- floor(mean_SRT+3.4*std_SRT)
-	SRT <- dnorm(seq(0,sup_SRT), mean_SRT, std_SRT)
-
-	inf_IBST <- ceiling(mean_IBST-3.4*std_IBST)
-	sup_IBST <- floor(mean_IBST+3.4*std_IBST)
-	IBST <- dnorm(seq(0,sup_IBST), mean_IBST, std_IBST)
-
 	# Calculate sigma = 1/E[IT]. Calculate gamma = 1/E[IBST+SRT]
-	sigma <- 1/mean_IT
-	gamma <- 1/(mean_SRT+mean_IBST)
-	
+	sg_out<-calculate_sigma_gamma(IT, SRT, IBST); sigma<-sg_out$sigma; gamma<-sg_out$gamma
+print(3)	
 	# Extract S, E, I, R from P, R
-		
 	U<-refine_data(P, R, IT=IT, SRT=SRT, IBST=IBST, normalise=normalise); S<-U$S; E<-U$E; I<-U$I; R<-U$R
-
 	# Estimate R0 using I and its exponential properties
-	R0 <- estimate_R0(sigma, gamma, I, R0_time_start, R0_time_end)
-	
+	R0_out <- estimate_R0(sigma, gamma, I, R0_time_start, R0_time_end); R0<-R0_out$R0
 	# Solve the SEIR with parameters sigma gamma beta=R0*gamma
 	U0 <- as.numeric(U[1,])
 	beta <- R0*gamma
@@ -150,12 +180,9 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_I
 
 	sol<-solve_SEIR(U0, eval_time, parameters)
 	
-	# Return sol = SEIR, S_E_I_R_, time, R0
-	out <- c(U, sol, R0)
-	names(out)[10] <- 'R0'
-	
+	# Returns SEIR, S_E_I_R_, time, R0, start (R0_time_start), end (R0_time_end)
+	out <- c(U, sol, R0_out)
 	return(out)
-	
 }
 
 

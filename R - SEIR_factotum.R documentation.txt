@@ -1,11 +1,10 @@
-RFUNCTION
 SEIR_factotum.R documentation
 
 REQUIRED PACKAGES : deSolve
 
 CAUTIONS:
     This function does not take into account the last m observations of both P and R, in order to retrieve consistently E and I.
-    m = max(len(IT), len(TT), len(IBST)), the last non-zero entry of the probability distributions. (reference to IT, TT, IBST later on     this documentation file.
+    m = max(len(IT), len(SRT), len(IBST)), the last non-zero entry of the probability distributions (reference to IT, SRT, IBST later on this documentation file).
 
 
 Inputs:
@@ -17,31 +16,42 @@ Inputs:
         
     N : int 
         total population.    
-            
+                      
+Other Inputs : 
+
     time_step : float (default 1)
 	integration step for ODE SEIR model
-            
-    normalise : bool (default TRUE)
-	if TRUE, S,E,I,R and predictions will be divided by N
-	rescale up after execution to retrieve correct data scale			
 
-Other inputs:
-    IT : list of float
-        discrete probability distribution of random variable Incubation Time. 
-        IT[tau] = Pr(Incubation time == tau-1)
-        
-    TT : list of float
-        discrete probability distribution of random variable Test Time. 
-        TT[tau] = Pr(Time span from symptomaticity to tested positive == tau-1)    
-        
-    IBST : list of float
-        discrete probability distribution of random variable Infective Before Symptoms Time.
-        IBST[tau] = Pr(Time span from infectivity to simptomaticity == tau-1)
-        
-    gamma : float (default 0.1 corresponding to 10 days of infectivity)
-        SEIR parameter gamma.
-        
-        
+    normalise : bool (default TRUE)  ##USE OF NORMALISE=FALSE IS DEPRECATED##
+	if TRUE, S,E,I,R and predictions will be divided by N
+	rescale up after execution to retreive correct data scale			
+
+    distr_IT, distr_SRT, distr_IBST : character, either 'norm' or 'exp' (default 'norm')
+	distribution to be used in estimating IT, SRT, IBST
+	its value fixes the format of par_IT, par_SRT, par_IBST inputs
+
+    par_IT, par_SRT, par_IBST : named list (default values(!) (6,1), (5,1), (1,1) risp)
+	list of parameters to simulate the distributions of IT, SRT, IBST
+	format: 
+		par_X = list('mean'=mean, 'std'=std) if distr_X='norm'
+		par_X 0 list('rate'=rate) if distr_X='exp' 
+
+    R0_time_start, R0_time_end : int
+	R0 will be estimated using I[J], where I[t] are the infected at time t and J is:
+		(time_start:time_end) 	 : if user provides both 
+		(1:time_end) 		 : if user provides time_end but not time_start
+		(time_start:length(I))   : if user provides time_start but not time_end
+		(start:end)              : if user provides neither. start and end are extrapolated with exp_period
+						and aim to identify the extremes of the stage of exponential growth in I
+
+Non-inputs : 	
+
+    IT, SRT, IBST : random variables
+	Incubation Time, Symptoms to Removed Time, Infectious Before Symptoms Time
+	IT[tau] = Pr(Incubation time == tau-1)
+	SRT[tau] = Pr(Time span from symptomaticity to tested positive == tau-1)
+	IBST[tau] = Pr(Time span from infectivity to simptomaticity == tau-1)
+    
 Outputs:
    
     out : list
@@ -60,4 +70,9 @@ Outputs:
 
     out$R0 : float
 	the R0 of the epidemics as estimated
+
+    out$start, out$end : int
+	extremes of J (see R0_time_start, R0_time_end for reference)
+	
+
 	
