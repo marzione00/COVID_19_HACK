@@ -10,7 +10,7 @@
 # I : array-like
 #	time serie of which to calculate R0
 
-# time_start, time_end : int
+# time_start, time_end : int 
 # 	R0 will be estimated using I[J], where J is:
 #		(time_start:time_end) 	if user provides both 
 #		(1:time_end) 			if user provides time_end but not time_start
@@ -19,7 +19,10 @@
 #									and aim to identify the extremes of the stage of exponential growth in I 
 
 # Outputs: 
-# 	R0
+# 	R0 : float
+#
+#	start, end : int
+# 		the extremes of J (as above). Ignore if any is passed by user.
 
 
 estimate_R0 <- function(sigma, gamma, I, time_start, time_end){
@@ -72,4 +75,10 @@ estimate_R0 <- function(sigma, gamma, I, time_start, time_end){
 		
 		I <- I[t]
 		R0 = optimise(sqdist_log, sigma=sigma, gamma=gamma, I=I, interval=c(0,20))$minimum
+		
+		out <- list('start'=start, 'end'=end, 'R0'=R0)
+
+		return(out)
+		
+		
 	}
