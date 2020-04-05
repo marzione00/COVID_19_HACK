@@ -1,14 +1,21 @@
+# default value of std_IT is arbitrary
+# consdering the infectious period to be from symptoms to test, ASSUMING: test and hospitalisation occur i
+# on the same day & mean of infectious period is the same as its median: gamma is 1/5. also, gamma is 1/mean(IBST+SRT)
+# ie the length of the span of time in which someone is infective
+# https://www.epicentro.iss.it/coronavirus/sars-cov-2-decessi-italia
 
+# SRT symptoms to removal (hospitalisation) time
 
-SEIR_factotum <- function(P, R, N, gamma=0.1, time_step=1, normalise=TRUE, IT=c(0,0,0,0,0,1), TT=c(1), IBST=c(1)) {
+SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_IT=1, mean_SRT=5, std_SRT=1, mean_IBST=1, std_IBST=1, R0_time_start, R0_time_end) {
 	#### Functions ####
+	
 	# Extract S, E, I, R from P, R. population is normalised to N=1
-	refine_data <- function(P, R, normalise=TRUE) {
+	refine_data <- function(P, R, IT, SRT, IBST, normalise=TRUE) {
 	
 		n_obs = length(P)
-		m = max(length(IT), length(TT), length(IBST))
+		m = max(length(IT), length(SRT), length(IBST))
 		ITl = length(IT)
-		TTl = length(TT)
+		SRTl = length(SRT)
 		IBSTl = length(IBST)
 		
 		S = integer(n_obs-m)
@@ -18,11 +25,11 @@ SEIR_factotum <- function(P, R, N, gamma=0.1, time_step=1, normalise=TRUE, IT=c(
 		
 		for(t in (1:(n_obs-m))){
 			IT_temp = c(IT, integer(n_obs-ITl-t+1))
-			TT_temp = c(TT, integer(n_obs-TTl-t+1))
+			SRT_temp = c(SRT, integer(n_obs-SRTl-t+1))
 			IBST_temp = c(IBST, integer(n_obs-IBSTl-t+1))
 			
-			E[t] <- ((IT_temp+TT_temp)/2) %*% P[t:n_obs]
-			I[t] <- ((IBST_temp+TT_temp)/2) %*% P[t:n_obs]
+			E[t] <- ((IT_temp+SRT_temp)/2) %*% P[t:n_obs]
+			I[t] <- ((IBST_temp+SRT_temp)/2) %*% P[t:n_obs]
 		}
 		
 		if(normalise){
@@ -36,7 +43,9 @@ SEIR_factotum <- function(P, R, N, gamma=0.1, time_step=1, normalise=TRUE, IT=c(
 	
 	}
 	# Estimate R0 using I and its exponential properties
-	estimate_R0 <- function(sigma, gamma, I){
+	estimate_R0 <- function(sigma, gamma, I, time_start, time_end){
+		#### Functions ####
+		
 		# Find the period of exponential growth for X
 		exp_period <- function(X){
 			start <- 1; end <- length(X)
@@ -61,9 +70,22 @@ SEIR_factotum <- function(P, R, N, gamma=0.1, time_step=1, normalise=TRUE, IT=c(
 			return(out)
 		}
 		
-		# Operate
-		period<-exp_period(I); start<-period[1]; end<-period[2]
-		
+		#### Operate ####
+		if(missing(time_start) & missing(time_end)) {
+			period<-exp_period(I); start<-period[1]; end<-period[2]
+		}	
+		else if(missing(time_start)) {
+			start <- 1
+			end <- time_end
+		}	
+		else if(missing(time_end)) {
+			start <- time_start
+			end <- length(I)
+		}	
+		else {
+			start<-time_start; end<-time_end
+		}
+
 		t <- (start:end)
 		I <- I[t]
 		R0 = optimise(sqdist_log, sigma=sigma, gamma=gamma, I=I, interval=c(0,20))$minimum
@@ -92,20 +114,36 @@ SEIR_factotum <- function(P, R, N, gamma=0.1, time_step=1, normalise=TRUE, IT=c(
 	
 	####Operations ####
 	
+	# Generate IT ~ N(mean_IT, std_IT) without outliers. Same for SRT, IBST
+	inf_IT <- ceiling(mean_IT-3.4*std_IT)
+	sup_IT <- floor(mean_IT+3.4*std_IT)
+	IT <- dnorm(seq(0,sup_IT), mean_IT, std_IT)
+		
+	inf_SRT <- ceiling(mean_SRT-3.4*std_SRT)
+	sup_SRT <- floor(mean_SRT+3.4*std_SRT)
+	SRT <- dnorm(seq(0,sup_SRT), mean_SRT, std_SRT)
+
+	inf_IBST <- ceiling(mean_IBST-3.4*std_IBST)
+	sup_IBST <- floor(mean_IBST+3.4*std_IBST)
+	IBST <- dnorm(seq(0,sup_IBST), mean_IBST, std_IBST)
+
+	# Calculate sigma = 1/E[IT]. Calculate gamma = 1/E[IBST+SRT]
+	sigma <- 1/mean_IT
+	gamma <- 1/(mean_SRT+mean_IBST)
+	
 	# Extract S, E, I, R from P, R
-	U<-refine_data(P, R, normalise=normalise); S<-U$S; E<-U$E; I<-U$I; R<-U$R
-	
-	
+		
+	U<-refine_data(P, R, IT=IT, SRT=SRT, IBST=IBST, normalise=normalise); S<-U$S; E<-U$E; I<-U$I; R<-U$R
+
 	# Estimate R0 using I and its exponential properties
-	sigma <- dot((0:length(IT)-1), IT)
-	
-	R0 <- estimate_R0(sigma, gamma, I)
+	R0 <- estimate_R0(sigma, gamma, I, R0_time_start, R0_time_end)
 	
 	# Solve the SEIR with parameters sigma gamma beta=R0*gamma
 	U0 <- as.numeric(U[1,])
 	beta <- R0*gamma
 	eval_time <- seq(0, length(U$I)-1, by = time_step)
-	parameters <- c(beta, sigma, gamma)
+	parameters <- c(beta=beta, sigma=sigma, gamma=gamma)
+
 	sol<-solve_SEIR(U0, eval_time, parameters)
 	
 	# Return sol = SEIR, S_E_I_R_, time, R0
@@ -115,6 +153,10 @@ SEIR_factotum <- function(P, R, N, gamma=0.1, time_step=1, normalise=TRUE, IT=c(
 	return(out)
 	
 }
+
+
+
+
 
 
 
