@@ -48,7 +48,10 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_I
 		
 		# Find the period of exponential growth for X
 		exp_period <- function(X){
-			start <- 1; end <- length(X)
+			start <- 1
+			for(t in (3:length(X)-1)){
+				end <- t
+			}
 			period <- c(start, end)
 			return(period)
 		}
@@ -87,6 +90,7 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, mean_IT=6, std_I
 		}
 
 		t <- (start:end)
+		
 		I <- I[t]
 		R0 = optimise(sqdist_log, sigma=sigma, gamma=gamma, I=I, interval=c(0,20))$minimum
 	}
