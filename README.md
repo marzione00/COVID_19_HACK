@@ -1,2 +1,1 @@
-SEIR_factotum.py and SEIR_factotum.R are two independent and different approaches to SEIR modellisations of epidemics. 
-Read documentation
+SEIR_factotum.R estimates the parameters of a SEIR model (no mortality, no immunity loss) and solves the SEIR system
