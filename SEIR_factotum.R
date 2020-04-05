@@ -167,7 +167,6 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE,
 	
 	# Calculate sigma = 1/E[IT]. Calculate gamma = 1/E[IBST+SRT]
 	sg_out<-calculate_sigma_gamma(IT, SRT, IBST); sigma<-sg_out$sigma; gamma<-sg_out$gamma
-print(3)	
 	# Extract S, E, I, R from P, R
 	U<-refine_data(P, R, IT=IT, SRT=SRT, IBST=IBST, normalise=normalise); S<-U$S; E<-U$E; I<-U$I; R<-U$R
 	# Estimate R0 using I and its exponential properties
