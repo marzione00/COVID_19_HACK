@@ -65,7 +65,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                    
                                                                    tabPanel(h3("Raw data"),
                                                                             shiny::uiOutput("rawData_input"),
-                                                                            DT::dataTableOutput("rawData_table")
+                                                                            DT::dataTableOutput("rawData_table") %>% shinycssloaders::withSpinner( color="#dd4b39")
                                                                    )
                                             )
                         ),

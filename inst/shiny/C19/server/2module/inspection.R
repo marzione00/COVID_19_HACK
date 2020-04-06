@@ -156,16 +156,6 @@ output$general_infos_plot <- highcharter::renderHighchart(
 output$rawData_input <- shiny::renderUI({
   shiny::fluidPage(
     shiny::fluidRow(
-      shiny::column(5,
-                    shiny::dateRangeInput(
-                      inputId = "rawData_date",
-                      label = "Select dates",
-                      start = countryTS$Italy$data[1],
-                      end = countryTS$Italy$data[nrow(countryTS$Italy)],
-                      min = countryTS$Italy$data[1], 
-                      max = countryTS$Italy$data[nrow(countryTS$Italy)]
-                    )
-      ),
       shiny::column(3,
                     shiny::radioButtons(
                       inputId = "rawData_terr",
@@ -176,6 +166,18 @@ output$rawData_input <- shiny::renderUI({
       ),
       shiny::column(4,
                     shiny::uiOutput("rawData_sel_input")
+      ),
+      shiny::column(5,
+                    shiny::radioButtons(
+                      inputId = "rawData_type", 
+                      label = "Data type:",
+                      choiceNames = list(HTML("<p><strong><span style='background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);'>Total</span></strong> (cumulative)</p>"),
+                                     HTML("<p><span style='background-color: rgb(184, 49, 47); color: rgb(255, 255, 255);'><strong>New</strong></span> (daily)</p>"),
+                                     HTML("<p><span style='background-color: rgb(255, 204, 0); color: rgb(255, 255, 255);'><strong>Current</strong></span></p>")
+                                     ),
+                      choiceValues = list("tot", "new", "cur"),
+                      selected = "tot",
+                      inline = TRUE)
       )
     )
     
@@ -204,22 +206,44 @@ output$rawData_sel_input <- shiny::renderUI({
 
 output$rawData_table <- DT::renderDataTable({
   
-  if( is_ready(input$rawData_terr) && input$rawData_terr == 1 | (input$rawData_terr == 2 && is_ready(input$rawData_reg_sel)) | (input$rawData_terr == 3 && is_ready(input$rawData_prov_sel)) ) {
+  if( is_ready(input$rawData_terr) && input$rawData_terr == 1 | (input$rawData_terr == 2 && is_ready(input$rawData_reg_sel)) | (input$rawData_terr == 3 && is_ready(input$rawData_prov_sel)) & is_ready(input$rawData_type) ) {
+    
+    headerCol <- switch(input$rawData_type,
+                        "tot" = DT::JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});", "}"),
+                        "new" = DT::JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#e62e00', 'color': '#fff'});", "}"),
+                        "cur" = DT::JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#ffcc00', 'color': '#fff'});", "}")
+                        )
+    
     DT::datatable( 
       switch(input$rawData_terr,
-             "1" = countryTS$Italy %>% 
-               dplyr::select(-stato, -data_seriale) %>%
-               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
-             "2" = regionTS[[input$rawData_reg_sel]] %>%
-               dplyr::select(-stato,-lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2]),
+             "1" = (switch(input$rawData_type,
+                      "tot" = countryTS$Italy %>% 
+                                dplyr::select("Date" = data, "Tot. cases" = totale_casi, "Tot. deaths" = deceduti, "Tot. recoveries" = dimessi_guariti, "Tot. swabs" = tamponi),
+                      "new" = countryTS$Italy %>%
+                                dplyr::mutate("New deaths" = dplyr::lag(deceduti), "New recoveries" = dplyr::lag(dimessi_guariti), "New swabs" = dplyr::lag(tamponi)) %>%
+                                dplyr::select("Date" = data, "New cases" = nuovi_positivi, "New deaths", "New recoveries", "New swabs"),
+                      "cur" = countryTS$Italy %>%
+                                dplyr::select("Date" = data, "Current pos. cases" = totale_positivi, "Current hospitalised" = totale_ospedalizzati, "Current intensive care" = terapia_intensiva, "Current home isol." = isolamento_domiciliare)
+                      )
+                    ),
+               
+             "2" = (switch(input$rawData_type,
+                      "tot" = regionTS[[input$rawData_reg_sel]] %>% 
+                                dplyr::select("Date" = data, "Tot. cases" = totale_casi, "Tot. deaths" = deceduti, "Tot. recoveries" = dimessi_guariti, "Tot. swabs" = tamponi),
+                      "new" = regionTS[[input$rawData_reg_sel]] %>% 
+                                dplyr::mutate("New deaths" = dplyr::lag(deceduti), "New recoveries" = dplyr::lag(dimessi_guariti), "New swabs" = dplyr::lag(tamponi)) %>%
+                                dplyr::select("Date" = data, "New cases" = nuovi_positivi, "New deaths", "New recoveries", "New swabs"),
+                      "cur" = regionTS[[input$rawData_reg_sel]] %>% 
+                                dplyr::select("Date" = data, "Current pos. cases" = totale_positivi, "Current hospitalised" = totale_ospedalizzati, "Current intensive care" = terapia_intensiva, "Current home isol." = isolamento_domiciliare)
+                      )
+                    ),
+               
              "3" = provTS[[input$rawData_prov_sel]] %>%
-               dplyr::select(-stato,-codice_provincia,-denominazione_provincia,-sigla_provincia,
-                             -lat,-long,-denominazione_regione,-codice_regione,-data_seriale) %>%
-               dplyr::filter(data >= input$rawData_date[1] &  data <= input$rawData_date[2])         
+                        dplyr::select("Date" = data, "Tot. cases" = totale_casi)        
       ), options = list(
         searching = FALSE,
-        pageLength = 6, lengthMenu = c(6,10,14), scrollX = T)
+        pageLength = 6, lengthMenu = c(6,10,14), scrollX = T,
+        initComplete = headerCol)
     )
   }
   
