@@ -29,7 +29,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                             
                                             shinydashboard::tabBox(width = 12,
                                                                    title = NULL,
-                                                                   tabPanel(h3("Plot"),
+                                                                   tabPanel(h4("Plot"),
                                                                             
                                                                             
                                                                             shiny::fluidRow(
@@ -63,7 +63,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                             
                                                                    ),
                                                                    
-                                                                   tabPanel(h3("Raw data"),
+                                                                   tabPanel(h4("Table"),
                                                                             shiny::uiOutput("rawData_input"),
                                                                             DT::dataTableOutput("rawData_table") %>% shinycssloaders::withSpinner( color="#dd4b39")
                                                                    )
