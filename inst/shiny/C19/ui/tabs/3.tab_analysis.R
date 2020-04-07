@@ -299,24 +299,26 @@ shinydashboard::tabItem(
     shiny::htmlOutput("selected_info3")
   ),
   
+  
+  fluidRow(
+    column(12,
   shinydashboard::box(
      color = "red",
      status = "danger",
      solidHeader = TRUE,
      title = "Input",
      width = 12,
-     fluidRow(
-       column(4,
+    
               helpText("Under construction...")
               #h5("Incubation time"),
               #hr(),
               #shiny::sliderInput("IT_mean", "Mean", min = 2, max = 10, value = 6),
               #shiny::sliderInput("IT_std", "St. deviation", min = 0.5, max = 1.5, value = 1)
-              ),
-       column(4
-              ),
+              )
+  
+  ),
        column(4
               )
      )
-  )
+  
 )
