@@ -15,7 +15,7 @@ ui <-
                                                                           shinydashboard::sidebarMenuOutput("menu")
                                          ),
                                          shinydashboard::dashboardBody(
-                                           
+                                           tags$head( tags$meta( name="google-site-verification" ,content="uqldthSbvNv8p4RPxzlwihRq2OXixrauM9a_G-OKXB4")),
                                            tags$head(includeHTML(("www/google-analytics.html"))),
                                            tags$head( tags$meta(name = "viewport", content = "content=width=device-width, initial-scale=0.55")),
                                           
