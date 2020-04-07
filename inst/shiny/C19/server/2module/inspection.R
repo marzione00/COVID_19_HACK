@@ -25,7 +25,7 @@ shiny::observe({
   else 
   {
     reac_dataset$plot_type = "column"
-    reac_dataset$pointWidth = 30
+    reac_dataset$pointWidth = 15
     reac_dataset$yAxis = 0
   }
   
@@ -41,8 +41,8 @@ shiny::observe({
       reac_dataset$name <- paste0(input$countrytab2, ", daily")
       
       reac_dataset$dataset$totale_casi = diff(c(NA,  countryTS$Italy$totale_casi))
-      reac_dataset$dataset$terapia_intensiva = diff( c(NA, countryTS$Italy$terapia_intensiva))
-      reac_dataset$dataset$totale_ospedalizzati = diff(c(NA,  countryTS$Italy$totale_ospedalizzati))
+    #  reac_dataset$dataset$terapia_intensiva = diff( c(NA, countryTS$Italy$terapia_intensiva))
+     # reac_dataset$dataset$totale_ospedalizzati = diff(c(NA,  countryTS$Italy$totale_ospedalizzati))
       reac_dataset$dataset$deceduti = diff(c(NA,  countryTS$Italy$deceduti))
       reac_dataset$dataset$dimessi_guariti = diff(c(NA,  countryTS$Italy$dimessi_guariti))
     }
@@ -65,8 +65,8 @@ shiny::observe({
       reac_dataset$name <- paste0(input$regiontab2, ", daily")
       
       reac_dataset$dataset$totale_casi = diff(c(NA, regionTS[[input$regiontab2]]$totale_casi))
-      reac_dataset$dataset$terapia_intensiva = diff( c(NA,regionTS[[input$regiontab2]]$terapia_intensiva))
-      reac_dataset$dataset$totale_ospedalizzati = diff(c(NA, regionTS[[input$regiontab2]]$totale_ospedalizzati))
+     # reac_dataset$dataset$terapia_intensiva = diff( c(NA,regionTS[[input$regiontab2]]$terapia_intensiva))
+     # reac_dataset$dataset$totale_ospedalizzati = diff(c(NA, regionTS[[input$regiontab2]]$totale_ospedalizzati))
       reac_dataset$dataset$deceduti = diff(c(NA, regionTS[[input$regiontab2]]$deceduti))
       reac_dataset$dataset$dimessi_guariti = diff(c(NA, regionTS[[input$regiontab2]]$dimessi_guariti))
     }
@@ -82,9 +82,9 @@ shiny::observe({
         list(lineWidth = 3, title = list(text  =  '')),
         list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
       )  %>%
-      highcharter::hc_add_series(data =reac_dataset$dataset, type = reac_dataset$plot_type, 
-                                 yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth,  highcharter::hcaes(x = data, y = totale_ospedalizzati),
-                                 name="Symptomatic", color="orange",showInLegend=TRUE)   %>%
+      # highcharter::hc_add_series(data =reac_dataset$dataset, type = reac_dataset$plot_type, 
+      #                           yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth,  highcharter::hcaes(x = data, y = totale_ospedalizzati),
+      #                            name="Symptomatic", color="orange",showInLegend=TRUE)   %>%
     
       highcharter::hc_add_series(data =reac_dataset$dataset, type =reac_dataset$plot_type, 
                                  yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth,  highcharter::hcaes(x = data, y = dimessi_guariti),
@@ -92,9 +92,9 @@ shiny::observe({
       highcharter::hc_add_series(data =reac_dataset$dataset, type = reac_dataset$plot_type, 
                                  yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth, highcharter::hcaes(x = data, y = deceduti),
                                  name="Deaths", color="black",showInLegend=TRUE)  %>%
-      highcharter::hc_add_series(data = reac_dataset$dataset, type =reac_dataset$plot_type, 
-                                 yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth, highcharter::hcaes(x = data, y = terapia_intensiva),
-                                 name="Intesive care", color="red",showInLegend=TRUE) %>%
+     #highcharter::hc_add_series(data = reac_dataset$dataset, type =reac_dataset$plot_type, 
+     #                           yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth, highcharter::hcaes(x = data, y = terapia_intensiva),
+     #                           name="Intesive care", color="red",showInLegend=TRUE) %>%
       
       highcharter::hc_legend(align = "top", verticalAlign = "top",
                              layout = "vertical", x = 30, y = 100, enabled=TRUE) %>%
