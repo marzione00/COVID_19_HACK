@@ -19,6 +19,29 @@ shiny::observe({
   shiny::validate(
     shiny::need(is_ready(input$geninfo_reg), "Wait...")
   )
+  
+  # UPDATE RADIO BUTTONS if province or region/country
+  if(input$geninfo_prov != "default" ) {
+    
+    inpt = input$geninfo_type
+    if(inpt == "cur")
+    {
+      inpt = "tot"
+    }
+    updateRadioButtons(session, inputId = "geninfo_type",selected =inpt, choiceValues = c("tot","new"),   choiceNames = list(HTML("<p><strong><span style='background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);'>Total</span></strong> (cumulative)</p>"),
+                                                                                                                               HTML("<p><span style='background-color: rgb(184, 49, 47); color: rgb(255, 255, 255);'><strong>New</strong></span> (daily)</p>")))
+  }
+  
+  else if (input$geninfo_prov == "default" )
+  {
+    updateRadioButtons(session, inputId = "geninfo_type",choiceValues = c("tot","new","cur"), choiceNames = list(HTML("<p><strong><span style='background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);'>Total</span></strong> (cumulative)</p>"),
+                                                                                                                 HTML("<p><span style='background-color: rgb(184, 49, 47); color: rgb(255, 255, 255);'><strong>New</strong></span> (daily)</p>"),
+                                                                                                                 HTML("<p><span style='background-color: rgb(255, 204, 0); color: rgb(255, 255, 255);'><strong>Current</strong></span></p>")
+    ), selected = input$geninfo_type)
+                                                                                                                               
+  }
+  
+
   # Switch over territory input
   if(input$geninfo_reg == "default" && input$geninfo_prov == "default") {
     reac_dataset$name <- input$geninfo_coun
@@ -81,7 +104,8 @@ shiny::observe({
     reac_dataset$colors <- c("#cc66ff", "#00e673", "#ff3300", "#00bfff")
   }
     
-
+  
+  
   reac_dataset$plot = highcharter::hchart(tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date),
                                           type = reac_dataset$plot_type, title= "General info",
                                           highcharter::hcaes(x = Date, y = value, group = key),
