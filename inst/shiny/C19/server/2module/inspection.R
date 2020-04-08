@@ -228,7 +228,23 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 # =========== plot growth monitoring --------------------------------------------------------------------
 
-hc <- highcharter::highchart(type = "stock") %>% 
+out_growth <- reactive({country_growth %>%
+  dplyr::filter(region==input$growth_region,province==input$growth_province)})
+
+growth <- reactive({data.frame(date=out_growth()$data,
+                     growth=out_growth()$growth)})
+
+growth_xts <- reactive({xts::xts(growth()[,-1], order.by=growth()[,1])})
+
+growth_change <- reactive({data.frame(date=out_growth()$data,
+                            growth=out_growth()$growth_change)})
+
+growth_change_xts <- reactive({xts::xts(growth_change()[,-1], order.by=growth_change()[,1])})
+
+
+output$plot_test <- highcharter::renderHighchart(
+
+highcharter::highchart(type = "stock") %>% 
   highcharter::hc_chart(zoomType = "xy") %>%
   highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wks"), 
                                                list(type="week", count=3, text="3wks"), list(type="week", count=4, text="4wks"),
@@ -236,12 +252,9 @@ hc <- highcharter::highchart(type = "stock") %>%
                                                list(type="all", count=1, text="All")), 
                                 selected = 7 ) %>%
   highcharter::hc_title(text = "% growth and growth change of total cases") %>%
-  highcharter::hc_add_series(growth_xts, name="growth", color = "red", type = "spline") %>% 
-  highcharter::hc_add_series(growth_change_xts, name="growth_change", color = "orange", type = "spline")
+  highcharter::hc_add_series(growth_xts(), name="growth", color = "red", type = "spline") %>% 
+  highcharter::hc_add_series(growth_change_xts(), name="growth_change", color = "orange", type = "spline")
 
-
-output$plot_test <- highcharter::renderHighchart(
-  hc
 )
 
 # tamponi graph -----------------------------------------------------------

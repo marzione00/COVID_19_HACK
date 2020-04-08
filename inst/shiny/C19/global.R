@@ -189,17 +189,17 @@ dfita2 <- dfita2 %>%
 
 
 # plot growth monitoring --------------------------------------------------------------------
-out_growth <- country_growth
-
-growth <- data.frame(date=countryTS$Italy$data,
-                     growth=out_growth$growth)
-
-growth_xts <- xts::xts(growth[,-1], order.by=growth[,1])
-
-growth_change <- data.frame(date=countryTS$Italy$data,
-                            growth=out_growth$growth_change)
-
-growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
+# out_growth <- country_growth
+# 
+# growth <- data.frame(date=countryTS$Italy$data,
+#                      growth=out_growth$growth)
+# 
+# growth_xts <- xts::xts(growth[,-1], order.by=growth[,1])
+# 
+# growth_change <- data.frame(date=countryTS$Italy$data,
+#                             growth=out_growth$growth_change)
+# 
+# growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
 
 # tamponi graph -----------------------------------------------------------
 tamp_data <- tibble::tibble(
