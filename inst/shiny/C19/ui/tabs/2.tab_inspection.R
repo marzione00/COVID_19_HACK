@@ -190,14 +190,29 @@ shinydashboard::tabItem(tabName = "tab_2",
                           ))),
                         hr(),
                         fluidRow(
-                          column(6,
-                                 
                                  
                                  
                                  shinydashboard::box(title="Growth Monitoring", solidHeader = T,
                                                      width = NULL,
                                                      color = "red",
                                                      
+                                                     column(2,
+                                                            
+                                                            
+                                                            shiny::selectInput(
+                                                              inputId = "growth_country", label = "Country",
+                                                              choices = countryNames, selected = "Italy"),
+                                                            
+                                                            shiny::selectInput(
+                                                              inputId = "growth_region", label = "Region",
+                                                              choices = c(names(regionTS), "--- ALL ---"), selected = "--- ALL ---"),
+                                                            
+                                                            shiny::uiOutput("regprov_dfout")
+                                                            
+                                                            
+                                                            ),
+                                                     
+                                                     column(10,
                                                      
                                                      shinydashboard::box(    
                                                        title=NULL,
@@ -237,19 +252,19 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      
                                                      highcharter::highchartOutput("plot_test", width = "100%",
                                                                                   height = "400px")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+                                                     ),
                                                      height=NULL, status="danger")
                                  
                                  
-                                 
-                          ),
+                        ),
                           
-                          column(6,
+                          fluidRow(
                                  shinydashboard::box(title="Tests Tracking", status="danger", 
                                                      solidHeader = TRUE, 
                                                      width=12,
                                                      highcharter::highchartOutput("tamp_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
                                  )
                           )
-                        )
+                        
                         
 )

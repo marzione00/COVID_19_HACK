@@ -290,3 +290,30 @@ output$age_plot <- highcharter::renderHighchart(
       highcharter::hc_xAxis(categories = dplyr::filter(age_df_final,region==input$regiontab3)$age_int)
   )
 
+
+# dynamic tabs ------------------------------------------------------------
+
+regprov_df <- purrr::map_df(names(provTS), function(x){
+  provTS[[x]] %>%
+    dplyr::select(denominazione_regione, denominazione_provincia) %>%
+    dplyr::rename(region=denominazione_regione, province=denominazione_provincia) %>%
+    unique()
+}) %>%
+  dplyr::bind_rows(
+    dplyr::tibble(region=names(regionTS),province="--- ALL ---")
+  ) %>%
+  dplyr::bind_rows(
+    dplyr::tibble(region="--- ALL ---",province=names(provTS))
+  ) %>%
+  dplyr::bind_rows(
+    dplyr::tibble(region="--- ALL ---",province="--- ALL ---")
+  )
+
+output$regprov_dfout <- renderUI({
+
+  shiny::selectInput(
+    inputId = "growth_province", label = "Province",
+    choices = dplyr::pull(dplyr::filter(regprov_df, region==input$growth_region), province),
+    selected = "--- ALL ---")
+  
+})
