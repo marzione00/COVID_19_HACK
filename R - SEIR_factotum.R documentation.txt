@@ -19,12 +19,17 @@ Inputs:
                       
 Other Inputs : 
 
+    normalise : bool (default TRUE)  ##USE OF NORMALISE=FALSE IS DEPRECATED##
+	if TRUE, S,E,I,R and predictions will be divided by N
+	rescale up after execution to retreive correct data scale	
+
     time_step : float (default 1)
 	integration step for ODE SEIR model
 
-    normalise : bool (default TRUE)  ##USE OF NORMALISE=FALSE IS DEPRECATED##
-	if TRUE, S,E,I,R and predictions will be divided by N
-	rescale up after execution to retreive correct data scale			
+    future : int (default 1)
+	solution to SEIR model will be evaluated on the data time interval rescaled by future
+	eg: if (S, E, I, R time series) data is available from day 0 to day 100, the SEIR solution
+		(S_, E_, I_, R_) will be evaluated from day 0 to day future*100
 
     distr_IT, distr_SRT, distr_IBST : character, either 'norm' or 'exp' (default 'norm')
 	distribution to be used in estimating IT, SRT, IBST
@@ -44,7 +49,7 @@ Other Inputs :
 		(start:end)              : if user provides neither. start and end are extrapolated with exp_period
 						and aim to identify the extremes of the stage of exponential growth in I
 
-Non-inputs : 	
+Insight: 	
 
     IT, SRT, IBST : random variables
 	Incubation Time, Symptoms to Removed Time, Infectious Before Symptoms Time
@@ -74,5 +79,8 @@ Outputs:
     out$start, out$end : int
 	extremes of J (see R0_time_start, R0_time_end for reference)
 	
+    out$R0_fitting : float
+	measures if J is a proper interval to fit R0 on data
+	Work In Progress
 
 	

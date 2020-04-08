@@ -1,15 +1,9 @@
-# default value of std_IT is arbitrary
-# consdering the infectious period to be from symptoms to test, ASSUMING: test and hospitalisation occur i
-# on the same day & mean of infectious period is the same as its median: gamma is 1/5. also, gamma is 1/mean(IBST+SRT)
-# ie the length of the span of time in which someone is infective
-# https://www.epicentro.iss.it/coronavirus/sars-cov-2-decessi-italia
 
-# SRT symptoms to removal (hospitalisation) time
-
-SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE, 
+SEIR_factotum <- function(P, R, N, normalise=TRUE, 
+					time_step=1, future=1,
 					distr_IT='norm', distr_SRT='norm', distr_IBST='norm',
 					par_IT=list('mean'=6, 'std'=1), par_SRT=list('mean'=5, 'std'=1), par_IBST=list('mean'=1, 'std'=1), 
-					R0_time_start, R0_time_end) {
+					R0_time_start=0, R0_time_end=5) {
 	#### Functions ####
 	# Generate distribution without outliers (Q3+1.5(IQR))
 	generate <- function(distr, parameters){
@@ -131,16 +125,18 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE,
 		t <- (start:end)
 		
 		I <- I[t]
-		R0 = optimise(sqdist_log, sigma=sigma, gamma=gamma, I=I, interval=c(0,20))$minimum
+		opt <- optimise(sqdist_log, sigma=sigma, gamma=gamma, I=I, interval=c(0,20))
+		R0 <- opt$minimum
+		mf <- opt$objective/(end-start+1)
 		
-		out <- list('start'=start, 'end'=end, 'R0'=R0)
+		out <- list('start'=start, 'end'=end, 'R0'=R0, 'mean_fitting'=mf)
 
 		return(out)
 	}
 	# SEIR differential equations
 	SEIR_model <- function(t, state, parameters){
 		with(as.list(c(state, parameters)), {
-			dS <- beta*S*I
+			dS <- -beta*S*I
 			dE <- beta*S*I-sigma*E
 			dI <- sigma*E-gamma*I
 			dR <- gamma*I
@@ -148,15 +144,67 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE,
 			list(c(dS, dE, dI, dR))
 		})
 	}
+	# solve ODE with variable parameters
+	multi_stage_ODE <- function(U0, func, var_names, par_fixed, msp, msp_name, L, time_step){
+	
+		N <- length(L) # number of stages
+		parms <- data.frame(par_fixed, msp) # parms[n, ] are the parameter to be used at stage n
+		names(parms)[length(names(parms))] <- msp_name # msp will be referreed with the passed name
+		total <- data.frame() # solution from 0 to L[n]
+		
+		for(n in (1:N)){
+			if(n==1)
+				eval_time <- seq(0, L[n], by=time_step)
+			else
+				eval_time <- seq(0, L[n]-L[n-1], by=time_step) 
+			
+			U0 <- as.numeric(U0)
+			names(U0) <- var_names # so that deSolve::ode can use appropriately the parameters
+			
+			sol <- deSolve::ode(y=U0, times=eval_time, func=func, parms=parms[n,])
+			sol <- data.frame(sol)	
+			sol <- sol[!(names(sol)=='time')] # drop the time column
+			
+			# initial data of next stage
+			if(n<N)
+				if(n==1)
+					U0 <- sol[L[n]+1,] 
+				else	
+					U0 <- sol[L[n]-L[n-1]+1,]
+			# drop the last value in sol, as it is U0 for next stage. Avoid repetitions
+			if(n==1)
+				total <- sol[-length(sol[[1]]),]
+			else {
+				sol <- sol[-length(sol[[1]]),] 
+				total <- rbind(total, sol) # append the new solution
+			}	
+		}
+	
+		rownames(total) <- 1:nrow(total)
+		time <- seq(0, L[N], by=time_step) # the evaluation times for total
+		out <- list('sol'=total, 'time'=time)
+		
+		return(out)
+	}
 	# Solve SEIR
 	solve_SEIR <- function(U0, eval_time, parameters){
-		state <- c(S=U0[1], E=U0[2], I=U0[3], R=U0[4])
+		state <- c('S'=U0[1], 'E'=U0[2], 'I'=U0[3], 'R'=U0[4])
 		
 		out <- deSolve::ode(y=state, times=eval_time, func=SEIR_model, parms=parameters)
 		out <- data.frame(out)
 		colnames(out) <- c('time', 'S_', 'E_', 'I_', 'R_')
 		
 		return(out)
+	}
+	# Solve multi stage SEIR
+	solve_ms_SEIR <- function(U0, gamma, sigma, R0_msp, time_of_R0_changes, time_step){
+		var_names <- list('S', 'E', 'I', 'R')
+		par_fixed <- list('sigma'=sigma, 'gamma'=gamma)
+		msp <- R0_msp*gamma
+		L <- time_of_R0_changes
+		
+		out <- multi_stage_ODE(U0, SEIR_model, var_names, par_fixed, msp, 'beta', L, time_step)
+			
 	}
 	
 	####Operations ####
@@ -174,12 +222,12 @@ SEIR_factotum <- function(P, R, N, time_step=1, normalise=TRUE,
 	# Solve the SEIR with parameters sigma gamma beta=R0*gamma
 	U0 <- as.numeric(U[1,])
 	beta <- R0*gamma
-	eval_time <- seq(0, length(U$I)-1, by = time_step)
+	eval_time <- seq(0, future*length(U$I)-1, by = time_step)
 	parameters <- c(beta=beta, sigma=sigma, gamma=gamma)
 
 	sol<-solve_SEIR(U0, eval_time, parameters)
 	
-	# Returns SEIR, S_E_I_R_, time, R0, start (R0_time_start), end (R0_time_end)
+	# Returns SEIR, S_E_I_R_, time, R0, start (R0_time_start), end (R0_time_end), mean sq dist (mean_fitting)
 	out <- c(U, sol, R0_out)
 	return(out)
 }
