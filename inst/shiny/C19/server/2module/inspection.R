@@ -228,8 +228,15 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 # =========== plot growth monitoring --------------------------------------------------------------------
 
-out_growth <- reactive({country_growth %>%
-  dplyr::filter(region==input$growth_region,province==input$growth_province)})
+out_growth <- reactive({
+  if(input$growth_region=="--- ALL ---"){
+    country_growth %>%
+      dplyr::filter(province==input$growth_province)
+  } else {
+  country_growth %>%
+  dplyr::filter(region==input$growth_region,province==input$growth_province)
+  }
+})
 
 growth <- reactive({data.frame(date=out_growth()$data,
                      growth=out_growth()$growth)})
