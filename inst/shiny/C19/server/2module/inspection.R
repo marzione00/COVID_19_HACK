@@ -322,11 +322,41 @@ regprov_df <- purrr::map_df(names(provTS), function(x){
     dplyr::tibble(region="--- ALL ---",province="--- ALL ---")
   )
 
+# tab for privinces selection in growth monitoring
 output$regprov_dfout <- renderUI({
 
   shiny::selectInput(
     inputId = "growth_province", label = "Province",
     choices = dplyr::pull(dplyr::filter(regprov_df, region==input$growth_region), province),
     selected = "--- ALL ---")
+  
+})
+
+# boxes with arrows and growth in growth monitoring
+output$summary_box_growth <- renderUI({
+  
+  shinydashboardPlus::descriptionBlock(
+    number = paste0(tail(out_growth()$growth,1),"%"),
+    number_color = ifelse(tail(out_growth()$growth,1)>0,"red","green"), 
+    number_icon = ifelse(tail(out_growth()$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
+    header = "CASES GROWTH", 
+    text = NULL, 
+    right_border = TRUE,
+    margin_bottom = FALSE
+  )
+  
+})
+
+output$summary_box_growth_change <- renderUI({
+  
+  shinydashboardPlus::descriptionBlock(
+    number = paste0(tail(out_growth()$growth_change,1),"%"),
+    number_color = ifelse(tail(out_growth()$growth_change,1)>0,"red","green"), 
+    number_icon = ifelse(tail(out_growth()$growth_change,1)>0,"fa fa-caret-up","fa fa-caret-down"),
+    header = HTML("CASES GROWTH &Delta;"), 
+    text = NULL, 
+    right_border = FALSE,
+    margin_bottom = FALSE
+  )
   
 })
