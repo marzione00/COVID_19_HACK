@@ -6,8 +6,6 @@ get_country_growth <- function() {
   country_g <- countryTS$Italy %>%
     dplyr::select(data, totale_casi) %>%
     dplyr::mutate(region="--- ALL ---", province="--- ALL ---")
-    # dplyr::mutate(growth=round(((totale_casi-dplyr::lag(totale_casi))/dplyr::lag(totale_casi))*100,2) ) %>%
-    # dplyr::mutate(growth_change=round(growth-dplyr::lag(growth),2) )
 
   region_g <- purrr::map_df(names(regionTS), function(x){
     regionTS[[x]] %>%
