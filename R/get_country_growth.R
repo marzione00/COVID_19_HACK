@@ -5,19 +5,22 @@ get_country_growth <- function() {
 
   country_g <- countryTS$Italy %>%
     dplyr::select(data, totale_casi) %>%
-    dplyr::mutate(region="--- ALL ---", province="--- ALL ---")
+    dplyr::mutate(region="--- ALL ---", province="--- ALL ---") %>%
+    dplyr::mutate(totale_casi=as.numeric(totale_casi))
 
   region_g <- purrr::map_df(names(regionTS), function(x){
     regionTS[[x]] %>%
       dplyr::select(data, totale_casi) %>%
-      dplyr::mutate(region=x, province="--- ALL ---")
+      dplyr::mutate(region=x, province="--- ALL ---") %>%
+      dplyr::mutate(totale_casi=as.numeric(totale_casi))
   })
 
   province_g <- purrr::map_df(names(provTS), function(x) {
     provTS[[x]] %>%
       dplyr::select(data, totale_casi, denominazione_regione) %>%
       dplyr::rename(region=denominazione_regione) %>%
-      dplyr::mutate(province=x)
+      dplyr::mutate(province=x) %>%
+      dplyr::mutate(totale_casi=as.numeric(totale_casi))
   })
 
   country_g %>%
