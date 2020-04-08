@@ -267,14 +267,14 @@ highcharter::highchart(type = "stock") %>%
 
 
 output$tamp_plot <- highcharter::renderHighchart(
-  highcharter::hchart(tamp_data_1, "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
+  highcharter::hchart(dplyr::filter(tamp_creg_1,region==input$test_region), "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
     highcharter::hc_chart(zoomType = "xy") %>%
     
     highcharter::hc_yAxis_multiples(
       list(lineWidth = 3, title = list(text  =  '')),
       list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
     ) %>%
-    highcharter::hc_add_series(data = tamp_data, type = "spline", 
+    highcharter::hc_add_series(data = dplyr::filter(tamp_creg,region==input$test_region), type = "spline", 
                                yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
                                name="share_infected_discovered", color="#383838")
 )

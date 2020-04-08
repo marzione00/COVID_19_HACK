@@ -246,7 +246,20 @@ shinydashboard::tabItem(tabName = "tab_2",
                                  shinydashboard::box(title="Tests Tracking", status="danger", 
                                                      solidHeader = TRUE, 
                                                      width=12,
-                                                     highcharter::highchartOutput("tamp_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
+                                                     fluidRow(
+                                                       column(2,
+                                                              shiny::selectInput(
+                                                                inputId = "test_country", label = "Country",
+                                                                choices = countryNames, selected = "Italy"),
+                                                              
+                                                              shiny::selectInput(
+                                                                inputId = "test_region", label = "Region",
+                                                                choices = c(names(regionTS), "--- ALL ---"), selected = "--- ALL ---")
+                                                              ),
+                                                       column(10,
+                                                              highcharter::highchartOutput("tamp_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
+                                                              )
+                                                     )
                                  )
                           )
                         

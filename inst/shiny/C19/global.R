@@ -202,13 +202,26 @@ dfita2 <- dfita2 %>%
 # growth_change_xts <- xts::xts(growth_change[,-1], order.by=growth_change[,1])
 
 # tamponi graph -----------------------------------------------------------
-tamp_data <- tibble::tibble(
+
+tamp_country <- tibble::tibble(
   data=countryTS$Italy$data,
   tamponi=countryTS$Italy$tamponi,
-  totale_casi=countryTS$Italy$totale_casi
-) %>% 
-  dplyr::mutate(casi_giornalieri=totale_casi-dplyr::lag(totale_casi)) %>%
-  dplyr::mutate(casi_giornalieri=ifelse(data==as.Date("2020-02-24"),totale_casi,casi_giornalieri)) %>% 
+  totale_casi=countryTS$Italy$totale_casi,
+  region = "--- ALL ---"
+)
+
+tamp_region <- purrr::map_df(names(regionTS), function(x){
+  regionTS[[x]] %>%
+    dplyr::select(data,tamponi,totale_casi) %>%
+    dplyr::mutate(region=x)
+})
+
+tamp_creg <- tamp_country %>% 
+  dplyr::bind_rows(tamp_region) %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(region) %>%
+  dplyr::mutate(casi_giornalieri=totale_casi-dplyr::lag(totale_casi)) %>% 
+  dplyr::mutate(casi_giornalieri=ifelse(data==as.Date("2020-02-24"),totale_casi,casi_giornalieri)) %>%
   dplyr::mutate(tamponi_giornalieri=tamponi-dplyr::lag(tamponi)) %>%
   dplyr::mutate(tamponi_giornalieri=ifelse(data==as.Date("2020-02-24"),tamponi,tamponi_giornalieri)) %>%
   dplyr::mutate(share_infected_discovered = casi_giornalieri/tamponi_giornalieri) %>%
@@ -216,10 +229,8 @@ tamp_data <- tibble::tibble(
   dplyr::rename(daily_cases=casi_giornalieri,daily_tests=tamponi_giornalieri,date=data) %>%
   dplyr::mutate(share_infected_discovered=round(share_infected_discovered,2))
 
-tamp_data_1 <- tamp_data %>% dplyr::select(1:3) %>%
-  tidyr::gather(key="key",value="value",-date)
-
-
+tamp_creg_1 <- tamp_creg %>% dplyr::select(1:4) %>%
+  tidyr::gather(key="key",value="value",-date, -region)
 
 # age_cases ---------------------------------------------------------------
 
