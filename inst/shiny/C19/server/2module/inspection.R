@@ -227,20 +227,35 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 
 # =========== plot growth monitoring --------------------------------------------------------------------
-out_growth <- reactive({
-  if(input$growth_province != "--- ALL ---" & input$growth_region == "--- ALL ---") {
-    country_growth %>%
-      dplyr::filter(province==input$growth_province)
-  } else {
-  country_growth %>%
-  dplyr::filter(region==input$growth_region,province==input$growth_province)
-  }
-})
+is_ready <- function(x) {
+  if(( is.null(x) || length(x) == 0 ))
+    return(FALSE)
+  
+  return(TRUE)
+}
+
+  out_growth <- reactive({
+    
+    if(is_ready(input$growth_province)){
+        if(input$growth_province != "--- ALL ---" & input$growth_region == "--- ALL ---") {
+          country_growth %>%
+            dplyr::filter(province==input$growth_province)
+        } else {
+        country_growth %>%
+        dplyr::filter(region==input$growth_region,province==input$growth_province)
+        }
+    } else {Sys.sleep(1)}
+    
+  })
 
 growth <- reactive({data.frame(date=out_growth()$data,
                      growth=out_growth()$growth)})
 
-growth_xts <- reactive({xts::xts(growth()[,-1], order.by=growth()[,1])})
+growth_xts <- reactive({
+  if(is_ready(out_growth())){
+  xts::xts(growth()[,-1], order.by=growth()[,1])
+  } else {Sys.sleep(1)}
+  })
 
 growth_change <- reactive({data.frame(date=out_growth()$data,
                             growth=out_growth()$growth_change)})
@@ -249,7 +264,7 @@ growth_change_xts <- reactive({xts::xts(growth_change()[,-1], order.by=growth_ch
 
 
 output$plot_test <- highcharter::renderHighchart(
-
+  if(is_ready(growth_xts())){
 highcharter::highchart(type = "stock") %>% 
   highcharter::hc_chart(zoomType = "xy") %>%
   highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wks"), 
@@ -260,6 +275,7 @@ highcharter::highchart(type = "stock") %>%
   highcharter::hc_title(text = "% growth and growth change of total cases") %>%
   highcharter::hc_add_series(growth_xts(), name="growth", color = "red", type = "spline") %>% 
   highcharter::hc_add_series(growth_change_xts(), name="growth_change", color = "orange", type = "spline")
+} else {Sys.sleep(1)}
 
 )
 
