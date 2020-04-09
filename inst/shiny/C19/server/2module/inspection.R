@@ -227,12 +227,6 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 
 # =========== plot growth monitoring --------------------------------------------------------------------
-is_ready <- function(x) {
-  if(( is.null(x) || length(x) == 0 ))
-    return(FALSE)
-  
-  return(TRUE)
-}
 
   out_growth <- reactive({
     
