@@ -131,7 +131,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      selectInput("occupancy_date",
                                                                  label = "Select date",
                                                                  choices = seq(init_date,by=1,fin_date),
-                                                                 selected = fin_date),
+                                                                 selected = fin_date)
                                                      
                                                      
                                  
@@ -176,7 +176,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                                      ) %>%
                                                                                        shinycssloaders::withSpinner( color="#dd4b39")
                                                                             )
-                                                     ),
+                                                     )
                                                      
                                                      
 
@@ -207,7 +207,8 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                               inputId = "growth_region", label = "Region",
                                                               choices = c(names(regionTS), "--- ALL ---"), selected = "--- ALL ---"),
                                                             
-                                                            shiny::uiOutput("regprov_dfout")
+                                                            shiny::uiOutput("regprov_dfout"),
+                                                            shiny::uiOutput("growth_NAlog")
                                                             
                                                             
                                                             ),
@@ -235,7 +236,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                      
                                                      
                                                      highcharter::highchartOutput("plot_test", width = "100%",
-                                                                                  height = "400px")%>% shinycssloaders::withSpinner( color="#dd4b39"),
+                                                                                  height = "400px")%>% shinycssloaders::withSpinner( color="#dd4b39")
                                                      ),
                                                      height=NULL, status="danger")
                                  
@@ -246,7 +247,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                  shinydashboard::box(title="Tests Tracking", status="danger", 
                                                      solidHeader = TRUE, 
                                                      width=12,
-                                                     fluidRow(
+                                                     
                                                        column(2,
                                                               shiny::selectInput(
                                                                 inputId = "test_country", label = "Country",
@@ -254,12 +255,14 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                               
                                                               shiny::selectInput(
                                                                 inputId = "test_region", label = "Region",
-                                                                choices = c(names(regionTS), "--- ALL ---"), selected = "--- ALL ---")
+                                                                choices = c(names(regionTS), "--- ALL ---"), selected = "--- ALL ---"),
+                                                              
+                                                              shiny::uiOutput("test_NAlog")
                                                               ),
                                                        column(10,
                                                               highcharter::highchartOutput("tamp_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
                                                               )
-                                                     )
+                                                     
                                  )
                           )
                         

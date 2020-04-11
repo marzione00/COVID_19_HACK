@@ -2,6 +2,23 @@
 #Dataset and plot reactive
 reac_dataset <- shiny::reactiveValues()
 
+disc_NAfind <- function(v) {
+  n <- length(v)
+  if(n > 0) {
+    i <- 1
+    while(is.na(v[i]) && i <= n) {
+      i <- i+1
+    }
+    while(i <= n) {
+      if(is.na(v[i]))
+        return(TRUE)
+      else
+        i <- i+1
+    }
+  }
+  return(FALSE)
+}
+
 shiny::observe({
   if(input$geninfo_reg != "default") {
     ch <- c("--- ALL ---" = "default", regAndProv[regAndProv$region == input$geninfo_reg, "province"])
@@ -158,6 +175,37 @@ output$geninfo_table <- DT::renderDataTable({
 })
 
 
+
+# age distribution plot ---------------------------------------------------
+
+output$age_plot <- highcharter::renderHighchart(
+  highcharter::highchart() %>% 
+    # Data
+    highcharter::hc_add_series(dplyr::filter(age_df_final,region==input$regiontab3), "column",
+                               highcharter::hcaes(x = age_int, y = cases), name = "cases") %>%
+    highcharter::hc_add_series(dplyr::filter(age_df_final,region==input$regiontab3), "pie", 
+                               highcharter::hcaes(name = age_int, y = perc_cases), name = "% cases") %>%
+    # Optiosn for each type of series
+    highcharter::hc_plotOptions(
+      series = list(
+        showInLegend = FALSE,
+        pointFormat = "{point.y}%"
+      ),
+      column = list(
+        colorByPoint = TRUE
+      ),
+      pie = list(
+        colorByPoint = TRUE, center = c('15%', '20%'),
+        size = 150, dataLabels = list(enabled = FALSE)
+      )) %>%
+    # Axis
+    highcharter::hc_yAxis(
+      title = list(text = "cases")
+    ) %>%
+    highcharter::hc_xAxis(categories = dplyr::filter(age_df_final,region==input$regiontab3)$age_int)
+)
+
+
 # =============== INTENSIVE CARE PLOTS
 
 
@@ -227,38 +275,32 @@ output$intensivecare_cap <- plotly::renderPlotly({
 
 
 # =========== plot growth monitoring --------------------------------------------------------------------
-
-  out_growth <- reactive({
-    
-    if(is_ready(input$growth_province)){
-        if(input$growth_province != "--- ALL ---" & input$growth_region == "--- ALL ---") {
-          country_growth %>%
-            dplyr::filter(province==input$growth_province)
-        } else {
-        country_growth %>%
+reac_growth <- shiny::reactiveValues()
+  
+shiny::observe({
+  if(is_ready(input$growth_province)){
+    if(input$growth_province != "--- ALL ---" & input$growth_region == "--- ALL ---") {
+      reac_growth$out_growth <- country_growth %>%
+        dplyr::filter(province==input$growth_province)
+    } else {
+      reac_growth$out_growth <- country_growth %>%
         dplyr::filter(region==input$growth_region,province==input$growth_province)
-        }
-    } else {Sys.sleep(1)}
+    }
     
-  })
-
-growth <- reactive({data.frame(date=out_growth()$data,
-                     growth=out_growth()$growth)})
-
-growth_xts <- reactive({
-  if(is_ready(out_growth())){
-  xts::xts(growth()[,-1], order.by=growth()[,1])
-  } else {Sys.sleep(1)}
-  })
-
-growth_change <- reactive({data.frame(date=out_growth()$data,
-                            growth=out_growth()$growth_change)})
-
-growth_change_xts <- reactive({xts::xts(growth_change()[,-1], order.by=growth_change()[,1])})
+    reac_growth$growth <- data.frame(date=reac_growth$out_growth$data, growth=reac_growth$out_growth$growth)
+    
+    reac_growth$growth_xts <- xts::xts(reac_growth$growth[,-1], order.by=reac_growth$growth[,1])
+    
+    reac_growth$growth_change <- data.frame(date=reac_growth$out_growth$data, growth=reac_growth$out_growth$growth_change)
+    
+    reac_growth$growth_change_xts <- xts::xts(reac_growth$growth_change[,-1], order.by=reac_growth$growth_change[,1])
+  }
+ 
+})
 
 
 output$plot_test <- highcharter::renderHighchart(
-  if(is_ready(growth_xts())){
+  if(is_ready(reac_growth$growth_xts)){
 highcharter::highchart(type = "stock") %>% 
   highcharter::hc_chart(zoomType = "xy") %>%
   highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wks"), 
@@ -267,8 +309,8 @@ highcharter::highchart(type = "stock") %>%
                                                list(type="all", count=1, text="All")), 
                                 selected = 7 ) %>%
   highcharter::hc_title(text = "% growth and growth change of total cases") %>%
-  highcharter::hc_add_series(growth_xts(), name="growth", color = "red", type = "spline") %>% 
-  highcharter::hc_add_series(growth_change_xts(), name="growth_change", color = "orange", type = "spline")
+  highcharter::hc_add_series(reac_growth$growth_xts, name="growth", color = "red", type = "spline") %>% 
+  highcharter::hc_add_series(reac_growth$growth_change_xts, name="growth_change", color = "orange", type = "spline")
 } else {Sys.sleep(1)}
 
 )
@@ -290,34 +332,6 @@ output$tamp_plot <- highcharter::renderHighchart(
 )
 
 
-# age distribution plot ---------------------------------------------------
-
-output$age_plot <- highcharter::renderHighchart(
-    highcharter::highchart() %>% 
-      # Data
-      highcharter::hc_add_series(dplyr::filter(age_df_final,region==input$regiontab3), "column",
-                                 highcharter::hcaes(x = age_int, y = cases), name = "cases") %>%
-      highcharter::hc_add_series(dplyr::filter(age_df_final,region==input$regiontab3), "pie", 
-                                 highcharter::hcaes(name = age_int, y = perc_cases), name = "% cases") %>%
-      # Optiosn for each type of series
-      highcharter::hc_plotOptions(
-        series = list(
-          showInLegend = FALSE,
-          pointFormat = "{point.y}%"
-        ),
-        column = list(
-          colorByPoint = TRUE
-        ),
-        pie = list(
-          colorByPoint = TRUE, center = c('15%', '20%'),
-          size = 150, dataLabels = list(enabled = FALSE)
-        )) %>%
-      # Axis
-      highcharter::hc_yAxis(
-        title = list(text = "cases")
-      ) %>%
-      highcharter::hc_xAxis(categories = dplyr::filter(age_df_final,region==input$regiontab3)$age_int)
-  )
 
 
 # dynamic tabs ------------------------------------------------------------
@@ -352,9 +366,9 @@ output$regprov_dfout <- renderUI({
 output$summary_box_growth <- renderUI({
   
   shinydashboardPlus::descriptionBlock(
-    number = paste0(tail(out_growth()$growth,1),"%"),
-    number_color = ifelse(tail(out_growth()$growth,1)>0,"red","green"), 
-    number_icon = ifelse(tail(out_growth()$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
+    number = paste0(tail(reac_growth$out_growth$growth,1),"%"),
+    number_color = ifelse(tail(reac_growth$out_growth$growth,1)>0,"red","green"), 
+    number_icon = ifelse(tail(reac_growth$out_growth$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
     header = "CASES GROWTH", 
     text = NULL, 
     right_border = TRUE,
@@ -366,13 +380,36 @@ output$summary_box_growth <- renderUI({
 output$summary_box_growth_change <- renderUI({
   
   shinydashboardPlus::descriptionBlock(
-    number = paste0(tail(out_growth()$growth_change,1),"%"),
-    number_color = ifelse(tail(out_growth()$growth_change,1)>0,"red","green"), 
-    number_icon = ifelse(tail(out_growth()$growth_change,1)>0,"fa fa-caret-up","fa fa-caret-down"),
-    header = HTML("CASES GROWTH &Delta;"), 
+    number = paste0(tail(reac_growth$out_growth$growth_change,1),"%"),
+    number_color = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"red","green"), 
+    number_icon = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"fa fa-caret-up","fa fa-caret-down"),
+    header = HTML("&Delta; CASES GROWTH"), 
     text = NULL, 
     right_border = FALSE,
     margin_bottom = FALSE
   )
   
 })
+
+output$growth_NAlog <- renderUI({
+
+  if(is_ready(reac_growth$growth) && disc_NAfind(reac_growth$growth$growth)) {
+    fluidRow(
+      hr(),
+      helpText(em("Warning: NA introduced"))
+    )
+  }
+
+})
+
+
+output$test_NAlog <- renderUI({
+
+  if( is_ready(input$test_region) && disc_NAfind(dplyr::filter(tamp_creg,region==input$test_region)$share_infected_discovered) ) {
+    fluidRow(
+      hr(),
+      helpText(em("Warning: NA introduced"))
+    )
+  }
+})
+
