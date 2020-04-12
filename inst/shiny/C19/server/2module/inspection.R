@@ -75,7 +75,7 @@ shiny::observe({
   #Switch over data type
   if(input$geninfo_type == "tot") {
     reac_dataset$plot_type = "spline"
-    reac_dataset$pointWidth = 0
+    reac_dataset$plotOptions_column = list()
     reac_dataset$yAxis = 1
     reac_dataset$headerCol <- DT::JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#000', 'color': '#fff'});", "}")
     
@@ -92,7 +92,7 @@ shiny::observe({
     
   } else if(input$geninfo_type == "new") {
     reac_dataset$plot_type = "column"
-    reac_dataset$pointWidth = 15
+    reac_dataset$plotOptions_column <- list(groupPadding = 0.1, pointPadding = 0)
     reac_dataset$yAxis = 0
     reac_dataset$headerCol <- DT::JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#e62e00', 'color': '#fff'});", "}")
     
@@ -111,7 +111,7 @@ shiny::observe({
     
   } else if(input$geninfo_prov == "default" && input$geninfo_type == "cur") {
     reac_dataset$plot_type = "spline"
-    reac_dataset$pointWidth = 0
+    reac_dataset$plotOptions_column = list()
     reac_dataset$yAxis = 1
     reac_dataset$headerCol <- DT::JS("function(settings, json) {", "$(this.api().table().header()).css({'background-color': '#ffcc00', 'color': '#fff'});", "}")
     
@@ -127,7 +127,10 @@ shiny::observe({
                                           type = reac_dataset$plot_type, title= "General info",
                                           highcharter::hcaes(x = Date, y = value, group = key),
                                           color=reac_dataset$colors,
-                                          yAxis = reac_dataset$yAxis,pointWidth= reac_dataset$pointWidth ,showInLegend=TRUE) %>%
+                                          yAxis = reac_dataset$yAxis,
+                                          showInLegend=TRUE) %>%
+    highcharter::hc_chart(scrollablePlotArea = list(minWidth = 1500, scrollPositionX = 1)) %>%
+    highcharter::hc_plotOptions(column = reac_dataset$plotOptions_column) %>%
       highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_yAxis_multiples(
         list(lineWidth = 3, title = list(text  =  '')),
