@@ -36,19 +36,20 @@ output$decree_tl <- highcharter::renderHighchart(
     highcharter::hc_xAxis(type = "datetime") %>%
     highcharter::hc_add_series(data = decrees, type = "timeline", showInLegend = FALSE,
                                dataLabels = list(allowOverlap = FALSE,
-                                                 format = '<span style="color:{point.color}"> * </span><span style="font-weight: bold;" > {point.name}</span>'),
-                               marker = list(symbol = "square"),
+                                                 format = '<span style="color:{point.color}">* </span><span style="font-weight: bold;" > {point.x:%d %b %Y}</span><br/>{point.label}'),
+                               marker = list(symbol = "circle"),
                                allowPointSelect = TRUE,
                                useHTML = TRUE
     ) %>%
     highcharter::hc_chart(zoomType = "x") %>%
-    highcharter::hc_yAxis(gridLineWidth = 1, title = NULL, labels = list(enabled = FALSE)) %>%
+    highcharter::hc_yAxis(gridLineWidth = 1, title = NULL, labels = list(enabled = FALSE), visible = FALSE) %>%
     highcharter::hc_legend(enabled = FALSE) %>%
     highcharter::hc_title(text = "Timeline of Ministerial Decrees concerning COVID-19") %>%
     highcharter::hc_tooltip(style = list(width = 300)) %>%
     highcharter::hc_plotOptions(series = list(cursor = "pointer", 
                                               point = list(
-                                                events = list(click = function(){} 
+                                                events = list(click = "function () {
+                                                              location.href = 'https://www.google.it'; }" 
                                                 ))))
 )
 
