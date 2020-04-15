@@ -30,6 +30,30 @@ shiny::observe({
 
 
 
+
+output$decree_tl <- highcharter::renderHighchart(
+  highcharter::highchart() %>%
+    highcharter::hc_xAxis(type = "datetime") %>%
+    highcharter::hc_add_series(data = decrees, type = "timeline", showInLegend = FALSE,
+                               dataLabels = list(allowOverlap = FALSE,
+                                                 format = '<span style="color:{point.color}">● </span><span style="font-weight: bold;" > {point.name}</span>'),
+                               marker = list(symbol = "square"),
+                               allowPointSelect = TRUE,
+                               useHTML = TRUE
+    ) %>%
+    highcharter::hc_chart(zoomType = "x") %>%
+    highcharter::hc_yAxis(gridLineWidth = 1, title = NULL, labels = list(enabled = FALSE)) %>%
+    highcharter::hc_legend(enabled = FALSE) %>%
+    highcharter::hc_title(text = "Timeline of Ministerial Decrees concerning COVID-19") %>%
+    highcharter::hc_tooltip(style = list(width = 300)) %>%
+    highcharter::hc_plotOptions(series = list(cursor = "pointer", 
+                                              point = list(
+                                                events = list(click = function(){} 
+                                                ))))
+)
+
+
+
 # General info reactive dataset
 shiny::observe({
 
@@ -129,9 +153,8 @@ shiny::observe({
                                           color=reac_dataset$colors,
                                           yAxis = reac_dataset$yAxis,
                                           showInLegend=TRUE) %>%
-    highcharter::hc_chart(scrollablePlotArea = list(minWidth = 1500, scrollPositionX = 1)) %>%
     highcharter::hc_plotOptions(column = reac_dataset$plotOptions_column) %>%
-      highcharter::hc_chart(zoomType = "xy") %>%
+      highcharter::hc_chart(zoomType = "xy", scrollablePlotArea = list(minWidth = 1500, scrollPositionX = 1)) %>%
       highcharter::hc_yAxis_multiples(
         list(lineWidth = 3, title = list(text  =  '')),
         list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
@@ -323,7 +346,7 @@ highcharter::highchart(type = "stock") %>%
 
 output$tamp_plot <- highcharter::renderHighchart(
   highcharter::hchart(dplyr::filter(tamp_creg_1,region==input$test_region), "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
-    highcharter::hc_chart(zoomType = "xy") %>%
+    highcharter::hc_chart(zoomType = "xy", scrollablePlotArea = list(minWidth = 1000, scrollPositionX = 1)) %>%
     
     highcharter::hc_yAxis_multiples(
       list(lineWidth = 3, title = list(text  =  '')),
