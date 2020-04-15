@@ -26,22 +26,22 @@ Other Inputs :
     time_step : float (default 1)
 	integration step for ODE SEIR model
 
-    future : int (default 1)
+    future : int (default 0)
 	solution to SEIR model will be evaluated on the data time interval rescaled by future
-	eg: if (S, E, I, R time series) data is available from day 0 to day 100, the SEIR solution
-		(S_, E_, I_, R_) will be evaluated from day 0 to day future*100
+	eg: if (S, E, I, R time series) data is available from day 0 to day 100 (101 entries), the SEIR solution
+		(S_, E_, I_, R_) will be evaluated from day 0 to day future+100
 
-    distr_IT, distr_SRT, distr_IBST : character, either 'norm' or 'exp' (default 'norm')
+    distr_IT, distr_SRT, distr_IBST : character 'norm', 'exp','none' (default 'exp', 'exp', 'none' resp)
 	distribution to be used in estimating IT, SRT, IBST
 	its value fixes the format of par_IT, par_SRT, par_IBST inputs
 
-    par_IT, par_SRT, par_IBST : named list (default values(!) (6,1), (5,1), (1,1) risp)
+    par_IT, par_SRT, par_IBST : named list (default values 1/5.2, log(2)/5, NULL resp)
 	list of parameters to simulate the distributions of IT, SRT, IBST
 	format: 
 		par_X = list('mean'=mean, 'std'=std) if distr_X='norm'
 		par_X 0 list('rate'=rate) if distr_X='exp' 
 
-    R0_time_start, R0_time_end : int
+    R0_exp_est_start, R0_exp_est_end : int (default 1, 5) - referred as time_start and time_end
 	R0 will be estimated using I[J], where I[t] are the infected at time t and J is:
 		(time_start:time_end) 	 : if user provides both 
 		(1:time_end) 		 : if user provides time_end but not time_start
@@ -49,6 +49,20 @@ Other Inputs :
 		(start:end)              : if user provides neither. start and end are extrapolated with exp_period
 						and aim to identify the extremes of the stage of exponential growth in I
 
+Optional inputs : 
+    
+    end : int
+    	data points P and R will be used up to end to reconstruct the time series of S, E, I, R
+	
+    R0_msp : array like of length RN
+    	values assumed by Rt
+	
+    R0_stages : array like of length RN-1
+    	days that defining the stages of Rt: 
+		R0_msp[1] is used in [0, R0_stages[1]]
+		R0_msp[n] is used in [R0_stages[n-1], R0_stages[n]]
+		R0_msp[N] is used in [R0_stages[N], length(S)]
+	
 Insight: 	
 
     IT, SRT, IBST : random variables
@@ -83,4 +97,5 @@ Outputs:
 	measures if J is a proper interval to fit R0 on data
 	Work In Progress
 
+    Please not that SEIR_factotum will not output R0, start, end, R0_fitting if R0_msp and R0_stages are input by user
 	
