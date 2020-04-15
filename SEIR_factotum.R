@@ -1,33 +1,42 @@
 
 SEIR_factotum <- function(P, R, N, normalise=TRUE, 
-					time_step=1, future=1,
-					distr_IT='norm', distr_SRT='norm', distr_IBST='norm',
-					par_IT=list('mean'=6, 'std'=1), par_SRT=list('mean'=5, 'std'=1), par_IBST=list('mean'=1, 'std'=1), 
-					R0_time_start=0, R0_time_end=5) {
+					time_step=1, end, future=0,
+					distr_IT='exp', distr_SRT='exp', distr_IBST='none',
+					par_IT=list('rate'=1/5.2), par_SRT=list('rate'=log(2)/5), par_IBST=list(), 
+					R0_exp_est_start=0, R0_exp_est_end=5, R0_msp, R0_stages) {
 	#### Functions ####
 	# Generate distribution without outliers (Q3+1.5(IQR))
 	generate <- function(distr, parameters){
-		if(distr=='norm'){
+		if(distr=='norm' & !is.null(parameters$mean) & !is.null(parameters$std)){
 			mean <- parameters$mean
 			std <- parameters$std
 			sup <- floor(mean+3.4*std)
 			out <- dnorm(seq(0,sup), mean, std)
 		}
-		else if(distr=='exp'){
+		else if(distr=='exp' & !is.null(parameters$rate)){
 			rate <- parameters$rate
 			sup <- floor(log(4)/rate + 1.5*log(3)/rate)
 			out <- dexp(seq(0, sup), rate)
 		}
-		else{
+		else if(distr=='none'){
+			out <- c(1)
+		}
+		else {
 			out <- NULL
 		}
-		
 		return(out)
 	}
 	# Extract S, E, I, R from P, R. population is normalised to N=1
-	refine_data <- function(P, R, IT, SRT, IBST, normalise=TRUE) {
+	refine_data <- function(P, R, IT, SRT, IBST, normalise=TRUE, end) {
 	
-		n_obs = length(P)
+		if(!missing(end))
+			if(end<length(P))
+				n_obs <- end
+			else
+				n_obs <- end
+		else
+			n_obs <- length(P)
+		
 		m = max(length(IT), length(SRT), length(IBST))
 		ITl = length(IT)
 		SRTl = length(SRT)
@@ -63,14 +72,15 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 	calculate_sigma_gamma <- function(IT, SRT, IBST){
 		#### Functions ####
 		expected_value <- function(X){
-			out <- (1:length(X)-1) %*% X
+			out <- c(1:(length(X))) %*% X
+			out <- as.numeric(out)
 	 		return(out)
 		}
 		
 		#### Operations ####
 		sigma <- 1/expected_value(IT)
 		gamma <- 1/(expected_value(SRT)+expected_value(IBST))
-		
+
 		out <- list('sigma'=sigma, 'gamma'=gamma)
 	
 		return(out)	
@@ -82,7 +92,7 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		# Find the period of exponential growth for X
 		exp_period <- function(X){
 			start <- 1
-			for(t in (3:length(X)-1)){
+			for(t in (1:(length(X)-1))){
 				end <- t
 			}
 			period <- c(start, end)
@@ -129,7 +139,7 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		R0 <- opt$minimum
 		mf <- opt$objective/(end-start+1)
 		
-		out <- list('start'=start, 'end'=end, 'R0'=R0, 'mean_fitting'=mf)
+		out <- list('start'=start, 'end'=end, 'R0'=R0, 'R0_fitting'=mf)
 
 		return(out)
 	}
@@ -146,11 +156,18 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 	}
 	# solve ODE with variable parameters
 	multi_stage_ODE <- function(U0, func, var_names, par_fixed, msp, msp_name, L, time_step){
-	
 		N <- length(L) # number of stages
 		parms <- data.frame(par_fixed, msp) # parms[n, ] are the parameter to be used at stage n
-		names(parms)[length(names(parms))] <- msp_name # msp will be referreed with the passed name
+		names(parms)[length(names(parms))] <- msp_name # msp will be referred with the passed name
 		total <- data.frame() # solution from 0 to L[n]
+		
+		# at step n: 
+		# find the interval of interest for deSolve::ode (eval_time) 
+		# polish U0 in order to use it in further calculations
+		# solve (again) the ode with new_parms as parameters of SEIR_model, polish solution
+		# define initial data of stage n+1
+		# drop the last element of solution n
+		# save solution as stage n in total
 		
 		for(n in (1:N)){
 			if(n==1)
@@ -171,7 +188,10 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 					U0 <- sol[L[n]+1,] 
 				else	
 					U0 <- sol[L[n]-L[n-1]+1,]
+			
 			# drop the last value in sol, as it is U0 for next stage. Avoid repetitions
+			# if n==N, the last values should be dropped as well to have length(S)==length(S_)
+			#
 			if(n==1)
 				total <- sol[-length(sol[[1]]),]
 			else {
@@ -181,7 +201,7 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		}
 	
 		rownames(total) <- 1:nrow(total)
-		time <- seq(0, L[N], by=time_step) # the evaluation times for total
+		time <- seq(0, L[N]-1, by=time_step) # the evaluation times for total
 		out <- list('sol'=total, 'time'=time)
 		
 		return(out)
@@ -197,38 +217,79 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		return(out)
 	}
 	# Solve multi stage SEIR
-	solve_ms_SEIR <- function(U0, gamma, sigma, R0_msp, time_of_R0_changes, time_step){
+	solve_ms_SEIR <- function(U0, gamma, sigma, R0_msp, R0_stages, time_step){
 		var_names <- list('S', 'E', 'I', 'R')
 		par_fixed <- list('sigma'=sigma, 'gamma'=gamma)
 		msp <- R0_msp*gamma
-		L <- time_of_R0_changes
+		L <- R0_stages
 		
-		out <- multi_stage_ODE(U0, SEIR_model, var_names, par_fixed, msp, 'beta', L, time_step)
-			
+		ode <- multi_stage_ODE(U0, SEIR_model, var_names, par_fixed, msp, 'beta', L, time_step)
+		sol <- ode$sol; time <- ode$time
+		S_<-sol$S; E_<-sol$E; I_<-sol$I; R_<-sol$R
+
+		out <- data.frame(time, S_, E_, I_, R_)
+		colnames(out) <- c('time', 'S_', 'E_', 'I_', 'R_')
+		
+		return(out)
 	}
 	
 	####Operations ####
+	
 	# Generate distribution without outliers (Q3+1.5(IQR))
-	IT <- generate(distr_IT, par_IT)
-	SRT <- generate(distr_SRT, par_SRT)
-	IBST <- generate(distr_IBST, par_IBST)
+	if(is.null(IT <- generate(distr_IT, par_IT)))	return('ERROR in IT generation')
+	if(is.null(SRT <- generate(distr_SRT, par_SRT))) return('ERROR in SRT generation')
+	if(is.null(IBST <- generate(distr_IBST, par_IBST))) return('ERROR in IBST generation')
 	
 	# Calculate sigma = 1/E[IT]. Calculate gamma = 1/E[IBST+SRT]
 	sg_out<-calculate_sigma_gamma(IT, SRT, IBST); sigma<-sg_out$sigma; gamma<-sg_out$gamma
-	# Extract S, E, I, R from P, R
-	U<-refine_data(P, R, IT=IT, SRT=SRT, IBST=IBST, normalise=normalise); S<-U$S; E<-U$E; I<-U$I; R<-U$R
-	# Estimate R0 using I and its exponential properties
-	R0_out <- estimate_R0(sigma, gamma, I, R0_time_start, R0_time_end); R0<-R0_out$R0
-	# Solve the SEIR with parameters sigma gamma beta=R0*gamma
-	U0 <- as.numeric(U[1,])
-	beta <- R0*gamma
-	eval_time <- seq(0, future*length(U$I)-1, by = time_step)
-	parameters <- c(beta=beta, sigma=sigma, gamma=gamma)
-
-	sol<-solve_SEIR(U0, eval_time, parameters)
 	
-	# Returns SEIR, S_E_I_R_, time, R0, start (R0_time_start), end (R0_time_end), mean sq dist (mean_fitting)
-	out <- c(U, sol, R0_out)
+	# Extract S, E, I, R from P, R. Update R0_stages with length(S) if necessary
+	U<-refine_data(P, R, IT=IT, SRT=SRT, IBST=IBST, end=end, normalise=normalise); S<-U$S; E<-U$E; I<-U$I; R<-U$R
+	
+	if(!missing(R0_msp) & !missing(R0_stages))
+		R0_stages <- c(R0_stages, length(S))
+		
+	# Initial conditions 
+	U0 <- as.numeric(U[1,])
+	
+	# Solve SEIR with parameters input by user (R0_msp is not missing)
+	# please note that now R0_msp and R0_stages (should) have the same length
+	
+	if(!missing(R0_msp) & !missing(R0_stages)){
+		if(length(R0_msp)==length(R0_stages))
+			N <- length(R0_msp) 
+		else 
+			return(NULL)
+		
+		# add future stage (from Length(S) to future+Length(S))
+		if(future>0){
+			# add one more stage to Rt,  from R0_stages[N] to R0_stages[N]+future
+			R0_msp[N+1] <- R0_msp[N]
+			used_time <- c(R0_stages, (future+R0_stages[N]))
+		}
+		else
+			used_time <- R0_stages
+			
+		sol <- solve_ms_SEIR(U0, gamma, sigma, R0_msp, used_time, time_step)
+		
+		out <- c(U, sol)
+	}
+	# Solve the SEIR with parameters sigma gamma beta=R0*gamma
+	else {
+		
+		R0_out <- estimate_R0(sigma, gamma, I, R0_exp_est_start, R0_exp_est_end); R0<-R0_out$R0
+		
+		beta <- R0*gamma
+		eval_time <- seq(0, (future+length(U$I)-1), by = time_step)
+		parameters <- c(beta=beta, sigma=sigma, gamma=gamma)
+
+		sol <- solve_SEIR(U0, eval_time, parameters)
+		
+		# Returns SEIR, S_E_I_R_, time, R0, start (R0_time_start), end (R0_time_end), mean sq dist (mean_fitting)
+		out <- c(U, sol, R0_out)
+		
+	}
+	
 	return(out)
 }
 
