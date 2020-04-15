@@ -1,5 +1,6 @@
 #================================
 #====== GENERAL DATA ACQUISITION =====
+remotes::install_github("jbkunst/highcharter", force = TRUE, upgrade = "never")
 countryTS = covid19:::get_countryTS()
 regionTS = covid19:::get_regionTS()
 provTS = covid19:::get_provTS()
