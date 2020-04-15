@@ -36,7 +36,7 @@ output$decree_tl <- highcharter::renderHighchart(
     highcharter::hc_xAxis(type = "datetime") %>%
     highcharter::hc_add_series(data = decrees, type = "timeline", showInLegend = FALSE,
                                dataLabels = list(allowOverlap = FALSE,
-                                                 format = '<span style="color:{point.color}">• </span><span style="font-weight: bold;" > {point.name}</span>'),
+                                                 format = '<span style="color:{point.color}"> ° </span><span style="font-weight: bold;" > {point.name}</span>'),
                                marker = list(symbol = "square"),
                                allowPointSelect = TRUE,
                                useHTML = TRUE
