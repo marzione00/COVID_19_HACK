@@ -10,6 +10,10 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                  icon=icon("chart-line"),
                                                  color = "navy", width = NULL),
                         
+                        shinydashboard::box(title = "Decrees timeline", status = "danger", solidHeader = TRUE,
+                                            width = NULL,
+                                            highcharter::highchartOutput("decree_tl")),
+                        
                         
                         shinydashboard::box(title="General info", status = "danger", solidHeader = T,
                                             width = NULL,
