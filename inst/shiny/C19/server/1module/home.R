@@ -47,8 +47,7 @@ output$map_region <- highcharter::renderHighchart(
                                joinBy = "id",
                                name=custom_map()[[1]]) %>% 
     highcharter::hc_colorAxis(stops = highcharter::color_stops(4,custom_map()[[2]])) %>% 
-    highcharter::hc_legend(layout = "vertical", reversed = TRUE,
-                           floating = TRUE, align = "left",y=-80,x=-20) %>% 
+    highcharter::hc_legend(floating=TRUE,verticalAlign = "top") %>%
     highcharter::hc_motion(
       enabled = TRUE,
       axisLabel = "year",
@@ -67,18 +66,48 @@ output$map_region <- highcharter::renderHighchart(
 
 
 # map by province ---------------------------------------------------------
+df_prov <- reactive({
+  dfita2 %>%
+    dplyr::filter(type==input$map_value) %>%
+    dplyr::select(-type)
+})
+
+my_ds_prov <- reactive({
+  df_prov() %>%
+    dplyr::group_by(hasc) %>% 
+    dplyr::do(item = list(
+      hasc = dplyr::first(.$hasc),
+      sequence = .$value,
+      value = dplyr::first(.$value))) %>% 
+    .$item
+})
 
 
 output$map_province <- highcharter::renderHighchart(
   
-    highcharter::highchart(type = "map") %>% 
-      highcharter::hc_chart(zoomType = "xy") %>%
-      highcharter::hc_add_series_map(map = ita, df = dfita2, 
-                                     joinBy = "hasc", value = input$map_value, name=custom_map()[[1]] ) %>%
-      highcharter::hc_colorAxis(
-        stops = highcharter::color_stops(4,custom_map()[[2]]))
+  highcharter::highchart(type = "map") %>% 
+    highcharter::hc_chart(zoomType = "xy") %>% 
+    highcharter::hc_add_series(data = my_ds_prov(),
+                               mapData = ita,
+                               joinBy = "hasc",
+                               name=custom_map()[[1]]) %>% 
+    highcharter::hc_colorAxis(stops = highcharter::color_stops(4,custom_map()[[2]])) %>% 
+    highcharter::hc_legend(floating=TRUE,verticalAlign = "top", y=-20) %>%
+    highcharter::hc_motion(
+      enabled = TRUE,
+      axisLabel = "year",
+      startIndex = length(unique(as.character(df_prov()$date))),
+      labels = unique(as.character(df_prov()$date)),
+      series = 0,
+      updateIterval = 50,
+      magnet = list(
+        round = "floor",
+        step = 0.1
+      )
+    )
   
 )
+
 
 
 # tabbox ------------------------------------------------------------------

@@ -1,6 +1,6 @@
 #================================
 #====== GENERAL DATA ACQUISITION =====
-remotes::install_github("jbkunst/highcharter", upgrade = "never")
+# remotes::install_github("jbkunst/highcharter", upgrade = "never")
 countryTS = covid19:::get_countryTS()
 regionTS = covid19:::get_regionTS()
 provTS = covid19:::get_provTS()
@@ -117,19 +117,18 @@ dfita1 <- dfita1 %>%
 # --- province ---
 
 clean_prov <- purrr::map_df(names(provTS), function(x) {
-  tail(provTS[[x]],1)$totale_casi
   dplyr::data_frame(
     name=x,
-    cases=tail(provTS[[x]],1)$totale_casi,
-    cases_old=tail(provTS[[x]],2)$totale_casi[[1]]
+    date=provTS[[x]]$data,
+    cases=provTS[[x]]$totale_casi
   )
 })
 
 clean_prov <- clean_prov %>%
   dplyr::ungroup() %>% 
-  dplyr::mutate(growth=round(((cases-cases_old)/cases_old)*100,2) ) %>% 
-  dplyr::select(-cases_old)
-
+  dplyr::group_by(name) %>%
+  dplyr::mutate(growth=round(((cases-dplyr::lag(cases))/dplyr::lag(cases))*100,2)) %>%
+  dplyr::ungroup()
 
 url <- "http://code.highcharts.com/mapdata/countries/it/it-all.geo.json"
 tmpfile <- tempfile(fileext = ".json")
@@ -167,6 +166,7 @@ territory_prov <- italy_ext$province %>%
 clean_prov <- clean_prov %>%
   dplyr::left_join(pop_prov) %>% 
   dplyr::left_join(territory_prov) %>%
+  dplyr::ungroup() %>%
   dplyr::mutate(name = ifelse(name=="Massa Carrara","Massa-Carrara",name)) %>%
   dplyr::mutate(name = ifelse(name=="Reggio nell'Emilia","Reggio Emilia",name)) %>% 
   dplyr::mutate(name = ifelse(name=="Bolzano","Bozen",name)) %>%
@@ -182,7 +182,9 @@ dfita2 <- dfita2 %>%
   dplyr::ungroup() %>% 
   dplyr::mutate(percentage=(cases/pop)*100) %>%
   dplyr::mutate(density=(cases/ext)*1000) %>%
-  dplyr::rename(absolute=cases)
+  dplyr::rename(absolute=cases) %>% 
+  dplyr::select(hasc, date, absolute, percentage, density, growth) %>%
+  tidyr::gather(key="type",value="value",-hasc,-date)
 
 
 
