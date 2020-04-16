@@ -4,7 +4,7 @@
 #	The default distribution for IT is an exponential with rate 1/5.2 (5.2 being the mean Incubation Time)
 #		https://www.nejm.org/doi/full/10.1056/NEJMoa2001316
 #	The default distribution for SRT is an exponential with rate log(2)/5 (5 being the median time from symptomaticity to removal - hospitalisation)
-#		
+#		https://www.epicentro.iss.it/coronavirus/bollettino/Report-COVID-2019_13_aprile.pdf
 #	The default distribution for IBST is an none as no data is available
 #		
 # 2_ parameters sigma and gamma are estimated as 1/mean(IT) and 1/mean(SRT) resp
