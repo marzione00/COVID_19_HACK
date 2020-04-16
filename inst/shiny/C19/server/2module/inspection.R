@@ -49,7 +49,7 @@ output$decree_tl <- highcharter::renderHighchart(
     highcharter::hc_plotOptions(series = list(cursor = "pointer", 
                                               point = list(
                                                 events = list(click = highcharter::JS("function () {
-                                                                window.open('https://www.google.com','_blank');
+                                                                window.open(this.options.link,'_blank');
                                                                                         win.focus();
                                                                                       }"
                                                 )))))
