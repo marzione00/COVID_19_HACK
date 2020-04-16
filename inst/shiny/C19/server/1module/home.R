@@ -47,7 +47,7 @@ output$map_region <- highcharter::renderHighchart(
                                joinBy = "id",
                                name=custom_map()[[1]]) %>% 
     highcharter::hc_colorAxis(stops = highcharter::color_stops(4,custom_map()[[2]])) %>% 
-    highcharter::hc_legend(floating=TRUE,verticalAlign = "top") %>%
+    highcharter::hc_legend(floating=TRUE,verticalAlign = "top", align= "right") %>%
     highcharter::hc_motion(
       enabled = TRUE,
       axisLabel = "year",
