@@ -50,15 +50,16 @@ pc_data <- regionTS
 names(pc_data) <- tolower(names(pc_data))
 
 pc_df <- purrr::map_df(names(pc_data), function(x){
-  casi <- tail(pc_data[[x]],1)$totale_casi
-  casi_vecchi <- tail(pc_data[[x]],2)$totale_casi[[1]]
-  dplyr::data_frame(name=x,cases=casi, cases_old=casi_vecchi)
+  dplyr::tibble(
+    name=x,
+    date=pc_data[[x]]$data,
+    cases=pc_data[[x]]$totale_casi)
 })
 
 pc_df <- pc_df %>%
   dplyr::ungroup() %>% 
-  dplyr::mutate(growth=round(((cases-cases_old)/cases_old)*100,2) ) %>% 
-  dplyr::select(-cases_old)
+  dplyr::group_by(name) %>%
+  dplyr::mutate(growth=round(((cases-dplyr::lag(cases))/dplyr::lag(cases))*100,2))
 
 pc_df$name
 
@@ -77,14 +78,16 @@ territory_region <- italy_ext$region %>%
 pc_df <- pc_df %>%
   dplyr::left_join(pop_region) %>% 
   dplyr::left_join(territory_region) %>%
+  dplyr::ungroup() %>% 
   dplyr::filter(!name%in%c("friuli v. g. ")) %>%
  dplyr::mutate(name=ifelse(name%in%c("trento","bolzano","p.a. trento","p.a. bolzano"),
                      "trentino-alto adige/sudtirol",name)) %>%
-  dplyr::group_by(name) %>%
+  dplyr::group_by(name, date) %>%
   dplyr::summarise(cases=sum(cases),
-            growth=sum(growth),
+            growth=mean(growth,na.rm=T),
             pop=sum(pop),
             ext=sum(ext)) %>%
+  dplyr::ungroup() %>% 
  dplyr::mutate(name=ifelse(name=="emilia romagna","emilia-romagna",name))
 
 
@@ -102,7 +105,10 @@ dfita1 <- dfita1 %>%
  dplyr::mutate(density=(cases/ext)*1000) %>%
   dplyr::rename(absolute=cases) %>%
  dplyr::mutate(percentage = round(percentage,2)) %>%
- dplyr::mutate(density = round(density, 2))
+ dplyr::mutate(density = round(density, 2)) %>%
+  dplyr::select(id, date, absolute, percentage, density, growth) %>%
+  dplyr::ungroup() %>%
+  tidyr::gather(key="type",value="value",-id,-date)
 
 
 

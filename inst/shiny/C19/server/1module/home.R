@@ -19,20 +19,52 @@ custom_map <- reactive({
   }
 })
 
- 
+
+# map by region -----------------------------------------------------------
+df <- reactive({
+  dfita1 %>%
+    dplyr::filter(type==input$map_value) %>%
+    dplyr::select(-type)
+})
+
+my_ds <- reactive({
+  df() %>%
+  dplyr::group_by(id) %>% 
+  dplyr::do(item = list(
+    id = dplyr::first(.$id),
+    sequence = .$value,
+    value = dplyr::first(.$value))) %>% 
+  .$item
+})
+
 
 output$map_region <- highcharter::renderHighchart(
   
-        highcharter::highchart(type = "map") %>% 
-          highcharter::hc_chart(zoomType = "xy") %>%
-          highcharter::hc_add_series_map(map = map, df = dfita1,
-                                         joinBy = "id", value = input$map_value, name=custom_map()[[1]]) %>%
-        highcharter::hc_colorAxis(
-          stops = highcharter::color_stops(4,custom_map()[[2]]))
+  highcharter::highchart(type = "map") %>% 
+    highcharter::hc_chart(zoomType = "xy") %>% 
+    highcharter::hc_add_series(data = my_ds(),
+                               mapData = map,
+                               joinBy = "id",
+                               name=custom_map()[[1]]) %>% 
+    highcharter::hc_colorAxis(stops = highcharter::color_stops(4,custom_map()[[2]])) %>% 
+    highcharter::hc_legend(layout = "vertical", reversed = TRUE,
+                           floating = TRUE, align = "left",y=-80,x=-20) %>% 
+    highcharter::hc_motion(
+      enabled = TRUE,
+      axisLabel = "year",
+      startIndex = length(unique(as.character(df()$date))),
+      labels = unique(as.character(df()$date)),
+      series = 0,
+      updateIterval = 50,
+      magnet = list(
+        round = "floor",
+        step = 0.1
+      )
+    )
   
-        )
+)
 
-  
+
 
 # map by province ---------------------------------------------------------
 
