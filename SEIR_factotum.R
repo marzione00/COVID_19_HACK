@@ -1,9 +1,78 @@
+# Solves a normalised (population=1) simplified SEIR system (no immunity loss, no mortality): 
+# 
+# 1_ extract the S, E, I, R, information from the input data P (positive) and R using the distributions IT, SRT, IBST. #
+#	The default distribution for IT is an exponential with rate 1/5.2 (5.2 being the mean Incubation Time)
+#		https://www.nejm.org/doi/full/10.1056/NEJMoa2001316
+#	The default distribution for SRT is an exponential with rate log(2)/5 (5 being the median time from symptomaticity to removal - hospitalisation)
+#		
+#	The default distribution for IBST is an none as no data is available
+#		
+# 2_ parameters sigma and gamma are estimated as 1/mean(IT) and 1/mean(SRT) resp
+
+# 3_a if the user inputs a valid Rt (consisting of R0_msp and R0_stagesof length RN and RN-1 resp), SEIR_factotum will solve the multi-stage SEIR with 
+#	parameters (at n-th stage) sigma, gamma, beta[n]=Rt[n]*gamma. It will return U and sol, U being the refined data and sol being 
+#	the solution of the SEIR equation. 
+
+# 3_b if no valid Rt is passed, SEIR_factotum will estimate an initial R0 using asymptotic properties of the series I in the early stages
+#	(from R0_exp_est_start to R0_exp_est_end, meaning R0 exponential estimate start/end), 
+#	then it will solve a single stage SEIR system with parameters sigma, gamma, beta=R0*gamma. 
+#	This can be used to show how the growth would have been like if no measures had taken place.
+#	It will return U and sol as above, plus result of the estimation of R0
+
+####
+
+# Example1: solve the SEIR for 10 days in the future, use normal distribution for IBST, 
+# 			estimate the initial R0 up to day 4. 
+# 			Retrieve the real data U, the solution sol, the estimated R0, info about R0. 
+# 	
+# 	out <- SEIR_factotum(P,R,N, future=10, distr_IBST='norm', par_IBST=list('mean'=2, 'std'=1), 
+# 				R0_exp_est_end=4)
+# 
+# 	S<-out$S; E<-out$E; I<-out$I; R<-out$R
+# 	S_<-out$S_; E_<-out$E_; I_<-out$I_; R_<-out$R_
+# 	U <- list('S'=S, 'E'=E, 'I'=I, 'R'=R)
+# 	sol <- list('S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+# 	
+# 	R0<-out$R0; R0_time_start<-out$start; R0_time_end<-out$end; R0_fitting<-out$R0_fitting
+# 	
+# Example2: solve the SEIR up to data availability (that is, the length of the refined (S,E,I,R) 
+# 		time series, in general less than the length of input time series P and R), 
+# 		with one time fixed parameter R0_input (please note that R0_stages is required).
+# 		Retrieve U and sol as above. 
+# 
+# 	out <- SEIR_factotum(P,R,N, future=0, R0_msp=R0_input, R0_stages=c())
+# 	
+# 	S<-out$S; E<-out$E; I<-out$I; R<-out$R
+# 	S_<-out$S_; E_<-out$E_; I_<-out$I_; R_<-out$R_
+# 	U <- list('S'=S, 'E'=E, 'I'=I, 'R'=R)
+# 	sol <- list('S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+# 	
+# Example3: solve the SEIR up to day 45 (20 S,E,I,R observations + 25 = future), 
+# 		with a time varying parameter Rt, 
+# 		Rt = 	8 from day 0 to day 5, 
+# 				2 from day 5 to day 10, 
+# 				4 from day 10 to day 20 (or in general up to the last observation)
+# 				4 from day 20 to day 45 (the last value is used from day end to day end+future)
+# 		Retrieve U and sol. 					
+# 	
+# 	Rt = c(8,2,4)
+# 	R0_stages = c(5,10)
+# 	
+# 	out <- SEIR_factotum(P,R,N, future=25, end=20, R0_msp=Rt, R0_stages=c())
+# 	
+# 	S<-out$S; E<-out$E; I<-out$I; R<-out$R
+# 	S_<-out$S_; E_<-out$E_; I_<-out$I_; R_<-out$R_
+# 	U <- list('S'=S, 'E'=E, 'I'=I, 'R'=R)
+# 	sol <- list('S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+# 	
+	
+	
 
 SEIR_factotum <- function(P, R, N, normalise=TRUE, 
 					time_step=1, end, future=0,
 					distr_IT='exp', distr_SRT='exp', distr_IBST='none',
 					par_IT=list('rate'=1/5.2), par_SRT=list('rate'=log(2)/5), par_IBST=list(), 
-					R0_exp_est_start=0, R0_exp_est_end=5, R0_msp, R0_stages) {
+					R0_exp_est_start=1, R0_exp_est_end=5, R0_msp, R0_stages) {
 	#### Functions ####
 	# Generate distribution without outliers (Q3+1.5(IQR))
 	generate <- function(distr, parameters){
