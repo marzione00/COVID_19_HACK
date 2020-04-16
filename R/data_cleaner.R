@@ -5,7 +5,7 @@
 #' @param PCD Protezione Civile dataset
 #' @return the cleaned dataset
 #' 
-#' @example
+#' @examples
 #' \dontrun{
 #' sicily <- get_regionTS()$Sicilia
 #' sicily_cl <- data_cleaner(sicily)

@@ -15,3 +15,9 @@ the cleaned dataset
 \description{
 Introduces NAs when data is biased, e.g. when cumulative counts are decreasing.
 }
+\examples{
+\dontrun{
+sicily <- get_regionTS()$Sicilia
+sicily_cl <- data_cleaner(sicily)
+}
+}
