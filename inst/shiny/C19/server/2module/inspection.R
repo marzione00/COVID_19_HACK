@@ -157,7 +157,7 @@ shiny::observe({
                                           yAxis = reac_dataset$yAxis,
                                           showInLegend=TRUE) %>%
     highcharter::hc_plotOptions(column = reac_dataset$plotOptions_column) %>%
-      highcharter::hc_chart(zoomType = "xy", scrollablePlotArea = list(minWidth = 1500, scrollPositionX = 1)) %>%
+      highcharter::hc_chart(zoomType = "xy") %>%
       highcharter::hc_yAxis_multiples(
         list(lineWidth = 3, title = list(text  =  '')),
         list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
