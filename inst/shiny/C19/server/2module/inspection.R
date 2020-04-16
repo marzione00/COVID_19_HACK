@@ -48,9 +48,11 @@ output$decree_tl <- highcharter::renderHighchart(
     highcharter::hc_tooltip(style = list(width = 300)) %>%
     highcharter::hc_plotOptions(series = list(cursor = "pointer", 
                                               point = list(
-                                                events = list(click = '<script>function () {
-                                                              location.href = "https://www.google.it"; }</script>'
-                                                ))))
+                                                events = list(click = highcharter::JS("function () {
+                                                                window.open('https://www.google.com','_blank');
+                                                                                        win.focus();
+                                                                                      }"
+                                                )))))
 )
 
 
