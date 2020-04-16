@@ -18,6 +18,7 @@ ui <-
                                            tags$head( tags$meta( name="google-site-verification" ,content="uqldthSbvNv8p4RPxzlwihRq2OXixrauM9a_G-OKXB4")),
                                            tags$head(includeHTML(("www/google-analytics.html"))),
                                            tags$head( tags$meta(name = "viewport", content = "content=width=device-width, initial-scale=0.55")),
+                                           #tags$head( tags$meta(name = "viewport", content = "content=width=device-width, initial-scale=1")),
                                            
                                            # tags$head(includeScript("google-analytics.js")),
                                            tags$head(HTML(
@@ -49,8 +50,19 @@ ui <-
                                            
                                            tags$style(HTML("body
                                                           {
-                                                            font-size:200%;
+                                                            font-size:150%;
                                                           }
+                                                          
+                                                          @media only screen and (max-width: 600px) {
+                                                             body {
+                                                                font-size:200%;
+                                                             }
+                                                             @media only screen and (min-width: 600px) {
+                                                             body
+                                                           {
+                                                           font-size:200%;
+                                                           }
+                                                             } 
                                                           ")),
                                            #waiter
                                            waiter::use_waiter(),
