@@ -1,5 +1,6 @@
 ## REACTIVES OF THIS CODE
 reac_ARIMA <- shiny::reactiveValues(arimaOK = FALSE)
+reac_FFT <- shiny::reactiveValues()
     
     # THIS IS THE REACTIVE CONTAINER OF TERRITORY SELECTION VARIABLES.
 t <- shiny::reactiveValues()
@@ -92,6 +93,9 @@ shiny::observe( {
                            step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
   shiny::updateSliderInput(session, "fitInterval",min = init_date, max = fin_date, timeFormat = "%d %b",
                            step = 1, value = c(reac_general$sugg_dates[1],reac_general$sugg_dates[2]))
+  shiny::updateSliderInput(session,"FFT_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
+                           step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
+  
 })
 
 
@@ -269,6 +273,10 @@ output$selected_info2 <- shiny::renderUI({
 })
 
 output$selected_info3 <- shiny::renderUI({
+  selected_info_func()
+})
+
+output$selected_info4 <- shiny::renderUI({
   selected_info_func()
 })
 
@@ -558,6 +566,35 @@ output$arima_shell_resid <- shiny::renderPrint({
   
 })
 
+
+shiny::observe({
+  wait <- waitLoading()
+  
+    reac_FFT$logic_interval <- eval(t$data)[[t$name]]$data >=  input$FFT_interval[1]  &
+      eval(t$data)[[t$name]]$data <= input$FFT_interval[2] 
+    
+    reac_FFT$sample_date <- eval(t$data)[[t$name]]$data
+    reac_FFT$sample_cases <- imputeTS::na_locf(eval(t$data)[[t$name]]$totale_casi)
+    
+    reac_FFT$sample_date_trim <- reac_FFT$sample_date[reac_FFT$logic_interval]
+    reac_FFT$sample_cases_trim <- reac_FFT$sample_cases[reac_FFT$logic_interval]+1
+
+})
+
+
+output$FFT_day_cases<- shiny::renderPlot({
+  
+  wait <- waitLoading()
+  FFTX<-spectral::spec.fft(diff(reac_FFT$sample_cases_trim))
+  plot(FFTX,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
+})
+
+output$FFT_day_cases_diff<- shiny::renderPlot({
+  
+  wait <- waitLoading()
+  FFTX<-spectral::spec.fft(diff(diff(reac_FFT$sample_cases_trim)))
+  plot(FFTX,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
+})
 
 
 

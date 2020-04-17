@@ -45,6 +45,7 @@ output$decree_tl <- highcharter::renderHighchart(
     highcharter::hc_yAxis(gridLineWidth = 1, title = NULL, labels = list(enabled = FALSE), visible = FALSE) %>%
     highcharter::hc_legend(enabled = FALSE) %>%
     highcharter::hc_title(text = "Timeline of Ministerial Decrees concerning COVID-19") %>%
+    highcharter::hc_subtitle(text = "Click on events to show official documents") %>%
     highcharter::hc_tooltip(style = list(width = 300)) %>%
     highcharter::hc_plotOptions(series = list(cursor = "pointer", 
                                               point = list(
