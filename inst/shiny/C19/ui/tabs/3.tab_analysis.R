@@ -337,8 +337,54 @@ shinydashboard::tabItem(
     #background-color: #f5f5f5; */
   ),
   
+  #====== R0 ======
   
-
+  shinydashboard::valueBox(
+    "Reproduction number",
+    "R(t) estimation",
+    icon = icon("analytics"),
+    color = "navy",
+    width = NULL
+  ),
+  
+  shinydashboard::box(
+    width = 12,
+    status = "danger",
+    solidHeader = TRUE,
+    shiny::htmlOutput("selected_info4")
+  ),
+  
+  
+  fluidRow(
+    
+    column(
+      4,
+      shinydashboard::box(
+        width = 12,
+        status = "danger",
+        solidHeader = TRUE,
+        title = "Input",
+        shiny::sliderInput(inputId = "R_interval", label = "Choose fitting interval",
+                           min = init_date, max = fin_date, timeFormat = "%d %b",
+                           step = 1, value = c(init_date,fin_date)),
+        shiny::sliderInput(inputId = "Gamma_1", label = "Shape parameter",
+                           min = 0, max = 10,step = 1,value=6),
+        shiny::sliderInput(inputId = "Gamma_2", label = "Rate parameter",
+                           min = 0, max = 10,step = 1,value=2),
+      )),
+    column(
+      8,
+      shinydashboard::box(
+        color = "red",
+        status = "danger",
+        title = "R(t)",
+        shiny::plotOutput("R_t_evaluation") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
+        width = 12
+      )
+    )
+    
+    #background-color: #f5f5f5; */
+  ),
   
   #====== SEIR ======
   
@@ -355,7 +401,7 @@ shinydashboard::tabItem(
     width = 12,
     status = "danger",
     solidHeader = TRUE,
-    shiny::htmlOutput("selected_info4")
+    shiny::htmlOutput("selected_info5")
   ),
   
   

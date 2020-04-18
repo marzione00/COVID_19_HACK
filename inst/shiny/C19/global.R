@@ -30,6 +30,11 @@ toLog10<- function(num)
   return(log(num)/log(10))
 }
 
+# from date to UTS date (milliseconds from Jan 1, 1970)
+UTSdate <- function(date) {
+  return(as.integer(date) * 86400000)
+}
+
 #================================
 
 #================================

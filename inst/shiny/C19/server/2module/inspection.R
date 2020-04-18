@@ -111,6 +111,8 @@ shiny::observe({
       reac_dataset$table_plot <- eval(reac_dataset$data)[[reac_dataset$name]] %>%
         dplyr::select("Date" = data, "Tot. cases" = totale_casi, "Tot. deaths" = deceduti, "Tot. recoveries" = dimessi_guariti)
       reac_dataset$colors <- c("blue", "black", "green")
+      # maxima labels
+      
     } else {
       reac_dataset$table_plot <- eval(reac_dataset$data)[[reac_dataset$name]] %>%
         dplyr::select("Date" = data, "Tot. cases" = totale_casi)
@@ -129,11 +131,34 @@ shiny::observe({
         dplyr::mutate("New deaths" = c(NA,diff(deceduti)), "New recoveries" = c(NA,diff(dimessi_guariti)), "New cases" = c(NA,diff(totale_casi))) %>%
         dplyr::select("Date" = data, "New cases", "New deaths", "New recoveries")
       reac_dataset$colors <- c("blue", "black", "green")
+      # maxima labels
+      reac_dataset$annotations_labels <- list(
+        list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"New cases"]) , "Date" ]),
+                          y = max(reac_dataset$table_plot[,"New cases"], na.rm = T), xAxis = 0, yAxis = 0),
+             text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
+             backgroundColor = 'rgba(63, 63, 191, 0.4)'),
+        list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"New deaths"]) , "Date" ]),
+                          y = max(reac_dataset$table_plot[,"New deaths"], na.rm = T), xAxis = 0, yAxis = 0),
+             text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
+             backgroundColor = 'rgba(0, 0, 0, 0.4)'),
+        list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"New recoveries"]) , "Date" ]),
+                          y = max(reac_dataset$table_plot[,"New recoveries"], na.rm = T), xAxis = 0, yAxis = 0),
+             text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
+             backgroundColor = 'rgba(27, 150, 27, 0.4)')
+      )
+      reac_dataset$yAxis_max <- max(reac_dataset$table_plot[,"New cases"], na.rm = T)*125/100
+      
     } else {
       reac_dataset$table_plot <- eval(reac_dataset$data)[[reac_dataset$name]] %>%
         dplyr::mutate("New cases" = c(NA,diff(totale_casi))) %>%
         dplyr::select("Date" = data, "New cases")
       reac_dataset$colors <- c("blue")
+      reac_dataset$annotations_labels <- list(
+        list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"New cases"]) , "Date" ]),
+                          y = max(reac_dataset$table_plot[,"New cases"], na.rm = T), xAxis = 0, yAxis = 0),
+             text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
+             backgroundColor = 'rgba(63, 63, 191, 0.4)')
+      )
     }
     
     
@@ -157,15 +182,30 @@ shiny::observe({
                                           color=reac_dataset$colors,
                                           yAxis = reac_dataset$yAxis,
                                           showInLegend=TRUE) %>%
+    highcharter::hc_xAxis(
+      plotBands = list(list(color = "#ffe6e6", from = UTSdate(as.Date("2020-03-09")), to = UTSdate(fin_date),
+                       label = list(text = "Complete lockdown", style = list(color = "#cc0000")))
+                       ),
+      plotLines = list(list(color = "#e60000", value = UTSdate(as.Date("2020-03-09")), width = 4,
+                            label = list(text = "Decree of March 9th"))
+                       )
+    ) %>%
+    highcharter::hc_yAxis(
+      max = reac_dataset$yAxis_max
+    ) %>%
+    highcharter::hc_annotations(list(
+      labels = reac_dataset$annotations_labels,
+      labelOptions = list(useHTML = T, distance = 15))
+      ) %>%
     highcharter::hc_plotOptions(column = reac_dataset$plotOptions_column) %>%
-      highcharter::hc_chart(zoomType = "xy") %>%
-      highcharter::hc_yAxis_multiples(
+    highcharter::hc_chart(zoomType = "xy") %>%
+    highcharter::hc_yAxis_multiples(
         list(lineWidth = 3, title = list(text  =  '')),
         list(showLastLabel = TRUE, opposite = TRUE, title = list(text  =  ''))
       )  %>%
-      highcharter::hc_legend(align = "top", verticalAlign = "top",
-                             layout = "vertical", x = 30, y = 100, enabled=TRUE) %>%
-      highcharter::hc_title(text = paste0("General info for: ",reac_dataset$name),
+    highcharter::hc_legend(align = "top", verticalAlign = "top",
+                           layout = "vertical", x = 30, y = 100, enabled=TRUE) %>%
+    highcharter::hc_title(text = paste0("General info for: ",reac_dataset$name),
                             margin = 20, align = "left",
                             style = list(useHTML = TRUE))
 

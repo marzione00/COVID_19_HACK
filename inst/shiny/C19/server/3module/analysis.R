@@ -1,6 +1,7 @@
 ## REACTIVES OF THIS CODE
 reac_ARIMA <- shiny::reactiveValues(arimaOK = FALSE)
 reac_FFT <- shiny::reactiveValues()
+reac_R <- shiny::reactiveValues()
     
     # THIS IS THE REACTIVE CONTAINER OF TERRITORY SELECTION VARIABLES.
 t <- shiny::reactiveValues()
@@ -277,6 +278,10 @@ output$selected_info3 <- shiny::renderUI({
 })
 
 output$selected_info4 <- shiny::renderUI({
+  selected_info_func()
+})
+
+output$selected_info5 <- shiny::renderUI({
   selected_info_func()
 })
 
@@ -596,7 +601,30 @@ output$FFT_day_cases_diff<- shiny::renderPlot({
   plot(FFTX,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
 })
 
+#======================= R(T) ==================================
 
+
+shiny::observe({
+  wait <- waitLoading()
+  
+  reac_R$logic_interval <- eval(t$data)[[t$name]]$data >=  input$R_interval[1]  &
+    eval(t$data)[[t$name]]$data <= input$R_interval[2] 
+  
+  reac_R$sample_date <- eval(t$data)[[t$name]]$data
+  reac_R$sample_cases <- imputeTS::na_locf(eval(t$data)[[t$name]]$totale_casi)
+  
+  reac_R$sample_date_trim <- reac_R$sample_date[reac_R$logic_interval]
+  reac_R$sample_cases_trim <- reac_R$sample_cases[reac_R$logic_interval]+1
+  
+})
+
+output$R_t_evaluation<- shiny::renderPlot({
+  
+  wait <- waitLoading()
+  GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+  R0_data<-R0::est.R0.TD(diff(reac_R$sample_cases_trim),GT.chld.hsld2, begin=1, end=53)
+  plot(R0_data)
+})
 
 #======================= SEIR MODEL ==================================
 
