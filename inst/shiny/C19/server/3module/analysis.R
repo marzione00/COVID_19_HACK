@@ -622,8 +622,25 @@ output$R_t_evaluation<- shiny::renderPlot({
   
   wait <- waitLoading()
   GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-  R0_data<-R0::est.R0.TD(diff(reac_R$sample_cases_trim),GT.chld.hsld2, begin=1, end=53)
+  R0_data<-R0::est.R0.TD(diff(reac_R$sample_cases_trim),GT.chld.hsld2, begin=1, end=52)
   plot(R0_data)
+})
+
+output$R_t_goodness_of_fit<- shiny::renderPlot({
+  
+  wait <- waitLoading()
+  GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+  R0_data<-R0::est.R0.TD(diff(reac_R$sample_cases_trim),GT.chld.hsld2, begin=1, end=52)
+  R0::plotfit(R0_data)
+})
+
+output$R_t_evaluation_FFT<- shiny::renderPlot({
+  
+  wait <- waitLoading()
+  GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+  R0_data_raw<-R0::est.R0.TD(diff(reac_R$sample_cases_trim),GT.chld.hsld2, begin=1, end=52)
+  R0_data_raw_FFT<-spectral::spec.fft(R0_data_raw[["R"]])
+  plot(R0_data_raw_FFT,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
 })
 
 #======================= SEIR MODEL ==================================

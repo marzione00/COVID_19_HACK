@@ -370,7 +370,7 @@ shinydashboard::tabItem(
         shiny::sliderInput(inputId = "Gamma_1", label = "Shape parameter",
                            min = 0, max = 10,step = 1,value=6),
         shiny::sliderInput(inputId = "Gamma_2", label = "Rate parameter",
-                           min = 0, max = 10,step = 1,value=2),
+                           min = 0, max = 10,step = 1,value=2)
       )),
     column(
       8,
@@ -379,6 +379,38 @@ shinydashboard::tabItem(
         status = "danger",
         title = "R(t)",
         shiny::plotOutput("R_t_evaluation") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
+        width = 12
+      )
+    )
+    
+    #background-color: #f5f5f5; */
+  ),
+  
+  fluidRow(
+    
+    column(
+      8,
+      shinydashboard::box(
+        color = "red",
+        status = "danger",
+        title = "R(t)",
+        shiny::plotOutput("R_t_goodness_of_fit") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
+        width = 12
+      )
+    )
+    
+    #background-color: #f5f5f5; */
+  ),
+  
+  fluidRow(
+    
+    column(
+      8,
+      shinydashboard::box(
+        color = "red",
+        status = "danger",
+        title = "R(t)",
+        shiny::plotOutput("R_t_evaluation_FFT") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
         width = 12
       )
     )
