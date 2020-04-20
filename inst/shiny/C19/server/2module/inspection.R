@@ -112,11 +112,30 @@ shiny::observe({
         dplyr::select("Date" = data, "Tot. cases" = totale_casi, "Tot. deaths" = deceduti, "Tot. recoveries" = dimessi_guariti)
       reac_dataset$colors <- c("blue", "black", "green")
       # maxima labels
-      
+      reac_dataset$annotations_labels <- list(
+        list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(c(NA,diff(reac_dataset$table_plot[,"Tot. cases"]))) , "Date" ]),
+                          y = reac_dataset$table_plot[ which.max(c(NA,diff(reac_dataset$table_plot[,"Tot. cases"]))) , "Tot. cases" ], xAxis = 0, yAxis = reac_dataset$yAxis),
+             text = 'Inflection: <strong>{y}</strong><br/>{x:%d %b %Y}',
+             backgroundColor = 'rgba(63, 63, 191, 0.4)'),
+        list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(c(NA,diff(reac_dataset$table_plot[,"Tot. deaths"]))) , "Date" ]),
+                          y = reac_dataset$table_plot[ which.max(c(NA,diff(reac_dataset$table_plot[,"Tot. deaths"]))) , "Tot. deaths" ], xAxis = 0, yAxis = reac_dataset$yAxis),
+             text = 'Inflection: <strong>{y}</strong><br/>{x:%d %b %Y}',
+             backgroundColor = 'rgba(0, 0, 0, 0.4)'),
+        list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(c(NA,diff(reac_dataset$table_plot[,"Tot. recoveries"]))) , "Date" ]),
+                          y = reac_dataset$table_plot[ which.max(c(NA,diff(reac_dataset$table_plot[,"Tot. recoveries"]))) , "Tot. recoveries" ], xAxis = 0, yAxis = reac_dataset$yAxis),
+             text = 'Inflection: <strong>{y}</strong><br/>{x:%d %b %Y}',
+             backgroundColor = 'rgba(27, 150, 27, 0.4)')
+      )
     } else {
       reac_dataset$table_plot <- eval(reac_dataset$data)[[reac_dataset$name]] %>%
         dplyr::select("Date" = data, "Tot. cases" = totale_casi)
       reac_dataset$colors <- c("blue")
+      reac_dataset$annotations_labels <- list(
+        list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(c(NA,diff(reac_dataset$table_plot[,"Tot. cases"]))) , "Date" ]),
+                          y = reac_dataset$table_plot[ which.max(c(NA,diff(reac_dataset$table_plot[,"Tot. cases"]))) , "Tot. cases" ], xAxis = 0, yAxis = reac_dataset$yAxis),
+             text = 'Inflection: <strong>{y}</strong><br/>{x:%d %b %Y}',
+             backgroundColor = 'rgba(63, 63, 191, 0.4)')
+      )
     }
     
     
@@ -134,15 +153,15 @@ shiny::observe({
       # maxima labels
       reac_dataset$annotations_labels <- list(
         list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"New cases"]) , "Date" ]),
-                          y = max(reac_dataset$table_plot[,"New cases"], na.rm = T), xAxis = 0, yAxis = 0),
+                          y = max(reac_dataset$table_plot[,"New cases"], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
              text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
              backgroundColor = 'rgba(63, 63, 191, 0.4)'),
         list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"New deaths"]) , "Date" ]),
-                          y = max(reac_dataset$table_plot[,"New deaths"], na.rm = T), xAxis = 0, yAxis = 0),
+                          y = max(reac_dataset$table_plot[,"New deaths"], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
              text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
              backgroundColor = 'rgba(0, 0, 0, 0.4)'),
         list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"New recoveries"]) , "Date" ]),
-                          y = max(reac_dataset$table_plot[,"New recoveries"], na.rm = T), xAxis = 0, yAxis = 0),
+                          y = max(reac_dataset$table_plot[,"New recoveries"], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
              text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
              backgroundColor = 'rgba(27, 150, 27, 0.4)')
       )
@@ -155,7 +174,7 @@ shiny::observe({
       reac_dataset$colors <- c("blue")
       reac_dataset$annotations_labels <- list(
         list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"New cases"]) , "Date" ]),
-                          y = max(reac_dataset$table_plot[,"New cases"], na.rm = T), xAxis = 0, yAxis = 0),
+                          y = max(reac_dataset$table_plot[,"New cases"], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
              text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
              backgroundColor = 'rgba(63, 63, 191, 0.4)')
       )
@@ -170,8 +189,25 @@ shiny::observe({
     
     reac_dataset$table_plot <- eval(reac_dataset$data)[[reac_dataset$name]] %>%
       dplyr::select("Date" = data, "Current pos. cases" = totale_positivi, "Current hospitalised" = totale_ospedalizzati, "Current intensive care" = terapia_intensiva, "Current home isol." = isolamento_domiciliare)
-    # reac_dataset$colors <- c("darkorchid", "darkseagreen3", "firebrick2", "cyan2")
     reac_dataset$colors <- c("#cc66ff", "#00e673", "#ff3300", "#00bfff")
+    reac_dataset$annotations_labels <- list(
+      list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"Current pos. cases"]) , "Date" ]),
+                        y = max(reac_dataset$table_plot[,"Current pos. cases"], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
+           text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
+           backgroundColor = 'rgba(204, 102, 255, 0.4)'),
+      list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"Current hospitalised"]) , "Date" ]),
+                        y = max(reac_dataset$table_plot[,"Current hospitalised"], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
+           text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
+           backgroundColor = 'rgba(0, 230, 115, 0.4)'),
+      list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"Current intensive care"]) , "Date" ]),
+                        y = max(reac_dataset$table_plot[,"Current intensive care"], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
+           text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
+           backgroundColor = 'rgba(255, 51, 0, 0.4)'),
+      list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"Current home isol."]) , "Date" ]),
+                        y = max(reac_dataset$table_plot[,"Current home isol."], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
+           text = 'Peak: <strong>{y}</strong><br/>{x:%d %b %Y}',
+           backgroundColor = 'rgba(0, 191, 255, 0.4)')
+    )
   }
     
   
@@ -216,6 +252,8 @@ shiny::observe({
 output$geninfo_plot <- highcharter::renderHighchart(
   reac_dataset$plot
 )
+
+output$log_geninfo <- renderPrint(reac_dataset$annotations_labels)
 
 
 #======= TABLE ====== 
