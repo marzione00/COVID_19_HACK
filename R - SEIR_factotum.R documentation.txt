@@ -1,6 +1,6 @@
 SEIR_factotum.R documentation
 
-REQUIRED PACKAGES : deSolve
+REQUIRED PACKAGES : deSolve, plotly
 
 CAUTIONS:
     This function does not take into account the last m observations of both P and R, in order to retrieve consistently E and I.
@@ -15,7 +15,10 @@ Inputs:
         time series of all removed cases (either dead or immune).
         
     N : int 
-        total population.    
+        total population.  
+
+    end : int
+    	data points P and R will be used up to end to reconstruct the time series of S, E, I, R  
                       
 Other Inputs : 
 
@@ -49,20 +52,26 @@ Other Inputs :
 		(start:end)              : if user provides neither. start and end are extrapolated with exp_period
 						and aim to identify the extremes of the stage of exponential growth in I
 
-Optional inputs : 
-    
-    end : int
-    	data points P and R will be used up to end to reconstruct the time series of S, E, I, R
-	
-    R0_msp : array like of length RN
-    	values assumed by Rt
-	
-    R0_stages : array like of length RN-1
+    R0_stages : array like of length RN-1, strictly increasing
     	days that defining the stages of Rt: 
 		R0_msp[1] is used in [0, R0_stages[1]]
 		R0_msp[n] is used in [R0_stages[n-1], R0_stages[n]]
 		R0_msp[N] is used in [R0_stages[N], length(S)]
+	used if R0_msp is not missing and if fit_Rt=TRUE	
+
+    fit_Rt : bool (default FALSE)
+	if R0_msp is missing and fit_Rt=TRUE, Rt will be estimated for all times. 
+	if R0_msp is missing and fit_Rt=FALSE, only initial R0 will be estimated.
+
+    plot_data : bool (default TRUE)
+	will data points be shown in final plot?
+
+Optional inputs : 
 	
+    R0_msp : array like of length RN
+    	values assumed by Rt. If missing, R0 or Rt (if fit_Rt=TRUE) will be estimated before solving the SEIR ode. 
+	
+    
 Insight: 	
 
     IT, SRT, IBST : random variables
@@ -96,6 +105,9 @@ Outputs:
     out$R0_fitting : float
 	measures if J is a proper interval to fit R0 on data
 	Work In Progress
+
+    out$plot : plotly
+	plot of SEIR solution. if plot_data is TRUE then it also plots the corresponding data points	
 
     Please not that SEIR_factotum will not output R0, start, end, R0_fitting if R0_msp and R0_stages are input by user
 	
