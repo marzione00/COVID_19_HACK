@@ -571,15 +571,14 @@ SEIR_factotum <- function(P, R, N, end, normalise=TRUE,
 		out <- c(U, sol, R0_out)
 	}
 	
-	
 	# Plot
 	if(plot_data)
 		name <- 'SEIR datapoints and solution'
 	else
 		name <- 'SEIR solution'
 	
-	fig <- plotty(U, sol, name, plot_data)
-	out$plot <- fig
+	# fig <- plotty(U, sol, name, plot_data)
+	# out$plot <- fig
 	
 	return(out)
 }
