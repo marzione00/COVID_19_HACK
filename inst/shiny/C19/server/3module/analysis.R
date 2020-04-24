@@ -1,4 +1,6 @@
 ## REACTIVES OF THIS CODE
+reac_general <- shiny::reactiveValues()
+reac_logistic <- shiny::reactiveValues()
 reac_ARIMA <- shiny::reactiveValues(arimaOK = FALSE)
 reac_FFT <- shiny::reactiveValues()
 reac_R <- shiny::reactiveValues()
@@ -7,7 +9,7 @@ reac_R <- shiny::reactiveValues()
 t <- shiny::reactiveValues()
     
     ## Reactive values for global storage 
-reac_general <- shiny::reactiveValues()
+
 
 ## CHECKS FOR ERROR PREVENTING ##
 is_ready <- function(x) {
@@ -37,7 +39,7 @@ waitInput <- shiny::reactive({
 suggest_dates <- function()
 {
   index = covid19::const_trim(eval(t$data)[[t$name]]$totale_casi,1)
-  sugStart = eval(t$data)[[t$name]]$data[index]
+  sugStart = reac_general$sample_date[index]
   
   return(c(sugStart, fin_date))
 }
@@ -90,13 +92,13 @@ shiny::observe( {
   }
   
   reac_general$sugg_dates = suggest_dates()
-  shiny::updateSliderInput(session,"arima_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
-                           step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
-  shiny::updateSliderInput(session, "fitInterval",min = init_date, max = fin_date, timeFormat = "%d %b",
-                           step = 1, value = c(reac_general$sugg_dates[1],reac_general$sugg_dates[2]))
-  shiny::updateSliderInput(session,"FFT_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
-                           step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
-  
+  # shiny::updateSliderInput(session,"arima_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
+  #                          step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
+  # shiny::updateSliderInput(session, "fitInterval",min = init_date, max = fin_date, timeFormat = "%d %b",
+  #                          step = 1, value = c(reac_general$sugg_dates[1],reac_general$sugg_dates[2]))
+  # shiny::updateSliderInput(session,"FFT_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
+  #                          step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
+  # 
 })
 
 
@@ -112,23 +114,33 @@ output$dates_sugg <- shiny::renderUI({
 })
 
 
+shiny::observe({
+  
+  wait <- waitLoading()
+  
+  reac_general$sample_date <- eval(t$data)[[t$name]]$data
+  reac_general$sample_cases <- level_and_fill(eval(t$data)[[t$name]]$totale_casi, direction = input$direction_fill, method = input$method_fill)
+})
+
 
 output$coolplot1 <- plotly::renderPlotly({
   
   wait <- waitLoading()
   #waiter::waiter_show(id = "coolplot1", html = waiter::spin_loaders(id = 1, color = "#ff471a"), color = "white")
   # Data trim and curve fitting #
+  
+  if(is_ready(reac_general$sample_cases)) {
   n <- nrow(eval(t$data)[[t$name]])
-  logic_interval <- eval(t$data)[[t$name]]$data >= input$fitInterval[1] &
-    eval(t$data)[[t$name]]$data <= input$fitInterval[2]
+  logic_interval <- reac_general$sample_date >= input$fitInterval[1] &
+    reac_general$sample_date <= input$fitInterval[2]
   
   sample_serial_date <- eval(t$data)[[t$name]]$data_seriale
   
-  sample_cases <- imputeTS::na_locf(eval(t$data)[[t$name]]$totale_casi)
+  sample_cases <- reac_general$sample_cases
   sample_diff <-  c(NA,diff(sample_cases))
   
   if( !t$p && input$swab_std ) {
-    swabs <- imputeTS::na_interpolation(eval(t$data)[[t$name]]$tamponi)
+    swabs <- level_and_fill(eval(t$data)[[t$name]]$tamponi, direction = input$direction_fill, method = input$method_fill)
     sample_cases <- sample_cases / swabs
     sample_diff <-  c(NA,sample_diff[-1] / diff(swabs))
   }
@@ -146,11 +158,11 @@ output$coolplot1 <- plotly::renderPlotly({
                       sample_date = sample_serial_date_trim,
                       days = days)
   
-  reac_general$model <- fit_data$out_fit$model
-  reac_general$resid <- fit_data$out_resid
-  reac_general$vals <- fit_data$out_fit$vals
+  reac_logistic$model <- fit_data$out_fit$model
+  reac_logistic$resid <- fit_data$out_resid
+  reac_logistic$vals <- fit_data$out_fit$vals
   
-  conf <- nlstools::confint2(level = 0.95, object = reac_general$model)
+  conf <- nlstools::confint2(level = 0.95, object = reac_logistic$model)
   
   yConf_up <- (conf["n0",2]*conf["k",2])/(conf["n0",2] + (conf["k",2]-conf["n0",2]) * exp(-conf["r",2]*sample_serial_date_trim))
   yConf_down <- (conf["n0",1]*conf["k",1])/(conf["n0",1] + (conf["k",1]-conf["n0",1]) * exp(-conf["r",1]*sample_serial_date_trim))
@@ -158,13 +170,13 @@ output$coolplot1 <- plotly::renderPlotly({
   
   
   # Conversion to real date and creation of fitted points #
-  points_trim <- data.frame("sample_serial_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
+  points_trim <- data.frame("sample_serial_date_trim" = reac_general$sample_date[logic_interval],
                             sample_cases_trim)
-  points_rem <- data.frame("sample_serial_date_rem" = eval(t$data)[[t$name]]$data[!logic_interval],
+  points_rem <- data.frame("sample_serial_date_rem" = reac_general$sample_date[!logic_interval],
                            sample_cases_rem)
-  points_diff_trim <- data.frame("sample_serial_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
+  points_diff_trim <- data.frame("sample_serial_date_trim" = reac_general$sample_date[logic_interval],
                                  sample_diff_trim)
-  points_diff_rem <- data.frame("sample_serial_date_rem" = eval(t$data)[[t$name]]$data[!logic_interval],
+  points_diff_rem <- data.frame("sample_serial_date_rem" = reac_general$sample_date[!logic_interval],
                                 sample_diff_rem)
   
   fittedPoints <- fit_data$fittedPoints
@@ -173,9 +185,9 @@ output$coolplot1 <- plotly::renderPlotly({
   fittedPoints$days <- seq_dates
   fittedPoints_der$days <- seq_dates
   
-  confPoints_up <- data.frame("sample_serial_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
+  confPoints_up <- data.frame("sample_serial_date_trim" = reac_general$sample_date[logic_interval],
                               yConf_up)
-  confPoints_down <- data.frame("sample_serial_date_trim" = eval(t$data)[[t$name]]$data[logic_interval],
+  confPoints_down <- data.frame("sample_serial_date_trim" = reac_general$sample_date[logic_interval],
                                 yConf_down)
   
   # PLOT with plotly #
@@ -191,8 +203,8 @@ output$coolplot1 <- plotly::renderPlotly({
     
     hovlabels <- c("")
     for(i in c(1:n)) {
-      hovlabels[i] <- paste(format(eval(t$data)[[t$name]]$data[i], "%d %b"),
-                            ", Tot cases = ", eval(t$data)[[t$name]]$totale_casi[i], sep ="")
+      hovlabels[i] <- paste(format(reac_general$sample_date[i], "%d %b"),
+                            ", Tot cases = ", sample_cases[i], sep ="")
       if( !t$p && input$swab_std )
         hovlabels[i] <- paste(hovlabels[i], ", Tot swabs = ", swabs[i], sep = "")
     }
@@ -210,9 +222,9 @@ output$coolplot1 <- plotly::renderPlotly({
   {
     hovlabels <- c("")
     for(i in c(2:n)) {
-      hovlabels[i] <- paste(format(eval(t$data)[[t$name]]$data[i], "%d %b"),
+      hovlabels[i] <- paste(format(reac_general$sample_date[i], "%d %b"),
                             ", Cases = ", 
-                            eval(t$data)[[t$name]]$totale_casi[i] - eval(t$data)[[t$name]]$totale_casi[i-1], 
+                            sample_cases[i] - sample_cases[i-1], 
                             sep ="")
       if( !t$p && input$swab_std )
         hovlabels[i] <- paste(hovlabels[i], ", Swabs = ", swabs[i]-swabs[i-1], sep = "")
@@ -243,16 +255,17 @@ output$coolplot1 <- plotly::renderPlotly({
   
   # labels and plot
   fig <- fig %>%plotly::layout(xaxis = list(title = "day"), yaxis = list(title = "Infected"))
-  if( reac_general$vals$k > 1e7 )
+  if( reac_logistic$vals$k > 1e7 )
     fig <- fig %>%plotly::layout(title = "Warning: unrealistic model estimated", font = list(color = 'red'),dtick= 5 )
   fig
   
+  }
 })
 
 #-- Summary of regions ---
 output$fit_smry <- shiny::renderPrint({
   wait <- waitLoading()
-  summary(reac_general$model)
+  summary(reac_logistic$model)
 })
 
 output$selected_terr <- shiny::renderPrint({
@@ -288,7 +301,7 @@ output$selected_info5 <- shiny::renderUI({
 output$resid_smry <- shiny::renderPrint({
   wait <- waitLoading()
   print("Data: residuals from nls regression")
-  nlstools::test.nlsResiduals(reac_general$resid)
+  nlstools::test.nlsResiduals(reac_logistic$resid)
 })
 
 
@@ -297,10 +310,10 @@ output$resid_smry <- shiny::renderPrint({
 output$plot_residual <- plotly::renderPlotly({
   wait <- waitLoading()
   
-  Res_DF_1<-as.data.frame(reac_general$resid$resi1)
-  Res_DF_2<-as.data.frame(reac_general$resid$resi2)
-  Res_DF_3<-as.data.frame(reac_general$resid$resi4)
-  Res_DF_4<-as.data.frame(reac_general$resid$resi3)
+  Res_DF_1<-as.data.frame(reac_logistic$resid$resi1)
+  Res_DF_2<-as.data.frame(reac_logistic$resid$resi2)
+  Res_DF_3<-as.data.frame(reac_logistic$resid$resi4)
+  Res_DF_4<-as.data.frame(reac_logistic$resid$resi3)
   
   p = plotly::plot_ly(type = 'scatter')
   
@@ -401,15 +414,12 @@ output$plot_residual <- plotly::renderPlotly({
 shiny::observe({
   wait <- waitLoading()
   
-  if(is_ready(input$arima_interval[1])) {
-    reac_ARIMA$logic_interval <- eval(t$data)[[t$name]]$data >=  input$arima_interval[1]  &
-      eval(t$data)[[t$name]]$data <= input$arima_interval[2] 
+  if(is_ready(input$arima_interval[1]) && is_ready(reac_general$sample_cases)) {
+    reac_ARIMA$logic_interval <- reac_general$sample_date >=  input$arima_interval[1]  &
+      reac_general$sample_date <= input$arima_interval[2] 
     
-    reac_ARIMA$sample_date <- eval(t$data)[[t$name]]$data
-    reac_ARIMA$sample_cases <- imputeTS::na_locf(eval(t$data)[[t$name]]$totale_casi)
-    
-    reac_ARIMA$sample_date_trim <- reac_ARIMA$sample_date[reac_ARIMA$logic_interval]
-    reac_ARIMA$sample_cases_trim <- reac_ARIMA$sample_cases[reac_ARIMA$logic_interval]+1
+    reac_ARIMA$sample_date_trim <- reac_general$sample_date[reac_ARIMA$logic_interval]
+    reac_ARIMA$sample_cases_trim <- reac_general$sample_cases[reac_ARIMA$logic_interval]+1
     
     reac_ARIMA$sugg_lags <- suggest_lags()
     updateSliderInput(session,"ARIMA_p", value=  reac_ARIMA$sugg_lags[1])
@@ -572,33 +582,36 @@ output$arima_shell_resid <- shiny::renderPrint({
 })
 
 
+
+#============ FFT ======================================
+
 shiny::observe({
   wait <- waitLoading()
   
-    reac_FFT$logic_interval <- eval(t$data)[[t$name]]$data >=  input$FFT_interval[1]  &
-      eval(t$data)[[t$name]]$data <= input$FFT_interval[2] 
+  if(is_ready(reac_general$sample_cases)) {
+    reac_FFT$logic_interval <- reac_general$sample_date >=  input$FFT_interval[1]  &
+      reac_general$sample_date <= input$FFT_interval[2] 
     
-    reac_FFT$sample_date <- eval(t$data)[[t$name]]$data
-    reac_FFT$sample_cases <- imputeTS::na_locf(eval(t$data)[[t$name]]$totale_casi)
-    
-    reac_FFT$sample_date_trim <- reac_FFT$sample_date[reac_FFT$logic_interval]
-    reac_FFT$sample_cases_trim <- reac_FFT$sample_cases[reac_FFT$logic_interval]+1
-
+    reac_FFT$sample_date_trim <- reac_general$sample_date[reac_FFT$logic_interval]
+    reac_FFT$sample_cases_trim <- reac_general$sample_cases[reac_FFT$logic_interval]+1
+  }
 })
 
 
 output$FFT_day_cases<- shiny::renderPlot({
   
-  wait <- waitLoading()
-  FFTX<-spectral::spec.fft(diff(reac_FFT$sample_cases_trim))
-  plot(FFTX,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
+  if(is_ready(reac_FFT$sample_cases_trim)) {
+    FFTX<-spectral::spec.fft(diff(reac_FFT$sample_cases_trim))
+    plot(FFTX,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
+  }
 })
 
 output$FFT_day_cases_diff<- shiny::renderPlot({
   
-  wait <- waitLoading()
-  FFTX<-spectral::spec.fft(diff(diff(reac_FFT$sample_cases_trim)))
-  plot(FFTX,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
+  if(is_ready(reac_FFT$sample_cases_trim)) {
+    FFTX<-spectral::spec.fft(diff(diff(reac_FFT$sample_cases_trim)))
+    plot(FFTX,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
+  }
 })
 
 #======================= R(T) ==================================
@@ -607,41 +620,41 @@ output$FFT_day_cases_diff<- shiny::renderPlot({
 shiny::observe({
   wait <- waitLoading()
   
-  reac_R$logic_interval <- eval(t$data)[[t$name]]$data >=  input$R_interval[1]  &
-    eval(t$data)[[t$name]]$data <= input$R_interval[2] 
-  
-  reac_R$sample_date <- eval(t$data)[[t$name]]$data
-  reac_R$sample_cases <- imputeTS::na_locf(eval(t$data)[[t$name]]$totale_casi)
-  
-  reac_R$sample_date_trim <- reac_R$sample_date[reac_R$logic_interval]
-  reac_R$sample_cases_trim <- reac_R$sample_cases[reac_R$logic_interval]+1
-  
+  if(is_ready(reac_general$sample_cases)) {
+
+    GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+    
+    time_R <- as.numeric(length(reac_general$sample_cases))-2
+    reac_R$R0_data <- R0::est.R0.TD(diff(reac_general$sample_cases),GT.chld.hsld2, begin=1, end=time_R)
+  }
 })
 
 output$R_t_evaluation<- shiny::renderPlot({
+
+  if(is_ready(reac_R$R0_data)) {
+    plot(reac_R$R0_data)
+  }
   
-  wait <- waitLoading()
-  GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-  R0_data<-R0::est.R0.TD(diff(reac_R$sample_cases_trim),GT.chld.hsld2, begin=1, end=52)
-  plot(R0_data)
 })
 
 output$R_t_goodness_of_fit<- shiny::renderPlot({
   
-  wait <- waitLoading()
-  GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-  R0_data<-R0::est.R0.TD(diff(reac_R$sample_cases_trim),GT.chld.hsld2, begin=1, end=52)
-  R0::plotfit(R0_data)
+  if(is_ready(reac_R$R0_data)) {
+    R0::plotfit(reac_R$R0_data)
+  }
+ 
 })
 
 output$R_t_evaluation_FFT<- shiny::renderPlot({
-  
-  wait <- waitLoading()
-  GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-  R0_data_raw<-R0::est.R0.TD(diff(reac_R$sample_cases_trim),GT.chld.hsld2, begin=1, end=52)
-  R0_data_raw_FFT<-spectral::spec.fft(R0_data_raw[["R"]])
-  plot(R0_data_raw_FFT,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
+
+  if(is_ready(reac_R$R0_data)) {
+    R0_data_raw_FFT <- spectral::spec.fft(reac_R$R0_data[["R"]])
+    plot(R0_data_raw_FFT,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
+  }
+
 })
+
+
 
 #======================= SEIR MODEL ==================================
 

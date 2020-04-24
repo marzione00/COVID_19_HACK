@@ -38,6 +38,24 @@ shinydashboard::tabItem(
     )
   ),
   
+  shinydashboard::box(width = 12,
+                      status= "danger",
+                      solidHeader = FALSE,
+                      title = "Data cleaning",
+                      shiny::fluidRow(
+                        shiny::column(6, 
+                                      shiny::radioButtons("direction_fill", label = "Direction", 
+                                                          choices = list("Forward" = "forward", "Backward" = "backward"),
+                                                          selected = "forward")
+                                      ),
+                        shiny::column(6, 
+                                      shiny::radioButtons("method_fill", label = "Method", 
+                                                          choices = list("Last Observation Carried Forward" = "locf", "Linear" = "linear"),
+                                                          selected = "locf")
+                        )
+                      )
+  ),
+  
   fluidRow(
     shiny::textOutput("log")
   ),
@@ -364,13 +382,10 @@ shinydashboard::tabItem(
         status = "danger",
         solidHeader = TRUE,
         title = "Input",
-        shiny::sliderInput(inputId = "R_interval", label = "Choose fitting interval",
-                           min = init_date, max = fin_date, timeFormat = "%d %b",
-                           step = 1, value = c(init_date,fin_date)),
         shiny::sliderInput(inputId = "Gamma_1", label = "Shape parameter",
-                           min = 0, max = 10,step = 1,value=6),
+                           min = 0, max = 5 ,step = 0.5,value=1.40),
         shiny::sliderInput(inputId = "Gamma_2", label = "Rate parameter",
-                           min = 0, max = 10,step = 1,value=2)
+                           min = 0, max = 5,step = 0.5,value=0.75)
       )),
     column(
       8,
