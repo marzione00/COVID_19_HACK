@@ -1,3 +1,8 @@
+# SEIR factotum V2
+
+
+
+
 # Solves a normalised (population=1) simplified SEIR system (no immunity loss, no mortality): 
 # 
 # 1_ extract the S, E, I, R, information from the input data P (positive) and R using the distributions IT, SRT, IBST. #
@@ -68,23 +73,36 @@
 	
 	
 
-SEIR_factotum <- function(P, R, N, normalise=TRUE, 
-					time_step=1, end, future=0,
+SEIR_factotum <- function(P, R, N, end, normalise=TRUE, 
+					time_step=1, future=0,
 					distr_IT='exp', distr_SRT='exp', distr_IBST='none',
 					par_IT=list('rate'=1/5.2), par_SRT=list('rate'=log(2)/5), par_IBST=list(), 
-					R0_exp_est_start=1, R0_exp_est_end=5, R0_msp, R0_stages) {
-	#### Functions ####
-	# Generate distribution without outliers (Q3+1.5(IQR))
+					R0_exp_est_start=1, R0_exp_est_end=5, R0_msp, R0_stages=c(), 
+					fit_Rt=FALSE, plot_data=TRUE) {
+	
+	#----Input Checking----
+	if(length(R) < 5)
+		stop('Not enough Removed data')
+	if(length(P) < 5)
+		stop('Not enough Positive data')
+	
+	#----"MACROS"----
+	ERR_generation <- 'correct use : distr_X = \'exp\', par_X = list(\'rate\'=float) \tOR :  distr_X = \'norm\', par_X = list(\'mean\'=float, \'std\'=float\tOR : distr_X = \'none\''
+	WARNING_end <- 'end > length(P). n_obs = min(end, length(P))'
+	
+	#----Functions----
+	
+	# Generate distribution without values of 3th quartile (trade off: accuracy - data)
 	generate <- function(distr, parameters){
 		if(distr=='norm' & !is.null(parameters$mean) & !is.null(parameters$std)){
 			mean <- parameters$mean
 			std <- parameters$std
-			sup <- floor(mean+3.4*std)
+			sup <- floor(mean+0.675*std)
 			out <- dnorm(seq(0,sup), mean, std)
 		}
 		else if(distr=='exp' & !is.null(parameters$rate)){
 			rate <- parameters$rate
-			sup <- floor(log(4)/rate + 1.5*log(3)/rate)
+			sup <- floor(log(4)/rate)
 			out <- dexp(seq(0, sup), rate)
 		}
 		else if(distr=='none'){
@@ -98,13 +116,12 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 	# Extract S, E, I, R from P, R. population is normalised to N=1
 	refine_data <- function(P, R, IT, SRT, IBST, normalise=TRUE, end) {
 	
-		if(!missing(end))
-			if(end<length(P))
-				n_obs <- end
-			else
-				n_obs <- end
-		else
+		if(end<=length(P))
+			n_obs <- end
+		else {
 			n_obs <- length(P)
+			warning(WARNING_end)
+		}
 		
 		m = max(length(IT), length(SRT), length(IBST))
 		ITl = length(IT)
@@ -175,13 +192,14 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 			return(out) 
 	
 		}
-		# Define the target function, ie a least square estimation for log(I)
+		# Define the target function, ie the sup distance of I and I_approx
 		sqdist_log <- function(R0, sigma, gamma, I){
 	
 			out = 0
 			for(t in (1:length(I)))
-				out = out + (log(I_approx(R0, sigma, gamma, I[1],t-1))-log(I[t]))^2
-			
+				# out = out + (log(I_approx(R0, sigma, gamma, I[1],t-1))-log(I[t]))^2
+				out <- max(out, (log(I_approx(R0, sigma, gamma, I[1],t-1))-log(I[t]))^2)
+
 			return(out)
 		}
 		
@@ -225,7 +243,7 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 	}
 	# solve ODE with variable parameters
 	multi_stage_ODE <- function(U0, func, var_names, par_fixed, msp, msp_name, L, time_step){
-		N <- length(L) # number of stages
+		M <- length(L) # number of stages
 		parms <- data.frame(par_fixed, msp) # parms[n, ] are the parameter to be used at stage n
 		names(parms)[length(names(parms))] <- msp_name # msp will be referred with the passed name
 		total <- data.frame() # solution from 0 to L[n]
@@ -237,13 +255,16 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		# define initial data of stage n+1
 		# drop the last element of solution n
 		# save solution as stage n in total
-		
-		for(n in (1:N)){
+		for(n in (1:M)){
+			# print(sprintf('il resto : %i', n))
+			# print(sprintf('L[n] = %i', L[n]))
+			# print(sprintf('L[n-1] = %i', L[n-1]))
+			# 
 			if(n==1)
 				eval_time <- seq(0, L[n], by=time_step)
 			else
 				eval_time <- seq(0, L[n]-L[n-1], by=time_step) 
-			
+		
 			U0 <- as.numeric(U0)
 			names(U0) <- var_names # so that deSolve::ode can use appropriately the parameters
 			
@@ -252,14 +273,14 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 			sol <- sol[!(names(sol)=='time')] # drop the time column
 			
 			# initial data of next stage
-			if(n<N)
+			if(n<M)
 				if(n==1)
 					U0 <- sol[L[n]+1,] 
 				else	
 					U0 <- sol[L[n]-L[n-1]+1,]
 			
 			# drop the last value in sol, as it is U0 for next stage. Avoid repetitions
-			# if n==N, the last values should be dropped as well to have length(S)==length(S_)
+			# if n==M, the last values should be dropped as well to have length(S)==length(S_)
 			#
 			if(n==1)
 				total <- sol[-length(sol[[1]]),]
@@ -270,9 +291,105 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		}
 	
 		rownames(total) <- 1:nrow(total)
-		time <- seq(0, L[N]-1, by=time_step) # the evaluation times for total
+		time <- seq(0, L[M]-1, by=time_step) # the evaluation times for total
 		out <- list('sol'=total, 'time'=time)
 		
+		return(out)
+	}
+	# fit R0 optimising function distance d(U, U_) = sup(dist(U[t], U_[t]))
+	ms_fit_R0 <- function(U0, U, par_fixed, L, time_step){
+	
+		target <- function(beta, sigma, gamma, U0, U, integration_extremes){
+			dist <- function(X, Y) {
+				if(length(X)==length(Y))
+					out <- sqrt(as.numeric(sum((X-Y)^2)))
+				else 
+					out <- NULL
+				return(out)
+			}
+			
+			parameters <- list('beta'=beta, 'sigma'=sigma, 'gamma'=gamma)
+			eval_time <- seq(0, (integration_extremes[2]-integration_extremes[1]))
+			D <- c()
+			# U in the time step we're considering, x+1 points. integration is performed on x+1 points from
+			# 0 to Ln-L(n-1)
+			U <- data.frame(U)
+			Ut <- U[integration_extremes[1] + eval_time, ]
+			
+			U_ <- deSolve::ode(y=U0, times=eval_time, func=SEIR_model, parms=parameters)
+			U_ <- data.frame(U_)
+			colnames(U_) <- c('time', 'S_', 'E_', 'I_', 'R_')
+			U_ <- U_[!(names(U_)=='time')]
+			
+			for(t in (1:length(Ut$S)))
+				D[t] <- dist(Ut[t,], U_[t,])
+			out <- max(D)
+			
+			return(out)
+		}
+		
+		#---- Operations ----
+		
+		M <- length(L) # number of stages
+		sigma <- par_fixed$sigma
+		gamma <- par_fixed$gamma
+		check <- FALSE #is this the last iteration? (ie from LM-1 to LM)
+		
+		opt_beta <- c()
+		total <- data.frame() # solution from 0 to L[M]-1
+
+		# at step n: 
+			# find the interval of interest for ode (eval_time) and target(integration_extremes)
+			# polish U0 in order to use it in further calculations
+			# find the best parameter (opt_beta[n]) optimising target
+			# solve (again) the ode with new_parms as parameters of SEIR_model, polihs solution
+			# define initial data of stage n+1
+			# drop the last element of solution n
+			# save solution as stage n in total
+			
+		for(n in (1:M)){
+			if(n==1){
+				eval_time <- seq(0, L[1], by=time_step)
+				integration_extremes <- c(0, L[1])
+			}
+			else {
+				eval_time <- seq(0, L[n]-L[n-1], by=time_step) 
+				integration_extremes <- c(L[n-1], L[n])
+			}
+			
+			U0 <- as.numeric(U0)
+			names(U0) <- c('S', 'E', 'I', 'R') # so that deSolve::ode can use appropriately the parameters
+			
+			opt_beta[n] <- optimise(f=target, 
+							sigma=sigma, gamma=gamma,
+							U0=U0, U=U,
+							integration_extremes=integration_extremes,
+							interval=c(0,10))$minimum
+			
+			new_parms <- c(par_fixed, 'beta'=opt_beta[n])
+			
+			sol <- deSolve::ode(y=U0, times=eval_time, func=SEIR_model, parms=new_parms)
+			sol <- data.frame(sol)	
+			sol <- sol[!(names(sol)=='time')] # drop the time column
+		
+			if(n==1)
+				U0 <- sol[L[n]+1,] 
+			else	
+				U0 <- sol[L[n]-L[n-1]+1,]
+			
+			if(n==1)
+				total <- sol[-length(sol[[1]]),]
+			else {
+				if(n<M | future>1) # OR DROP ANYWAY?
+					sol <- sol[-length(sol[[1]]),] 
+				total <- rbind(total, sol) # append the new solution
+			}	
+		}
+		
+		rownames(total) <- 1:nrow(total)
+		time <- seq(0, future*L[M], by=time_step) # the evaluation times for total
+		names(total) <- c('S_', 'E_', 'I_', 'R_')
+		out <- list('sol'=total, 'time'=time, 'beta'=opt_beta)
 		return(out)
 	}
 	# Solve SEIR
@@ -301,40 +418,111 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		
 		return(out)
 	}
+	# Plotting, plotly. returns a plotly object
+	plotty <- function(U, sol, name, plot_data=TRUE){
+		S<-U$S; E<-U$E; I<-U$I; R<-U$R
+		S_<-sol$S; E_<-sol$E; I_<-sol$I; R_<-sol$R
+		
+		x <- (1:length(S))
+		x_ <- (1:length(S_))
+		plotS <- FALSE
+		
+		# Should it print one graph or multiple? It depends: if S_ and E_ are comparable at some point, one graph is enough
+		
+		for(t in (1:length(S_)))
+			if((S_<5*E_)[t])
+				plotS <- TRUE
+		
+		trace_0 <- E
+		trace_1 <- E_
+		trace_2 <- I
+		trace_3 <- I_
+		trace_4 <- R
+		trace_5 <- R_
+		trace_6 <- S
+		trace_7 <- S_
+		
+		colors <- c('r', 'b', 'g', 'y')
+		
+		
+		df <- data.frame(x, trace_0, trace_2, trace_4, trace_6)
+		df_ <- data.frame(x_, trace_1, trace_3, trace_5, trace_7)
+		if(plotS){
+			fig <- plot_ly()
+			if(plot_data){
+				fig <- fig %>% add_trace(df, x = ~x, y = ~trace_6, name = 'S', type = 'scatter', mode = 'markers', color=colors[1])
+				fig <- fig %>% add_trace(df, x = ~x, y = ~trace_0, name = 'E', type = 'scatter', mode = 'markers', color=colors[2])
+				fig <- fig %>% add_trace(df, x = ~x, y = ~trace_2, name = 'I', type = 'scatter', mode = 'markers', color=colors[3])
+				fig <- fig %>% add_trace(df, x = ~x, y = ~trace_4, name = 'R', type = 'scatter', mode = 'markers', color=colors[4])
+			}
+			fig <- fig %>% add_trace(df_, x = ~x_, y = ~trace_7, name = 'S_', type = 'scatter', mode = 'lines', color=colors[1])
+			fig <- fig %>% add_trace(df_, x = ~x_, y = ~trace_1, name = 'E_', type = 'scatter', mode = 'lines', color=colors[2])
+			fig <- fig %>% add_trace(df_, x = ~x_, y = ~trace_3, name = 'I_', type = 'scatter', mode = 'lines', color=colors[3])
+			fig <- fig %>% add_trace(df_, x = ~x_, y = ~trace_5, name = 'R_', type = 'scatter', mode = 'lines', color=colors[4])
+			fig <- fig %>% layout(title = name)
+			
+		}
+		else {
+			
+			fig1 <- plot_ly()
+			if(plot_data){
+				fig1 <- fig1 %>% add_trace(df, x = ~x, y = ~trace_0, name = 'E', type = 'scatter', mode = 'markers', color=colors[1])
+				fig1 <- fig1 %>% add_trace(df, x = ~x, y = ~trace_2, name = 'I', type = 'scatter', mode = 'markers', color=colors[2])
+				fig1 <- fig1 %>% add_trace(df, x = ~x, y = ~trace_4, name = 'R', type = 'scatter', mode = 'markers', color=colors[3])
+			}
+			fig1 <- fig1 %>% add_trace(df_, x = ~x_, y = ~trace_1, name = 'E_', type = 'scatter', mode = 'lines', color=colors[1])
+			fig1 <- fig1 %>% add_trace(df_, x = ~x_, y = ~trace_3, name = 'I_', type = 'scatter', mode = 'lines', color=colors[2])
+			fig1 <- fig1 %>% add_trace(df_, x = ~x_, y = ~trace_5, name = 'R_', type = 'scatter', mode = 'lines', color=colors[3])
+			fig1 <- fig1 %>% layout(title = name)
+				
+			fig2 <- plot_ly()
+			if(plot_data)
+				fig2 <- fig2 %>% add_trace(df, x = ~x, y = ~trace_6, name = 'S', type = 'scatter', mode = 'markers', color=colors[4])
+			fig2 <- fig2 %>% add_trace(df_, x = ~x_, y = ~trace_7, name = 'S_', type = 'scatter', mode = 'lines', color=colors[4])
+			fig2 <- fig2 %>% layout(title = name)
+			
+			fig <- subplot(fig1, fig2)
+			
+		}
+		return(fig)
+	}
 	
-	####Operations ####
+	#----Operations----
 	
-	# Generate distribution without outliers (Q3+1.5(IQR))
-	if(is.null(IT <- generate(distr_IT, par_IT)))	return('ERROR in IT generation')
-	if(is.null(SRT <- generate(distr_SRT, par_SRT))) return('ERROR in SRT generation')
-	if(is.null(IBST <- generate(distr_IBST, par_IBST))) return('ERROR in IBST generation')
+	# Generate distribution only up to 3rd quartile
+	if(is.null(IT <- generate(distr_IT, par_IT)))	stop('ERROR in IT generation : ', ERR_generation)
+	if(is.null(SRT <- generate(distr_SRT, par_SRT))) stop('ERROR in SRT generation : ', ERR_generation)
+	if(is.null(IBST <- generate(distr_IBST, par_IBST))) stop('ERROR in IBST generation : ', ERR_generation)
 	
 	# Calculate sigma = 1/E[IT]. Calculate gamma = 1/E[IBST+SRT]
 	sg_out<-calculate_sigma_gamma(IT, SRT, IBST); sigma<-sg_out$sigma; gamma<-sg_out$gamma
 	
-	# Extract S, E, I, R from P, R. Update R0_stages with length(S) if necessary
+	# Extract S, E, I, R from P, R
 	U<-refine_data(P, R, IT=IT, SRT=SRT, IBST=IBST, end=end, normalise=normalise); S<-U$S; E<-U$E; I<-U$I; R<-U$R
-	
-	if(!missing(R0_msp) & !missing(R0_stages))
-		R0_stages <- c(R0_stages, length(S))
-		
+
 	# Initial conditions 
 	U0 <- as.numeric(U[1,])
 	
-	# Solve SEIR with parameters input by user (R0_msp is not missing)
-	# please note that now R0_msp and R0_stages (should) have the same length
-	
-	if(!missing(R0_msp) & !missing(R0_stages)){
+	# ALL GIVEN
+	# elongate R0_stages if feasible (last element<length(S))
+	# note that NOW R0_msp and R0_stages have the same length
+	if(!missing(R0_msp)){
+		
+		if(length(R0_stages) > 0)
+			if(R0_stages[length(R0_stages)] >= length(S))
+				stop(sprintf('Each element of R0_stages has to be strictly < %i = length(S)', length(S)))
+		R0_stages <- c(R0_stages, length(S))
+		
 		if(length(R0_msp)==length(R0_stages))
-			N <- length(R0_msp) 
+			M <- length(R0_msp) 
 		else 
-			return(NULL)
+			stop('Error : length(R0_msp)!=length(R0_stages)-1')
 		
 		# add future stage (from Length(S) to future+Length(S))
 		if(future>0){
-			# add one more stage to Rt,  from R0_stages[N] to R0_stages[N]+future
-			R0_msp[N+1] <- R0_msp[N]
-			used_time <- c(R0_stages, (future+R0_stages[N]))
+			# add one more stage to Rt,  from R0_stages[M] to R0_stages[M]+future
+			R0_msp[M+1] <- R0_msp[M]
+			used_time <- c(R0_stages, (future+R0_stages[M]))
 		}
 		else
 			used_time <- R0_stages
@@ -343,7 +531,32 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		
 		out <- c(U, sol)
 	}
-	# Solve the SEIR with parameters sigma gamma beta=R0*gamma
+	# Rt
+	else if(fit_Rt){
+		if(length(R0_stages) > 0)
+			if(R0_stages[length(R0_stages)] >= length(S))
+				stop(sprintf('Each element of R0_stages has to be strictly < %i = length(S)', length(S)))
+		R0_stages <- c(R0_stages, length(S))
+		
+		if(future>0)
+			used_time <- c(R0_stages, (future+R0_stages[M]))
+		else
+			used_time <- R0_stages
+		
+		sol <- list()
+		par_fixed <- list('gamma'=gamma, 'sigma'=sigma)
+		
+		sol_Rt <- ms_fit_R0(U0, U, par_fixed, used_time, time_step)
+		
+		beta <- sol_Rt$beta
+		Rt <- beta/gamma
+		sol <- sol_Rt$sol
+
+		out <- c(U, sol)
+		out$Rt <- Rt
+	}
+	
+	# R0
 	else {
 		
 		R0_out <- estimate_R0(sigma, gamma, I, R0_exp_est_start, R0_exp_est_end); R0<-R0_out$R0
@@ -356,8 +569,16 @@ SEIR_factotum <- function(P, R, N, normalise=TRUE,
 		
 		# Returns SEIR, S_E_I_R_, time, R0, start (R0_time_start), end (R0_time_end), mean sq dist (mean_fitting)
 		out <- c(U, sol, R0_out)
-		
 	}
+	
+	# Plot
+	if(plot_data)
+		name <- 'SEIR datapoints and solution'
+	else
+		name <- 'SEIR solution'
+	
+	# fig <- plotty(U, sol, name, plot_data)
+	# out$plot <- fig
 	
 	return(out)
 }
