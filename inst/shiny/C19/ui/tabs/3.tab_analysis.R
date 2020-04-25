@@ -320,7 +320,7 @@ shinydashboard::tabItem(
   fluidRow(
     
     column(
-      4,
+      2,
       shinydashboard::box(
         width = 12,
         status = "danger",
@@ -332,7 +332,7 @@ shinydashboard::tabItem(
       )),
     
     column(
-      4,
+      5,
       shinydashboard::box(
         color = "red",
         status = "danger",
@@ -342,7 +342,7 @@ shinydashboard::tabItem(
       )
     ),
     column(
-      4,
+      5,
       shinydashboard::box(
         color = "red",
         status = "danger",
@@ -376,7 +376,7 @@ shinydashboard::tabItem(
   fluidRow(
     
     column(
-      4,
+      3,
       shinydashboard::box(
         width = 12,
         status = "danger",
@@ -388,7 +388,7 @@ shinydashboard::tabItem(
                            min = 0, max = 5,step = 0.5,value=0.75)
       )),
     column(
-      8,
+      9,
       shinydashboard::box(
         color = "red",
         status = "danger",
@@ -397,14 +397,11 @@ shinydashboard::tabItem(
         width = 12
       )
     )
-    
-    #background-color: #f5f5f5; */
   ),
-  
+
   fluidRow(
-    
     column(
-      8,
+      6,
       shinydashboard::box(
         color = "red",
         status = "danger",
@@ -412,15 +409,13 @@ shinydashboard::tabItem(
         shiny::plotOutput("R_t_goodness_of_fit") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
         width = 12
       )
-    )
+    ),
     
     #background-color: #f5f5f5; */
-  ),
   
-  fluidRow(
     
     column(
-      8,
+      6,
       shinydashboard::box(
         color = "red",
         status = "danger",
@@ -429,9 +424,9 @@ shinydashboard::tabItem(
         width = 12
       )
     )
-    
-    #background-color: #f5f5f5; */
   ),
+    #background-color: #f5f5f5; */
+
   
   #====== SEIR ======
   

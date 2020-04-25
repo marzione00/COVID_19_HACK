@@ -622,24 +622,39 @@ output$FFT_day_cases_diff<- shiny::renderPlot({
 
 #DEFAULT 1.4, 0.8
 #
-#shiny::observe({
-#  wait <- waitLoading()
-#  
-#  if(is_ready(reac_general$sample_cases && input$Gamma_1 && input$Gamma_2)) {
-#
-#    GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-#    
-#    time_R <- as.numeric(length(reac_general$sample_cases))-2
-#    print( reac_general$sample_cases+1)
-#    print( GT.chld.hsld2)
-#    reac_R$R0_data <- R0::est.R0.TD(diff(reac_general$sample_cases),GT.chld.hsld2, begin=1, end=time_R)
-#  }
-#})
-#
+
+R0_data <- shiny::reactive({
+  
+  GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+  
+  time_R <- as.numeric(length(reac_general$sample_cases))-2
+  reac_R$R0_data = checkReac_R()
+# shiny::validate(
+#   shiny::need(reac_R$R0_data, "The estimates cannot be calculated")
+# )
+  return(reac_R$R0_data )
+})
+
+checkReac_R <- function()
+{
+ 
+  out <- tryCatch(
+    {
+      out = R0::est.R0.TD(diff(reac_general$sample_cases),GT.chld.hsld2, begin=1, end=time_R)
+    },
+    error = function(e)
+    {
+      out = FALSE
+    }
+  )
+  return(out)
+}
+
 output$R_t_evaluation<- shiny::renderPlot({
 
   if(is_ready(reac_R$R0_data)) {
-    plot(reac_R$R0_data)
+ 
+    plot( R0_data())
   }
   
 })
@@ -647,7 +662,7 @@ output$R_t_evaluation<- shiny::renderPlot({
 output$R_t_goodness_of_fit<- shiny::renderPlot({
   
   if(is_ready(reac_R$R0_data)) {
-    R0::plotfit(reac_R$R0_data)
+    R0::plotfit(R0_data())
   }
  
 })
@@ -655,7 +670,7 @@ output$R_t_goodness_of_fit<- shiny::renderPlot({
 output$R_t_evaluation_FFT<- shiny::renderPlot({
 
   if(is_ready(reac_R$R0_data)) {
-    R0_data_raw_FFT <- spectral::spec.fft(reac_R$R0_data[["R"]])
+    R0_data_raw_FFT <- spectral::spec.fft(R0_data()[["R"]])
     plot(R0_data_raw_FFT,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
   }
 
