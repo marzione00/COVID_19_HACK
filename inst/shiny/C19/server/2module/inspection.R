@@ -189,7 +189,7 @@ shiny::observe({
     
     reac_dataset$table_plot <- eval(reac_dataset$data)[[reac_dataset$name]] %>%
       dplyr::select("Date" = data, "Current pos. cases" = totale_positivi, "Current hospitalised" = totale_ospedalizzati, "Current intensive care" = terapia_intensiva, "Current home isol." = isolamento_domiciliare)
-    reac_dataset$colors <- c("#cc66ff", "#00e673", "#ff3300", "#00bfff")
+    reac_dataset$colors <- c("#00bfff", "#00e673", "#ff3300", "#cc66ff")
     reac_dataset$annotations_labels <- list(
       list(point = list(x = UTSdate(reac_dataset$table_plot[ which.max(reac_dataset$table_plot[,"Current pos. cases"]) , "Date" ]),
                         y = max(reac_dataset$table_plot[,"Current pos. cases"], na.rm = T), xAxis = 0, yAxis = reac_dataset$yAxis),
