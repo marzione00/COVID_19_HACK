@@ -402,10 +402,41 @@ shiny::observe({
     reac_growth$growth_change <- data.frame(date=reac_growth$out_growth$data, growth=reac_growth$out_growth$growth_change)
     
     reac_growth$growth_change_xts <- xts::xts(reac_growth$growth_change[,-1], order.by=reac_growth$growth_change[,1])
+    
+    reac_growth$table_growth <- data.frame(date=reac_growth$out_growth$data, growth=reac_growth$out_growth$growth, growth_change = reac_growth$out_growth$growth_change)
   }
  
 })
 
+# boxes with arrows and growth in growth monitoring
+output$summary_box_growth <- renderUI({
+  
+  shinydashboardPlus::descriptionBlock(
+    number = paste0(tail(reac_growth$out_growth$growth,1),"%"),
+    number_color = ifelse(tail(reac_growth$out_growth$growth,1)>0,"red","green"), 
+    number_icon = ifelse(tail(reac_growth$out_growth$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
+    header = "CASES GROWTH", 
+    text = NULL, 
+    right_border = TRUE,
+    margin_bottom = FALSE
+  )
+  
+})
+
+
+output$summary_box_growth_change <- renderUI({
+  
+  shinydashboardPlus::descriptionBlock(
+    number = paste0(tail(reac_growth$out_growth$growth_change,1),"%"),
+    number_color = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"red","green"), 
+    number_icon = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"fa fa-caret-up","fa fa-caret-down"),
+    header = HTML("&Delta; CASES GROWTH"), 
+    text = NULL, 
+    right_border = FALSE,
+    margin_bottom = FALSE
+  )
+  
+})
 
 output$plot_test <- highcharter::renderHighchart(
   if(is_ready(reac_growth$growth_xts)){
@@ -417,9 +448,26 @@ highcharter::highchart(type = "stock") %>%
                                                list(type="all", count=1, text="All")), 
                                 selected = 7 ) %>%
   highcharter::hc_title(text = "% growth and growth change of total cases") %>%
-  highcharter::hc_add_series(reac_growth$growth_xts, name="growth", color = "red", type = "spline") %>% 
-  highcharter::hc_add_series(reac_growth$growth_change_xts, name="growth_change", color = "orange", type = "spline")
-} else {Sys.sleep(1)}
+  # highcharter::hc_add_series(reac_growth$growth_xts, name="growth", color = "red", type = "spline", yAxis = 0,
+  #                            tooltip = list(
+  #                              pointFormat = '<span style="color:{point.color}">-</span> Growth: <b>{point.y}</b><br>Growth change: <b>prova</b>',
+  #                              valueSuffix = '%')) %>% 
+  highcharter::hc_add_series(reac_growth$table_growth, name="growth", 
+                             highcharter::hcaes(x = date, y = growth, yd = growth_change),
+                             color = "red", type = "spline", yAxis = 0,
+                              tooltip = list(
+                               pointFormat = '<span style="color:{point.color}">-</span> Growth: <b>{point.y}</b><br>Growth change: <b>{point.yd}</b>',
+                               valueSuffix = '%')) %>% 
+  # highcharter::hc_add_series(reac_growth$growth_change_xts, name="growth_change", color = "orange", type = "spline", yAxis = 1) %>%
+  highcharter::hc_yAxis(
+    plotLines = list(list(color = "black", value = 0, width = 3, dashStyle = "ShortDash"))
+  )
+  #   %>%
+  # highcharter::hc_yAxis_multiples(
+  #   list(lineWidth = 3, title = list(text  =  ''), plotLines = list(list(color = "#e60000", value = 1, width = 4, dashStyle = "ShortDash"))),
+  #   list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
+  # )
+}
 
 )
 
@@ -471,34 +519,7 @@ output$regprov_dfout <- renderUI({
   
 })
 
-# boxes with arrows and growth in growth monitoring
-output$summary_box_growth <- renderUI({
-  
-  shinydashboardPlus::descriptionBlock(
-    number = paste0(tail(reac_growth$out_growth$growth,1),"%"),
-    number_color = ifelse(tail(reac_growth$out_growth$growth,1)>0,"red","green"), 
-    number_icon = ifelse(tail(reac_growth$out_growth$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
-    header = "CASES GROWTH", 
-    text = NULL, 
-    right_border = TRUE,
-    margin_bottom = FALSE
-  )
-  
-})
 
-output$summary_box_growth_change <- renderUI({
-  
-  shinydashboardPlus::descriptionBlock(
-    number = paste0(tail(reac_growth$out_growth$growth_change,1),"%"),
-    number_color = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"red","green"), 
-    number_icon = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"fa fa-caret-up","fa fa-caret-down"),
-    header = HTML("&Delta; CASES GROWTH"), 
-    text = NULL, 
-    right_border = FALSE,
-    margin_bottom = FALSE
-  )
-  
-})
 
 output$growth_NAlog <- renderUI({
 
