@@ -38,8 +38,10 @@ waitInput <- shiny::reactive({
 # DEPENDS ON REACTIVE t
 suggest_dates <- function()
 {
+
   index = covid19::const_trim(eval(t$data)[[t$name]]$totale_casi,1)
-  sugStart = reac_general$sample_date[index]
+  sugStart = eval(t$data)[[t$name]]$data[index]
+  #sugStart = reac_general$sample_date[index]
   
   return(c(sugStart, fin_date))
 }
@@ -92,13 +94,15 @@ shiny::observe( {
   }
   
   reac_general$sugg_dates = suggest_dates()
-  # shiny::updateSliderInput(session,"arima_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
-  #                          step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
-  # shiny::updateSliderInput(session, "fitInterval",min = init_date, max = fin_date, timeFormat = "%d %b",
-  #                          step = 1, value = c(reac_general$sugg_dates[1],reac_general$sugg_dates[2]))
-  # shiny::updateSliderInput(session,"FFT_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
-  #                          step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
-  # 
+  print(reac_general$sugg_dates[2])
+  
+  shiny::updateSliderInput(session,"arima_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
+                           step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
+   shiny::updateSliderInput(session, "fitInterval",min = init_date, max = fin_date, timeFormat = "%d %b",
+                            step = 1, value = c(reac_general$sugg_dates[1],reac_general$sugg_dates[2]))
+   shiny::updateSliderInput(session,"FFT_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
+                            step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
+  
 })
 
 
@@ -616,19 +620,22 @@ output$FFT_day_cases_diff<- shiny::renderPlot({
 
 #======================= R(T) ==================================
 
-
-shiny::observe({
-  wait <- waitLoading()
-  
-  if(is_ready(reac_general$sample_cases)) {
-
-    GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-    
-    time_R <- as.numeric(length(reac_general$sample_cases))-2
-    reac_R$R0_data <- R0::est.R0.TD(diff(reac_general$sample_cases),GT.chld.hsld2, begin=1, end=time_R)
-  }
-})
-
+#DEFAULT 1.4, 0.8
+#
+#shiny::observe({
+#  wait <- waitLoading()
+#  
+#  if(is_ready(reac_general$sample_cases && input$Gamma_1 && input$Gamma_2)) {
+#
+#    GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+#    
+#    time_R <- as.numeric(length(reac_general$sample_cases))-2
+#    print( reac_general$sample_cases+1)
+#    print( GT.chld.hsld2)
+#    reac_R$R0_data <- R0::est.R0.TD(diff(reac_general$sample_cases),GT.chld.hsld2, begin=1, end=time_R)
+#  }
+#})
+#
 output$R_t_evaluation<- shiny::renderPlot({
 
   if(is_ready(reac_R$R0_data)) {
