@@ -284,6 +284,8 @@ age_df_final <- age_df %>%
 #====== MODULE 3 - ANALYSIS ====== 
 
 # Inital and final dates of samples
+'%then%' <- shiny:::'%OR%'
+
 init_date <- min(countryTS$Italy$data)
 
 init_date_arima = init_date

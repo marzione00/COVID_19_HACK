@@ -4,6 +4,7 @@ reac_logistic <- shiny::reactiveValues()
 reac_ARIMA <- shiny::reactiveValues(arimaOK = FALSE)
 reac_FFT <- shiny::reactiveValues()
 reac_R <- shiny::reactiveValues()
+reac_SEIR <- shiny::reactiveValues()
     
     # THIS IS THE REACTIVE CONTAINER OF TERRITORY SELECTION VARIABLES.
 t <- shiny::reactiveValues()
@@ -94,7 +95,6 @@ shiny::observe( {
   }
   
   reac_general$sugg_dates = suggest_dates()
-  print(reac_general$sugg_dates[2])
   
   shiny::updateSliderInput(session,"arima_interval",min = init_date, max = fin_date, timeFormat = "%d %b",
                            step = 1, value = c(reac_general$sugg_dates[1], reac_general$sugg_dates[2]))
@@ -299,7 +299,17 @@ output$selected_info4 <- shiny::renderUI({
 })
 
 output$selected_info5 <- shiny::renderUI({
-  selected_info_func()
+  if(is_ready(reac_SEIR$name) && is_ready(reac_SEIR$notAvail))
+  {
+    if(reac_SEIR$notAvail) {
+      fluidPage(
+        div(h2(strong(paste("Selected territory:", reac_SEIR$name))), align = "center", style = "color:red"),
+        div(h5(em(paste("Data for SEIR not available at province level"))), align = "center", style = "color:red")
+      )
+    } else {
+      div(h2(strong(paste("Selected territory:", reac_SEIR$name))), align = "center", style = "color:red")
+    }
+  }
 })
 
 output$resid_smry <- shiny::renderPrint({
@@ -623,56 +633,52 @@ output$FFT_day_cases_diff<- shiny::renderPlot({
 #DEFAULT 1.4, 0.8
 #
 
-R0_data <- shiny::reactive({
+shiny::observe({
   
-  GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-  
-  time_R <- as.numeric(length(reac_general$sample_cases))-2
-  reac_R$R0_data = checkReac_R()
-# shiny::validate(
-#   shiny::need(reac_R$R0_data, "The estimates cannot be calculated")
-# )
-  return(reac_R$R0_data )
+  if(is_ready(reac_general$sample_cases) && is_ready(input$"Gamma_1")) {
+    
+    GT.chld.hsld2<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+    time_R <- as.numeric(length(reac_general$sample_cases))-2
+    
+    tryCatch(
+      {
+        reac_R$R0_data <- R0::est.R0.TD(diff(reac_general$sample_cases),GT.chld.hsld2, begin=1, end=time_R)
+      },
+      error = function(e)
+      {
+        reac_R$R0_data <- FALSE
+      }
+    )
+  }
 })
 
-checkReac_R <- function()
-{
- 
-  out <- tryCatch(
-    {
-      out = R0::est.R0.TD(diff(reac_general$sample_cases),GT.chld.hsld2, begin=1, end=time_R)
-    },
-    error = function(e)
-    {
-      out = FALSE
-    }
+R0_data <- shiny::reactive({
+
+  shiny::validate(
+    shiny::need(is_ready(reac_R$R0_data), "Wait...") %then%
+    shiny::need(!isFALSE(reac_R$R0_data), "The estimates cannot be calculated")
   )
-  return(out)
-}
+  return(reac_R$R0_data)
+})
+
+
 
 output$R_t_evaluation<- shiny::renderPlot({
 
-  if(is_ready(reac_R$R0_data)) {
- 
     plot( R0_data())
-  }
   
 })
 
 output$R_t_goodness_of_fit<- shiny::renderPlot({
-  
-  if(is_ready(reac_R$R0_data)) {
+
     R0::plotfit(R0_data())
-  }
  
 })
 
 output$R_t_evaluation_FFT<- shiny::renderPlot({
 
-  if(is_ready(reac_R$R0_data)) {
     R0_data_raw_FFT <- spectral::spec.fft(R0_data()[["R"]])
     plot(R0_data_raw_FFT,type = "l",ylab = "Amplitude",xlab = "Frequency",lwd = 2)
-  }
 
 })
 
@@ -681,5 +687,118 @@ output$R_t_evaluation_FFT<- shiny::renderPlot({
 #======================= SEIR MODEL ==================================
 
 
+#---- data retrieval, common to both
+
+distr_IT <- 'exp'
+distr_SRT <- 'exp'
+distr_IBST <- 'none'
+
+shiny::observe({
+  
+  wait <- waitLoading()
+
+  # territory selection for SEIR
+  if(t$p) {
+    reac_SEIR$data <- expression(regionTS)
+    reac_SEIR$notAvail <- TRUE
+    reac_SEIR$name <- regAndProv[ regAndProv$province == t$name, "region"]
+  } else {
+    reac_SEIR$data <- t$data
+    reac_SEIR$notAvail <- FALSE
+    reac_SEIR$name <- t$name
+  }
+  
+  # N =  population of area
+  if(t$c) {
+    reac_SEIR$N <- italy_pop$country[1,"valore"]
+  } else {
+    reac_SEIR$N <- italy_pop$region[italy_pop$region$territorio == reac_SEIR$name, "valore"]
+  }
+  
+  ## Time series
+  # Infected Time Series
+  reac_SEIR$P <- level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$totale_casi, direction = input$direction_fill, method = input$method_fill)
+  
+  # Removed Time Series (recovered + dead)
+  reac_SEIR$R <- level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$dimessi_guariti, direction = input$direction_fill, method = input$method_fill) +
+    level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$deceduti, direction = input$direction_fill, method = input$method_fill)
+  
+  
+  reac_SEIR$par_IT <- list('rate'=1/input$rate_IT)
+  reac_SEIR$par_SRT <- list('rate'=1/input$rate_SRT)
+  reac_SEIR$par_IBST <- NULL
+  
+  reac_SEIR$IT <- covid19::generate(distr_IT, reac_SEIR$par_IT)
+  reac_SEIR$SRT <- covid19::generate(distr_SRT, reac_SEIR$par_SRT)
+  reac_SEIR$IBST <- covid19::generate(distr_IBST, reac_SEIR$par_IBST)
+  
+  reac_SEIR$m <- max(length(reac_SEIR$IT), length(reac_SEIR$SRT), length(reac_SEIR$IBST))
+  reac_SEIR$end <- length(reac_SEIR$P) #Rt goes from day 1 to day n_obs-m BUT also the SEIR data series will go from day 1 to that day after refinement
+})
 
 
+#---- R0 part
+
+shiny::observeEvent(input$est_R0, {
+
+  out <- SEIR_factotum(P = reac_SEIR$P, R = reac_SEIR$R, N = reac_SEIR$N,
+                       end=reac_SEIR$end, future=input$future,
+                       distr_IT=distr_IT, distr_SRT=distr_SRT, distr_IBST=distr_IBST,
+                       par_IT=reac_SEIR$par_IT, par_SRT=reac_SEIR$par_SRT, par_IBST=reac_SEIR$par_IBST,
+                       R0_exp_est_end=input$R0_exp_est_end,
+                       plot_data=input$plot_data)
+
+  reac_SEIR$R0 <- out$R0
+
+  S_<-out$S_; E_<-out$E_; I_<-out$I_; R_<-out$R_
+  S<-out$S; E<-out$E; I<-out$I; R<-out$R
+
+  U <- list('S'=S, 'E'=E, 'I'=I, 'R'=R)
+  U_ <- list('S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+
+  # if(input$plot_data <- TRUE)
+  # 	output$SEIR_plot <- plotly::plot(U_ & U on time)
+  # else
+  # 	output$SEIR_plot <- plotly::plot(U_ on time)
+
+})
+
+
+shiny::observeEvent(input$est_Rt, {
+
+  n_obs <- reac_SEIR$end
+  len_data_series <- n_obs - reac_SEIR$m
+
+  # REFERS TO INPUT IN PRECEDENT TAB
+
+  GT<-R0::generation.time("gamma", input$"Gamma_1", input$"Gamma_2")
+  R0_out <- R0::est.R0.SB(reac_SEIR$P,GT,begin=1, end=len_data_series)
+  Rt <- R0_out$R
+  R0_stages <- (1:(length(Rt)-1))
+
+  out <- SEIR_factotum(P = reac_SEIR$P, R = reac_SEIR$R, N = reac_SEIR$N,
+                       end=reac_SEIR$end, future=input$future,
+                       distr_IT=distr_IT, distr_SRT=distr_SRT, distr_IBST=distr_IBST,
+                       par_IT=reac_SEIR$par_IT, par_SRT=reac_SEIR$par_SRT, par_IBST=reac_SEIR$par_IBST,
+                       R0_msp=Rt, R0_stages=R0_stages,
+                       plot_data=input$plot_data)
+
+  S_<-out$S_; E_<-out$E_; I_<-out$I_; R_<-out$R_
+  S<-out$S; E<-out$E; I<-out$I; R<-out$R
+
+  U <- list('S'=S, 'E'=E, 'I'=I, 'R'=R)
+  U_ <- list('S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+
+  # if(input$plot_data <- TRUE)
+  # 	output$SEIR_plot <- plotly::plot(U_ & U on time)
+  # else
+  # 	output$SEIR_plot <- plotly::plot(U_ on time)
+
+})
+
+
+output$SEIR_R0 <- renderPrint({
+  if(is_ready(reac_SEIR$R0)) {
+    print(reac_SEIR$R0)
+  }
+})
