@@ -734,6 +734,7 @@ shiny::observe({
   
   reac_SEIR$m <- max(length(reac_SEIR$IT), length(reac_SEIR$SRT), length(reac_SEIR$IBST))
   reac_SEIR$end <- length(reac_SEIR$P) #Rt goes from day 1 to day n_obs-m BUT also the SEIR data series will go from day 1 to that day after refinement
+  reac_SEIR$len <- reac_SEIR$end - reac_SEIR$m
 })
 
 
@@ -753,8 +754,8 @@ shiny::observeEvent(input$est_R0, {
   S_<-out$S_; E_<-out$E_; I_<-out$I_; R_<-out$R_
   S<-out$S; E<-out$E; I<-out$I; R<-out$R
 
-  U <- list('S'=S, 'E'=E, 'I'=I, 'R'=R)
-  U_ <- list('S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+  reac_SEIR$U <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S'=S, 'E'=E, 'I'=I, 'R'=R)
+  reac_SEIR$U_ <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
 
   # if(input$plot_data <- TRUE)
   # 	output$SEIR_plot <- plotly::plot(U_ & U on time)
@@ -766,13 +767,11 @@ shiny::observeEvent(input$est_R0, {
 
 shiny::observeEvent(input$est_Rt, {
 
-  n_obs <- reac_SEIR$end
-  len_data_series <- n_obs - reac_SEIR$m
 
   # REFERS TO INPUT IN PRECEDENT TAB
 
-  GT<-R0::generation.time("gamma", input$"Gamma_1", input$"Gamma_2")
-  R0_out <- R0::est.R0.SB(reac_SEIR$P,GT,begin=1, end=len_data_series)
+  GT<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+  R0_out <- R0::est.R0.TD(diff(reac_SEIR$P),GT,begin=1, end=reac_SEIR$len)
   Rt <- R0_out$R
   R0_stages <- (1:(length(Rt)-1))
 
@@ -786,8 +785,8 @@ shiny::observeEvent(input$est_Rt, {
   S_<-out$S_; E_<-out$E_; I_<-out$I_; R_<-out$R_
   S<-out$S; E<-out$E; I<-out$I; R<-out$R
 
-  U <- list('S'=S, 'E'=E, 'I'=I, 'R'=R)
-  U_ <- list('S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+  reac_SEIR$U <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S'=S, 'E'=E, 'I'=I, 'R'=R)
+  reac_SEIR$U_ <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
 
   # if(input$plot_data <- TRUE)
   # 	output$SEIR_plot <- plotly::plot(U_ & U on time)
@@ -802,3 +801,8 @@ output$SEIR_R0 <- renderPrint({
     print(reac_SEIR$R0)
   }
 })
+
+output$SEIR_plot <- highcharter::renderHighchart(
+  highcharter::highchart() %>%
+    highcharter::hc_add_series(reac_SEIR$U, highcharter::hcaes(x = date, y = S), type = "scatter" )
+)
