@@ -13,7 +13,7 @@ shinydashboard::tabItem(
   fluidRow(
     shinydashboard::box(width = 12,
                         status= "danger",
-                        solidHeader = FALSE,
+                        solidHeader = TRUE,
                         title = "Territory selection",
                         shiny::fluidPage(
                           shiny::fluidRow(
@@ -419,7 +419,7 @@ shinydashboard::tabItem(
       shinydashboard::box(
         color = "red",
         status = "danger",
-        title = "R(t)",
+        title = "FFT of R(t)",
         shiny::plotOutput("R_t_evaluation_FFT") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
         width = 12
       )
@@ -464,7 +464,7 @@ shinydashboard::tabItem(
         shiny::actionButton(inputId = "est_Rt", "all times Rt. Refer to previous tab for Rt parameters choice"),	
         shiny::sliderInput(inputId = "R0_exp_est_end", label = "If estimating initial R0, number of days to estimate",
                            min = 1, max = 20, step = 1, value = 5),
-        shiny::sliderInput(inputId = "future", label = "Select forecast lags",
+        shiny::sliderInput(inputId = "future", label = "Forecast lags",
                            min = 0, max = 100, step = 1, value = 0),
         shiny::checkboxInput(inputId = "plot_data", label = "Show true data points", value = TRUE)
       ),
@@ -485,7 +485,7 @@ shinydashboard::tabItem(
         color = "red",
         status = "danger",
         title = "SEIR plot",
-        shiny::plotOutput("SEIR_plot") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
+        highcharter::highchartOutput("SEIR_plot") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
         width = 12
       )
     )
