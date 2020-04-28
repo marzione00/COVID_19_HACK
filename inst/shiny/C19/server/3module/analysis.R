@@ -763,10 +763,7 @@ shiny::observeEvent(input$est_R0, {
   reac_SEIR$U <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S'=S, 'E'=E, 'I'=I, 'R'=R)
   reac_SEIR$U_ <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
 
-  # if(input$plot_data <- TRUE)
-  # 	output$SEIR_plot <- plotly::plot(U_ & U on time)
-  # else
-  # 	output$SEIR_plot <- plotly::plot(U_ on time)
+  reac_SEIR$current <- "R0"
 
 })
 
@@ -777,7 +774,7 @@ shiny::observeEvent(input$est_Rt, {
   # REFERS TO INPUT IN PRECEDENT TAB
 
   GT<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-  R0_out <- R0::est.R0.TD(diff(reac_SEIR$P),GT,begin=1, end=reac_SEIR$len)
+  R0_out <- R0::est.R0.TD(diff(reac_SEIR$P),GT,begin=1, end=as.numeric(reac_SEIR$len))
   Rt <- R0_out$R
   R0_stages <- (1:(length(Rt)-1))
 
@@ -800,11 +797,34 @@ shiny::observeEvent(input$est_Rt, {
   reac_SEIR$U <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S'=S, 'E'=E, 'I'=I, 'R'=R)
   reac_SEIR$U_ <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
 
-  # if(input$plot_data <- TRUE)
-  # 	output$SEIR_plot <- plotly::plot(U_ & U on time)
-  # else
-  # 	output$SEIR_plot <- plotly::plot(U_ on time)
+  reac_SEIR$current <- "R(t)"
 
+})
+
+
+shiny::observe({
+  if(is_ready(reac_SEIR$U_) ) {
+    reac_SEIR$SEIR_plot <- highcharter::hchart(tidyr::gather((reac_SEIR$U_), key="key", value="value", -date), 
+                                               highcharter::hcaes(x = date, y = value, group = key), 
+                                               type = "line",
+                                               color = c("#bf40bf", "#e60000", "#00b300", "#fec501"),
+                                               name = c("Exposed", "Infectious", "Recovered", "Susceptible"),
+                                               marker = list(enabled = FALSE),
+                                               legendIndex = c(2,3,4,1),
+                                               tooltip = list(valueDecimals = 0)
+    ) %>%
+      highcharter::hc_add_series(tidyr::gather((reac_SEIR$U), key="key", value="value", -date), 
+                                 highcharter::hcaes(x = date, y = value, group = key), 
+                                 type = "scatter",
+                                 name = c("Exposed (true)", "Infectious (true)", "Recovered (true)", "Susceptible (true)"),
+                                 color = c("#bf40bf", "#e60000", "#00b300", "#fec501"),
+                                 legendIndex = c(2,3,4,1),
+                                 tooltip = list(valueDecimals = 0, 
+                                                pointFormat = '<span style="color:{point.color}">■</span> {series.name}: <b>{point.y}</b><br/>',
+                                                headerFormat = '<span style="font-size: 10px">{point.key}</span><br/>')
+      ) %>%
+      highcharter::hc_title(text = paste("SEIR based on", reac_SEIR$current))
+  }
 })
 
 
@@ -815,20 +835,5 @@ output$SEIR_R0 <- renderPrint({
 })
 
 output$SEIR_plot <- highcharter::renderHighchart(
-  highcharter::hchart(tidyr::gather((reac_SEIR$U_), key="key", value="value", -date), 
-                      highcharter::hcaes(x = date, y = value, group = key), 
-                      type = "line",
-                      color = c("#bf40bf", "#e60000", "#00b300", "#fec501"),
-                      name = c("Exposed", "Infectious", "Recovered", "Susceptible"),
-                      marker = list(enabled = FALSE),
-                      legendIndex = c(2,3,4,1)
-                      ) %>%
-    highcharter::hc_add_series(tidyr::gather((reac_SEIR$U), key="key", value="value", -date), 
-                               highcharter::hcaes(x = date, y = value, group = key), 
-                               type = "scatter",
-                               name = c("Exposed (true)", "Infectious (true)", "Recovered (true)", "Susceptible (true)"),
-                               color = c("#bf40bf", "#e60000", "#00b300", "#fec501"),
-                               legendIndex = c(2,3,4,1)
-                               ) %>%
-    highcharter::hc_title(text = "SEIR plot")
+  reac_SEIR$SEIR_plot
 )

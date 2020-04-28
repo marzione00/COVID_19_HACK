@@ -107,12 +107,12 @@ setdiff(b,a)
 dfita1 <- dfita1 %>%
   dplyr::left_join(pc_df) %>%
   dplyr::ungroup() %>% 
- dplyr::mutate(percentage=(cases/pop)*100) %>%
- dplyr::mutate(density=(cases/ext)*1000) %>%
+ dplyr::mutate(proportion=(cases/pop)*100) %>%
+ dplyr::mutate(density=(cases/ext)) %>%
   dplyr::rename(absolute=cases) %>%
- dplyr::mutate(percentage = round(percentage,2)) %>%
+ dplyr::mutate(proportion = round(proportion,2)) %>%
  dplyr::mutate(density = round(density, 2)) %>%
-  dplyr::select(id, date, absolute, percentage, density, growth) %>%
+  dplyr::select(id, date, absolute, proportion, density, growth) %>%
   dplyr::ungroup() %>%
   tidyr::gather(key="type",value="value",-id,-date)
 
@@ -186,10 +186,10 @@ clean_prov <- clean_prov %>%
 dfita2 <- dfita2 %>%
   dplyr::left_join(clean_prov) %>% 
   dplyr::ungroup() %>% 
-  dplyr::mutate(percentage=(cases/pop)*100) %>%
-  dplyr::mutate(density=(cases/ext)*1000) %>%
+  dplyr::mutate(proportion=(cases/pop)*100) %>%
+  dplyr::mutate(density=(cases/ext)) %>%
   dplyr::rename(absolute=cases) %>% 
-  dplyr::select(hasc, date, absolute, percentage, density, growth) %>%
+  dplyr::select(hasc, date, absolute, proportion, density, growth) %>%
   tidyr::gather(key="type",value="value",-hasc,-date)
 
 
