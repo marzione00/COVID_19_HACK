@@ -685,155 +685,155 @@ output$R_t_evaluation_FFT<- shiny::renderPlot({
 
 
 #======================= SEIR MODEL ==================================
-
-
-#---- data retrieval, common to both
-
-distr_IT <- 'exp'
-distr_SRT <- 'exp'
-distr_IBST <- 'none'
-
-shiny::observe({
-  
-  wait <- waitLoading()
-
-  # territory selection for SEIR
-  if(t$p) {
-    reac_SEIR$data <- expression(regionTS)
-    reac_SEIR$notAvail <- TRUE
-    reac_SEIR$name <- regAndProv[ regAndProv$province == t$name, "region"]
-  } else {
-    reac_SEIR$data <- t$data
-    reac_SEIR$notAvail <- FALSE
-    reac_SEIR$name <- t$name
-  }
-  
-  # N =  population of area
-  if(t$c) {
-    reac_SEIR$N <- italy_pop$country[1,"valore"]
-  } else {
-    reac_SEIR$N <- italy_pop$region[italy_pop$region$territorio == reac_SEIR$name, "valore"]
-  }
-  
-  ## Time series
-  # Infected Time Series
-  reac_SEIR$P <- level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$totale_casi, direction = input$direction_fill, method = input$method_fill)
-  
-  # Removed Time Series (recovered + dead)
-  reac_SEIR$R <- level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$dimessi_guariti, direction = input$direction_fill, method = input$method_fill) +
-    level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$deceduti, direction = input$direction_fill, method = input$method_fill)
-  
-  
-  reac_SEIR$par_IT <- list('rate'=1/input$rate_IT)
-  reac_SEIR$par_SRT <- list('rate'=1/input$rate_SRT)
-  reac_SEIR$par_IBST <- NULL
-  
-  reac_SEIR$IT <- covid19::generate(distr_IT, reac_SEIR$par_IT)
-  reac_SEIR$SRT <- covid19::generate(distr_SRT, reac_SEIR$par_SRT)
-  reac_SEIR$IBST <- covid19::generate(distr_IBST, reac_SEIR$par_IBST)
-  
-  reac_SEIR$m <- max(length(reac_SEIR$IT), length(reac_SEIR$SRT), length(reac_SEIR$IBST))
-  reac_SEIR$end <- length(reac_SEIR$P) #Rt goes from day 1 to day n_obs-m BUT also the SEIR data series will go from day 1 to that day after refinement
-  reac_SEIR$len <- reac_SEIR$end - reac_SEIR$m
-})
-
-
-#---- R0 part
-
-shiny::observeEvent(input$est_R0, {
-
-  out <- SEIR_factotum(P = reac_SEIR$P, R = reac_SEIR$R, N = reac_SEIR$N,
-                       end=reac_SEIR$end, future=input$future,
-                       distr_IT=distr_IT, distr_SRT=distr_SRT, distr_IBST=distr_IBST,
-                       par_IT=reac_SEIR$par_IT, par_SRT=reac_SEIR$par_SRT, par_IBST=reac_SEIR$par_IBST,
-                       R0_exp_est_end=input$R0_exp_est_end,
-                       plot_data=input$plot_data)
-
-  reac_SEIR$R0 <- out$R0
-
-  S_ <- reac_SEIR$N*out$S_ 
-  E_ <- reac_SEIR$N*out$E_ 
-  I_ <- reac_SEIR$N*out$I_ 
-  R_ <- reac_SEIR$N*out$R_
-  S <- reac_SEIR$N*out$S 
-  E <- reac_SEIR$N*out$E 
-  I <- reac_SEIR$N*out$I
-  R <- reac_SEIR$N*out$R
-
-  reac_SEIR$U <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S'=S, 'E'=E, 'I'=I, 'R'=R)
-  reac_SEIR$U_ <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
-
-  reac_SEIR$current <- "R0"
-
-})
-
-
-shiny::observeEvent(input$est_Rt, {
-
-
-  # REFERS TO INPUT IN PRECEDENT TAB
-
-  GT<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
-  R0_out <- R0::est.R0.TD(diff(reac_SEIR$P),GT,begin=1, end=as.numeric(reac_SEIR$len))
-  Rt <- R0_out$R
-  R0_stages <- (1:(length(Rt)-1))
-
-  out <- SEIR_factotum(P = reac_SEIR$P, R = reac_SEIR$R, N = reac_SEIR$N,
-                       end=reac_SEIR$end, future=input$future,
-                       distr_IT=distr_IT, distr_SRT=distr_SRT, distr_IBST=distr_IBST,
-                       par_IT=reac_SEIR$par_IT, par_SRT=reac_SEIR$par_SRT, par_IBST=reac_SEIR$par_IBST,
-                       R0_msp=Rt, R0_stages=R0_stages,
-                       plot_data=input$plot_data)
-
-  S_ <- reac_SEIR$N*out$S_ 
-  E_ <- reac_SEIR$N*out$E_ 
-  I_ <- reac_SEIR$N*out$I_ 
-  R_ <- reac_SEIR$N*out$R_
-  S <- reac_SEIR$N*out$S 
-  E <- reac_SEIR$N*out$E 
-  I <- reac_SEIR$N*out$I
-  R <- reac_SEIR$N*out$R
-
-  reac_SEIR$U <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S'=S, 'E'=E, 'I'=I, 'R'=R)
-  reac_SEIR$U_ <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
-
-  reac_SEIR$current <- "R(t)"
-
-})
-
-
-shiny::observe({
-  if(is_ready(reac_SEIR$U_) ) {
-    reac_SEIR$SEIR_plot <- highcharter::hchart(tidyr::gather((reac_SEIR$U_), key="key", value="value", -date), 
-                                               highcharter::hcaes(x = date, y = value, group = key), 
-                                               type = "line",
-                                               color = c("#bf40bf", "#e60000", "#00b300", "#fec501"),
-                                               name = c("Exposed", "Infectious", "Recovered", "Susceptible"),
-                                               marker = list(enabled = FALSE),
-                                               legendIndex = c(2,3,4,1),
-                                               tooltip = list(valueDecimals = 0)
-    ) %>%
-      highcharter::hc_add_series(tidyr::gather((reac_SEIR$U), key="key", value="value", -date), 
-                                 highcharter::hcaes(x = date, y = value, group = key), 
-                                 type = "scatter",
-                                 name = c("Exposed (true)", "Infectious (true)", "Recovered (true)", "Susceptible (true)"),
-                                 color = c("#bf40bf", "#e60000", "#00b300", "#fec501"),
-                                 legendIndex = c(2,3,4,1),
-                                 tooltip = list(valueDecimals = 0, 
-                                                pointFormat = '<span style="color:{point.color}">■</span> {series.name}: <b>{point.y}</b><br/>',
-                                                headerFormat = '<span style="font-size: 10px">{point.key}</span><br/>')
-      ) %>%
-      highcharter::hc_title(text = paste("SEIR based on", reac_SEIR$current))
-  }
-})
-
-
-output$SEIR_R0 <- renderPrint({
-  if(is_ready(reac_SEIR$R0)) {
-    print(reac_SEIR$R0)
-  }
-})
-
-output$SEIR_plot <- highcharter::renderHighchart(
-  reac_SEIR$SEIR_plot
-)
+# 
+# 
+# #---- data retrieval, common to both
+# 
+# distr_IT <- 'exp'
+# distr_SRT <- 'exp'
+# distr_IBST <- 'none'
+# 
+# shiny::observe({
+#   
+#   wait <- waitLoading()
+# 
+#   # territory selection for SEIR
+#   if(t$p) {
+#     reac_SEIR$data <- expression(regionTS)
+#     reac_SEIR$notAvail <- TRUE
+#     reac_SEIR$name <- regAndProv[ regAndProv$province == t$name, "region"]
+#   } else {
+#     reac_SEIR$data <- t$data
+#     reac_SEIR$notAvail <- FALSE
+#     reac_SEIR$name <- t$name
+#   }
+#   
+#   # N =  population of area
+#   if(t$c) {
+#     reac_SEIR$N <- italy_pop$country[1,"valore"]
+#   } else {
+#     reac_SEIR$N <- italy_pop$region[italy_pop$region$territorio == reac_SEIR$name, "valore"]
+#   }
+#   
+#   ## Time series
+#   # Infected Time Series
+#   reac_SEIR$P <- level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$totale_casi, direction = input$direction_fill, method = input$method_fill)
+#   
+#   # Removed Time Series (recovered + dead)
+#   reac_SEIR$R <- level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$dimessi_guariti, direction = input$direction_fill, method = input$method_fill) +
+#     level_and_fill(eval(reac_SEIR$data)[[reac_SEIR$name]]$deceduti, direction = input$direction_fill, method = input$method_fill)
+#   
+#   
+#   reac_SEIR$par_IT <- list('rate'=1/input$rate_IT)
+#   reac_SEIR$par_SRT <- list('rate'=1/input$rate_SRT)
+#   reac_SEIR$par_IBST <- NULL
+#   
+#   reac_SEIR$IT <- covid19::generate(distr_IT, reac_SEIR$par_IT)
+#   reac_SEIR$SRT <- covid19::generate(distr_SRT, reac_SEIR$par_SRT)
+#   reac_SEIR$IBST <- covid19::generate(distr_IBST, reac_SEIR$par_IBST)
+#   
+#   reac_SEIR$m <- max(length(reac_SEIR$IT), length(reac_SEIR$SRT), length(reac_SEIR$IBST))
+#   reac_SEIR$end <- length(reac_SEIR$P) #Rt goes from day 1 to day n_obs-m BUT also the SEIR data series will go from day 1 to that day after refinement
+#   reac_SEIR$len <- reac_SEIR$end - reac_SEIR$m
+# })
+# 
+# 
+# #---- R0 part
+#
+# shiny::observeEvent(input$est_R0, {
+# 
+#   out <- SEIR_factotum(P = reac_SEIR$P, R = reac_SEIR$R, N = reac_SEIR$N,
+#                        end=reac_SEIR$end, future=input$future,
+#                        distr_IT=distr_IT, distr_SRT=distr_SRT, distr_IBST=distr_IBST,
+#                        par_IT=reac_SEIR$par_IT, par_SRT=reac_SEIR$par_SRT, par_IBST=reac_SEIR$par_IBST,
+#                        R0_exp_est_end=input$R0_exp_est_end,
+#                        plot_data=input$plot_data)
+# 
+#   reac_SEIR$R0 <- out$R0
+# 
+#   S_ <- reac_SEIR$N*out$S_ 
+#   E_ <- reac_SEIR$N*out$E_ 
+#   I_ <- reac_SEIR$N*out$I_ 
+#   R_ <- reac_SEIR$N*out$R_
+#   S <- reac_SEIR$N*out$S 
+#   E <- reac_SEIR$N*out$E 
+#   I <- reac_SEIR$N*out$I
+#   R <- reac_SEIR$N*out$R
+# 
+#   reac_SEIR$U <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S'=S, 'E'=E, 'I'=I, 'R'=R)
+#   reac_SEIR$U_ <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+# 
+#   reac_SEIR$current <- "R0"
+# 
+# })
+# 
+# 
+# shiny::observeEvent(input$est_Rt, {
+# 
+# 
+#   # REFERS TO INPUT IN PRECEDENT TAB
+# 
+#   GT<-R0::generation.time("gamma", c(input$"Gamma_1", input$"Gamma_2"))
+#   R0_out <- R0::est.R0.TD(diff(reac_SEIR$P),GT,begin=1, end=as.numeric(reac_SEIR$len))
+#   Rt <- R0_out$R
+#   R0_stages <- (1:(length(Rt)-1))
+# 
+#   out <- SEIR_factotum(P = reac_SEIR$P, R = reac_SEIR$R, N = reac_SEIR$N,
+#                        end=reac_SEIR$end, future=input$future,
+#                        distr_IT=distr_IT, distr_SRT=distr_SRT, distr_IBST=distr_IBST,
+#                        par_IT=reac_SEIR$par_IT, par_SRT=reac_SEIR$par_SRT, par_IBST=reac_SEIR$par_IBST,
+#                        R0_msp=Rt, R0_stages=R0_stages,
+#                        plot_data=input$plot_data)
+# 
+#   S_ <- reac_SEIR$N*out$S_ 
+#   E_ <- reac_SEIR$N*out$E_ 
+#   I_ <- reac_SEIR$N*out$I_ 
+#   R_ <- reac_SEIR$N*out$R_
+#   S <- reac_SEIR$N*out$S 
+#   E <- reac_SEIR$N*out$E 
+#   I <- reac_SEIR$N*out$I
+#   R <- reac_SEIR$N*out$R
+# 
+#   reac_SEIR$U <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S'=S, 'E'=E, 'I'=I, 'R'=R)
+#   reac_SEIR$U_ <- data.frame(date = seq(from = init_date, by = 1, length.out = reac_SEIR$len), 'S_'=S_, 'E_'=E_, 'I_'=I_, 'R_'=R_)
+# 
+#   reac_SEIR$current <- "R(t)"
+# 
+# })
+# 
+# 
+# shiny::observe({
+#   if(is_ready(reac_SEIR$U_) ) {
+#     reac_SEIR$SEIR_plot <- highcharter::hchart(tidyr::gather((reac_SEIR$U_), key="key", value="value", -date), 
+#                                                highcharter::hcaes(x = date, y = value, group = key), 
+#                                                type = "line",
+#                                                color = c("#bf40bf", "#e60000", "#00b300", "#fec501"),
+#                                                name = c("Exposed", "Infectious", "Recovered", "Susceptible"),
+#                                                marker = list(enabled = FALSE),
+#                                                legendIndex = c(2,3,4,1),
+#                                                tooltip = list(valueDecimals = 0)
+#     ) %>%
+#       highcharter::hc_add_series(tidyr::gather((reac_SEIR$U), key="key", value="value", -date), 
+#                                  highcharter::hcaes(x = date, y = value, group = key), 
+#                                  type = "scatter",
+#                                  name = c("Exposed (true)", "Infectious (true)", "Recovered (true)", "Susceptible (true)"),
+#                                  color = c("#bf40bf", "#e60000", "#00b300", "#fec501"),
+#                                  legendIndex = c(2,3,4,1),
+#                                  tooltip = list(valueDecimals = 0, 
+#                                                 pointFormat = '<span style="color:{point.color}">■</span> {series.name}: <b>{point.y}</b><br/>',
+#                                                 headerFormat = '<span style="font-size: 10px">{point.key}</span><br/>')
+#       ) %>%
+#       highcharter::hc_title(text = paste("SEIR based on", reac_SEIR$current))
+#   }
+# })
+# 
+# 
+# output$SEIR_R0 <- renderPrint({
+#   if(is_ready(reac_SEIR$R0)) {
+#     print(reac_SEIR$R0)
+#   }
+# })
+# 
+# output$SEIR_plot <- highcharter::renderHighchart(
+#   reac_SEIR$SEIR_plot
+# )

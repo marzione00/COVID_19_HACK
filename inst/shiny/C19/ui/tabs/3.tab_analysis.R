@@ -447,50 +447,50 @@ shinydashboard::tabItem(
   ),
   
   
-  fluidRow(
-    
-    column(
-      4,
-      shinydashboard::box(
-        width = 12,
-        status = "danger",
-        solidHeader = TRUE,
-        title = "Input",
-        shiny::sliderInput(inputId = "rate_IT", label = "Mean incubation time",
-                           min = 0, max = 10, step = 0.1, value = 5.2),
-        shiny::sliderInput(inputId = "rate_SRT", label = "Mean timespan from symptoms to recovery",
-                           min = 0, max = 10, step = 0.1, value=round(log(5)/2) ,1),
-        shiny::actionButton(inputId = "est_R0", "If epidemic continued as in initial stages"), 
-        shiny::actionButton(inputId = "est_Rt", "all times Rt. Refer to previous tab for Rt parameters choice"),	
-        shiny::sliderInput(inputId = "R0_exp_est_end", label = "If estimating initial R0, number of days to estimate",
-                           min = 1, max = 20, step = 1, value = 5),
-        shiny::sliderInput(inputId = "future", label = "Forecast lags",
-                           min = 0, max = 100, step = 1, value = 0),
-        shiny::checkboxInput(inputId = "plot_data", label = "Show true data points", value = TRUE)
-      ),
-      
-      shinydashboard::box(
-        width = 12,
-        status = "danger",
-        solidHeader = TRUE,
-        title = "R0",
-        shiny::verbatimTextOutput("SEIR_R0")
-      )
-      
-    ),
-    
-    column(
-      8,
-      shinydashboard::box(
-        color = "red",
-        status = "danger",
-        title = "SEIR plot",
-        highcharter::highchartOutput("SEIR_plot") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
-        width = 12
-      )
-    )
-    
-  )
+  # fluidRow(
+  #   
+  #   column(
+  #     4,
+  #     shinydashboard::box(
+  #       width = 12,
+  #       status = "danger",
+  #       solidHeader = TRUE,
+  #       title = "Input",
+  #       shiny::sliderInput(inputId = "rate_IT", label = "Mean incubation time",
+  #                          min = 0, max = 10, step = 0.1, value = 5.2),
+  #       shiny::sliderInput(inputId = "rate_SRT", label = "Mean timespan from symptoms to recovery",
+  #                          min = 0, max = 10, step = 0.1, value=round(log(5)/2) ,1),
+  #       shiny::actionButton(inputId = "est_R0", "If epidemic continued as in initial stages"), 
+  #       shiny::actionButton(inputId = "est_Rt", "all times Rt. Refer to previous tab for Rt parameters choice"),	
+  #       shiny::sliderInput(inputId = "R0_exp_est_end", label = "If estimating initial R0, number of days to estimate",
+  #                          min = 1, max = 20, step = 1, value = 5),
+  #       shiny::sliderInput(inputId = "future", label = "Forecast lags",
+  #                          min = 0, max = 100, step = 1, value = 0),
+  #       shiny::checkboxInput(inputId = "plot_data", label = "Show true data points", value = TRUE)
+  #     ),
+  #     
+  #     shinydashboard::box(
+  #       width = 12,
+  #       status = "danger",
+  #       solidHeader = TRUE,
+  #       title = "R0",
+  #       shiny::verbatimTextOutput("SEIR_R0")
+  #     )
+  #     
+  #   ),
+  #   
+  #   column(
+  #     8,
+  #     shinydashboard::box(
+  #       color = "red",
+  #       status = "danger",
+  #       title = "SEIR plot",
+  #       highcharter::highchartOutput("SEIR_plot") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
+  #       width = 12
+  #     )
+  #   )
+  #   
+  # )
   
   
   
