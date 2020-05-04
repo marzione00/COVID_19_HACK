@@ -1,6 +1,7 @@
 # ====== GENERAL INFO ==== 
 #Dataset and plot reactive
 reac_dataset <- shiny::reactiveValues()
+reac_delay <- shiny::reactiveValues()
 
 disc_NAfind <- function(v) {
   n <- length(v)
@@ -487,6 +488,41 @@ output$tamp_plot <- highcharter::renderHighchart(
                                yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
                                name="share_infected_discovered", color="#383838")
 )
+
+
+
+# SPREADING DELAY ---------------------------------------------------------
+
+# shiny::observe({
+#   
+#   switch(input$rank_type,
+#          "start" = {
+#            
+#          },
+#          "peak" = {
+#            
+#          },
+#          "end" = {
+#            
+#          })
+#   reac_delay$data
+# })
+
+shiny::observe({
+  reac_delay$map_rank <- highcharter::highchart(type = "map") %>% 
+    highcharter::hc_chart(zoomType = "xy") %>%
+    highcharter::hc_add_series_map(map = ita, df = dfita3, 
+                                   joinBy = "hasc", value = input$rank_type, name=input$rank_type) %>%
+    highcharter::hc_colorAxis(
+      stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000"))
+    )
+})
+
+output$map_rank <- highcharter::renderHighchart({
+  reac_delay$map_rank
+})
+
+
 
 
 
