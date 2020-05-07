@@ -220,11 +220,15 @@ shiny::observe({
                                           yAxis = reac_dataset$yAxis,
                                           showInLegend=TRUE) %>%
     highcharter::hc_xAxis(
-      plotBands = list(list(color = "#ffe6e6", from = UTSdate(as.Date("2020-03-09")), to = UTSdate(fin_date),
-                       label = list(text = "Complete lockdown", style = list(color = "#cc0000")))
+      plotBands = list(list(color = "#ffe6e6", from = UTSdate(as.Date("2020-03-09")), to = UTSdate(as.Date("2020-05-04")),
+                       label = list(text = "First stage", style = list(color = "#cc0000"))),
+                       list(color = "#ffebcc", from = UTSdate(as.Date("2020-05-04")), to = UTSdate(fin_date),
+                            label = list(text = "Second stage", style = list(color = "#cc7a00")))
                        ),
       plotLines = list(list(color = "#e60000", value = UTSdate(as.Date("2020-03-09")), width = 4,
-                            label = list(text = "Decree of March 9th"))
+                            label = list(text = "Decree of March 9th")),
+                       list(color = "#e67300", value = UTSdate(as.Date("2020-05-04")), width = 4,
+                            label = list(text = "Decree of April 26th"))
                        )
     ) %>%
     highcharter::hc_yAxis(

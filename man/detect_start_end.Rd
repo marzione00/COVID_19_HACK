@@ -6,7 +6,7 @@
  
 ... more specifics ...}
 \usage{
-detect_start_end(x, threshold = 0.005)
+detect_start_end(v, threshold = 0.005)
 }
 \arguments{
 \item{threshold}{}

@@ -17,7 +17,7 @@ detect_start_end <- function(v, threshold = 0.005) {
   if(is.null(v) || !is.numeric(v) || length(v) == 0)
     return(NULL)
   
-  tot <- tail(v,1)
+  tot <- tail(v[!is.na(v)],1)
   
   for(i in c(1:length(v))) {
     if(!is.na(v[i]) && v[i]/tot > threshold)
