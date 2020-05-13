@@ -512,11 +512,18 @@ output$tamp_plot <- highcharter::renderHighchart(
 #   reac_delay$data
 # })
 
+dfita4 <- dfita3 %>%
+  dplyr::mutate(
+    start_num = scales::rescale(as.numeric(start)),
+    end_num = scales::rescale(as.numeric(end)),
+    peak_num = scales::rescale(as.numeric(peak)))
+
 shiny::observe({
   reac_delay$map_rank <- highcharter::highchart(type = "map") %>% 
     highcharter::hc_chart(zoomType = "xy") %>%
-    highcharter::hc_add_series_map(map = ita, df = dfita3, 
-                                   joinBy = "hasc", value = input$rank_type, name=input$rank_type) %>%
+    highcharter::hc_add_series_map(map = ita, df = dfita4, 
+                                   joinBy = "hasc", value = paste0(input$rank_type, "_num"),
+                                   name=input$rank_type) %>%
     highcharter::hc_colorAxis(
       stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000"))
     )
