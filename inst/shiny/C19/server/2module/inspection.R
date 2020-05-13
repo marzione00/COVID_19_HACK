@@ -523,7 +523,8 @@ shiny::observe({
     highcharter::hc_chart(zoomType = "xy") %>%
     highcharter::hc_add_series_map(map = ita, df = dfita4, 
                                    joinBy = "hasc", value = paste0(input$rank_type, "_num"),
-                                   name=input$rank_type) %>%
+                                   name = "") %>%
+    highcharter::hc_tooltip(pointFormat = "region: {point.name} <br> start: {point.start} <br> end: {point.end} <br> peak: {point.peak}") %>% 
     highcharter::hc_colorAxis(
       stops = highcharter::color_stops(4,c("#FFE4B5","#FFA500","#FF4500","#cc0000"))
     )
