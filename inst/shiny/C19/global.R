@@ -9,7 +9,7 @@ intensivecare_capacity = covid19:::get_intensivecare_cap(regionTS)
 age_cases = covid19:::get_agecases(as.character(sort(names(regionTS))))
 decrees = covid19:::get_decrees()
 
-N <- nrow(countryTS)
+N <- nrow(countryTS$Italy)
 
 
 #===  Global function to check error 
@@ -42,6 +42,19 @@ toLog10<- function(num)
 UTSdate <- function(date) {
   return(as.integer(date) * 86400000)
 }
+
+
+# Aggregates a time series weekly
+aggr_wly <- function(v,avg=F) {
+  out <- unlist( lapply( split(v,ceiling(seq_along(v)/7)) ,sum) )
+  if(avg)
+    out <- out/7
+  return(unname(out))
+}
+
+init_date <- min(countryTS$Italy$data)
+
+fin_date <- max(countryTS$Italy$data)
 
 #================================
 
@@ -272,10 +285,24 @@ tamp_country <- tibble::tibble(
   region = "--- ALL ---"
 )
 
+tamp_country_wly <- tibble::tibble(
+  data=countryTS$Italy$data[seq(1,N,7)],
+  tamponi_giornalieri=aggr_wly(diff(c(0,countryTS$Italy$tamponi))),
+  casi_giornalieri=aggr_wly(diff(c(0,countryTS$Italy$totale_casi))),
+  region = "--- ALL ---"
+)
+
 tamp_region <- purrr::map_df(names(regionTS), function(x){
   regionTS[[x]] %>%
     dplyr::select(data,tamponi,totale_casi) %>%
     dplyr::mutate(region=x)
+})
+
+tamp_region_wly <- purrr::map_df(names(regionTS), function(x){
+  data.frame("data"=regionTS[[x]]$data[seq(1,N,7)],
+             "tamponi_giornalieri"=aggr_wly(diff(c(0,regionTS[[x]]$tamponi))),
+             "casi_giornalieri"=aggr_wly(diff(c(0,regionTS[[x]]$totale_casi))),
+             "region"=x)
 })
 
 tamp_creg <- tamp_country %>% 
@@ -283,15 +310,27 @@ tamp_creg <- tamp_country %>%
   dplyr::ungroup() %>%
   dplyr::group_by(region) %>%
   dplyr::mutate(casi_giornalieri=totale_casi-dplyr::lag(totale_casi)) %>% 
-  dplyr::mutate(casi_giornalieri=ifelse(data==as.Date("2020-02-24"),totale_casi,casi_giornalieri)) %>%
+  dplyr::mutate(casi_giornalieri=ifelse(data==init_date,totale_casi,casi_giornalieri)) %>%
   dplyr::mutate(tamponi_giornalieri=tamponi-dplyr::lag(tamponi)) %>%
-  dplyr::mutate(tamponi_giornalieri=ifelse(data==as.Date("2020-02-24"),tamponi,tamponi_giornalieri)) %>%
+  dplyr::mutate(tamponi_giornalieri=ifelse(data==init_date,tamponi,tamponi_giornalieri)) %>%
   dplyr::mutate(share_infected_discovered = casi_giornalieri/tamponi_giornalieri) %>%
   dplyr::select(data,casi_giornalieri,tamponi_giornalieri,share_infected_discovered) %>%
   dplyr::rename(daily_cases=casi_giornalieri,daily_tests=tamponi_giornalieri,date=data) %>%
   dplyr::mutate(share_infected_discovered=round(share_infected_discovered,2))
 
 tamp_creg_1 <- tamp_creg %>% dplyr::select(1:4) %>%
+  tidyr::gather(key="key",value="value",-date, -region)
+
+tamp_creg_wly <- tamp_country_wly %>% 
+  dplyr::bind_rows(tamp_region_wly) %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(region) %>%
+  dplyr::mutate(share_infected_discovered = casi_giornalieri/tamponi_giornalieri) %>%
+  dplyr::select(data,casi_giornalieri,tamponi_giornalieri,share_infected_discovered) %>%
+  dplyr::rename(daily_cases=casi_giornalieri,daily_tests=tamponi_giornalieri,date=data) %>%
+  dplyr::mutate(share_infected_discovered=round(share_infected_discovered,2))
+
+tamp_creg_1_wly <- tamp_creg_wly %>% dplyr::select(1:4) %>%
   tidyr::gather(key="key",value="value",-date, -region)
 
 # age_cases ---------------------------------------------------------------
@@ -333,11 +372,7 @@ age_df_final <- age_df %>%
 # Inital and final dates of samples
 '%then%' <- shiny:::'%OR%'
 
-init_date <- min(countryTS$Italy$data)
-
 init_date_arima = init_date
-  
-fin_date <- max(countryTS$Italy$data)
 
 # Total population sizes in 2020 winter
 country_tot_pop <- 6.048e+07

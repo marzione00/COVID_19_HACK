@@ -2,6 +2,7 @@
 #Dataset and plot reactive
 reac_dataset <- shiny::reactiveValues()
 reac_delay <- shiny::reactiveValues()
+reac_test <- shiny::reactiveValues()
 
 disc_NAfind <- function(v) {
   n <- length(v)
@@ -476,11 +477,23 @@ highcharter::highchart(type = "stock") %>%
 
 )
 
-# tamponi graph -----------------------------------------------------------
+# Tests tracking -----------------------------------------------------------
+
+shiny::observe({
+  if(input$test_aggr) {
+    reac_test$tamp_creg <- tamp_creg_wly
+    reac_test$tamp_creg_1 <- tamp_creg_1_wly
+  } else {
+    reac_test$tamp_creg <- tamp_creg
+    reac_test$tamp_creg_1 <- tamp_creg_1
+  }
+  
+})
 
 
 output$tamp_plot <- highcharter::renderHighchart(
-  highcharter::hchart(dplyr::filter(tamp_creg_1,region==input$test_region), "column", highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
+  highcharter::hchart(dplyr::filter(reac_test$tamp_creg_1,region==input$test_region), "column", 
+                      highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
     # BUGGED
     #highcharter::hc_chart(zoomType = "xy", scrollablePlotArea = list(minWidth = 1000, scrollPositionX = 1)) %>%
     highcharter::hc_chart(zoomType = "xy") %>%
@@ -488,8 +501,8 @@ output$tamp_plot <- highcharter::renderHighchart(
       list(lineWidth = 3, title = list(text  =  '')),
       list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
     ) %>%
-    highcharter::hc_add_series(data = dplyr::filter(tamp_creg,region==input$test_region), type = "spline", 
-                               yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
+    highcharter::hc_add_series(data = dplyr::filter(reac_test$tamp_creg,region==input$test_region), 
+                               type = "spline", yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
                                name="share_infected_discovered", color="#383838")
 )
 
@@ -589,7 +602,7 @@ output$growth_NAlog <- renderUI({
 
 output$test_NAlog <- renderUI({
 
-  if( is_ready(input$test_region) && disc_NAfind(dplyr::filter(tamp_creg,region==input$test_region)$share_infected_discovered) ) {
+  if( is_ready(input$test_region) && disc_NAfind(dplyr::filter(reac_test$tamp_creg,region==input$test_region)$share_infected_discovered) ) {
     fluidRow(
       hr(),
       helpText(em("Warning: NA introduced"))
