@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.8.27)  17 SEP 2020 21:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.8.27)  17 SEP 2020 21:44
 entering extended mode
 **./article_4.tex
 (article_4.tex
@@ -1109,12 +1109,12 @@ Package pdftex.def Info: Figures/Malthusian_growth_vs_logistic_growth-2.jpg  us
 ed on input line 255.
 (pdftex.def)             Requested size: 296.00113pt x 208.10657pt.
  [11 <./Figures/Malthusian_growth_vs_logistic_growth-2.jpg>] [12] [13]
-<Figures/Home_figure_1.png, id=240, 437.00766pt x 497.98547pt>
+<Figures/Home_figure_1.png, id=239, 437.00766pt x 497.98547pt>
 File: Figures/Home_figure_1.png Graphic file (type png)
 <use Figures/Home_figure_1.png>
 Package pdftex.def Info: Figures/Home_figure_1.png  used on input line 311.
 (pdftex.def)             Requested size: 185.0pt x 210.81657pt.
-<Figures/Home_figure_2.png, id=242, 140.39954pt x 105.01735pt>
+<Figures/Home_figure_2.png, id=241, 140.39954pt x 105.01735pt>
 File: Figures/Home_figure_2.png Graphic file (type png)
 <use Figures/Home_figure_2.png>
 Package pdftex.def Info: Figures/Home_figure_2.png  used on input line 320.
@@ -1126,31 +1126,31 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [14
 
  <./Figures/Home_figure_1.png>]
-<Figures/Home_figure_3.png, id=255, 442.27734pt x 181.80421pt>
+<Figures/Home_figure_3.png, id=254, 442.27734pt x 181.80421pt>
 File: Figures/Home_figure_3.png Graphic file (type png)
 <use Figures/Home_figure_3.png>
 Package pdftex.def Info: Figures/Home_figure_3.png  used on input line 337.
 (pdftex.def)             Requested size: 185.0pt x 76.04654pt.
  [15 <./Figures/Home_figure_2.png> <./Figures/Home_figure_3.png>]
-<Figures/Inspection_perc_occupancy.png, id=270, 881.2925pt x 302.12875pt>
+<Figures/Inspection_perc_occupancy.png, id=269, 881.2925pt x 302.12875pt>
 File: Figures/Inspection_perc_occupancy.png Graphic file (type png)
 <use Figures/Inspection_perc_occupancy.png>
 Package pdftex.def Info: Figures/Inspection_perc_occupancy.png  used on input l
 ine 355.
 (pdftex.def)             Requested size: 185.0pt x 63.42123pt.
-<Figures/Inspection_rawdata.png, id=271, 825.0825pt x 469.755pt>
+<Figures/Inspection_rawdata.png, id=270, 825.0825pt x 469.755pt>
 File: Figures/Inspection_rawdata.png Graphic file (type png)
 <use Figures/Inspection_rawdata.png>
 Package pdftex.def Info: Figures/Inspection_rawdata.png  used on input line 362
 .
 (pdftex.def)             Requested size: 185.0pt x 105.32475pt.
-<Figures/Inspection_test_tracking.png, id=272, 413.04312pt x 240.39813pt>
+<Figures/Inspection_test_tracking.png, id=271, 413.04312pt x 240.39813pt>
 File: Figures/Inspection_test_tracking.png Graphic file (type png)
 <use Figures/Inspection_test_tracking.png>
 Package pdftex.def Info: Figures/Inspection_test_tracking.png  used on input li
 ne 369.
 (pdftex.def)             Requested size: 185.0pt x 107.67561pt.
-<Figures/Inspection_Cattura.png, id=273, 671.50874pt x 251.94125pt>
+<Figures/Inspection_Cattura.png, id=272, 671.50874pt x 251.94125pt>
 File: Figures/Inspection_Cattura.png Graphic file (type png)
 <use Figures/Inspection_Cattura.png>
 Package pdftex.def Info: Figures/Inspection_Cattura.png  used on input line 376
@@ -1166,19 +1166,19 @@ Overfull \hbox (2.65201pt too wide) in paragraph at lines 352--380
 []$ $[]$ 
  []
 
-<Figures/Inspection_general_info.png, id=274, 855.69687pt x 309.65688pt>
+<Figures/Inspection_general_info.png, id=273, 855.69687pt x 309.65688pt>
 File: Figures/Inspection_general_info.png Graphic file (type png)
 <use Figures/Inspection_general_info.png>
 Package pdftex.def Info: Figures/Inspection_general_info.png  used on input lin
 e 387.
 (pdftex.def)             Requested size: 185.0pt x 66.94347pt.
-<Figures/Inspection_growth_monitoring.png, id=275, 434.12187pt x 300.62312pt>
+<Figures/Inspection_growth_monitoring.png, id=274, 434.12187pt x 300.62312pt>
 File: Figures/Inspection_growth_monitoring.png Graphic file (type png)
 <use Figures/Inspection_growth_monitoring.png>
 Package pdftex.def Info: Figures/Inspection_growth_monitoring.png  used on inpu
 t line 394.
 (pdftex.def)             Requested size: 185.0pt x 128.10945pt.
-<Figures/Inspection_occupancy2.png, id=276, 878.78313pt x 301.62688pt>
+<Figures/Inspection_occupancy2.png, id=275, 878.78313pt x 301.62688pt>
 File: Figures/Inspection_occupancy2.png Graphic file (type png)
 <use Figures/Inspection_occupancy2.png>
 Package pdftex.def Info: Figures/Inspection_occupancy2.png  used on input line 
@@ -1193,33 +1193,33 @@ Overfull \hbox (2.65201pt too wide) in paragraph at lines 384--405
 > <./Figures/Inspection_test_tracking.png> <./Figures/Inspection_Cattura.png>]
 [17 <./Figures/Inspection_general_info.png> <./Figures/Inspection_growth_monito
 ring.png> <./Figures/Inspection_occupancy2.png>] [18]
-<Figures/logistic_input.png, id=319, 257.46187pt x 320.69812pt>
+<Figures/logistic_input.png, id=318, 257.46187pt x 320.69812pt>
 File: Figures/logistic_input.png Graphic file (type png)
 <use Figures/logistic_input.png>
 Package pdftex.def Info: Figures/logistic_input.png  used on input line 449.
 (pdftex.def)             Requested size: 222.00226pt x 276.5339pt.
-<Figures/logistic_plot1.png, id=320, 557.08125pt x 350.81062pt>
+<Figures/logistic_plot1.png, id=319, 557.08125pt x 350.81062pt>
 File: Figures/logistic_plot1.png Graphic file (type png)
 <use Figures/logistic_plot1.png>
 Package pdftex.def Info: Figures/logistic_plot1.png  used on input line 456.
 (pdftex.def)             Requested size: 222.00226pt x 139.79716pt.
-<Figures/logistic_plot2.png, id=321, 560.8453pt x 352.31625pt>
+<Figures/logistic_plot2.png, id=320, 560.8453pt x 352.31625pt>
 File: Figures/logistic_plot2.png Graphic file (type png)
 <use Figures/logistic_plot2.png>
 Package pdftex.def Info: Figures/logistic_plot2.png  used on input line 463.
 (pdftex.def)             Requested size: 222.00226pt x 139.45638pt.
  [19]
-<Figures/logistic_plot3.png, id=329, 293.59688pt x 53.44969pt>
+<Figures/logistic_plot3.png, id=328, 293.59688pt x 53.44969pt>
 File: Figures/logistic_plot3.png Graphic file (type png)
 <use Figures/logistic_plot3.png>
 Package pdftex.def Info: Figures/logistic_plot3.png  used on input line 476.
 (pdftex.def)             Requested size: 222.00226pt x 40.41582pt.
-<Figures/logistic_res1.png, id=330, 483.30562pt x 350.05782pt>
+<Figures/logistic_res1.png, id=329, 483.30562pt x 350.05782pt>
 File: Figures/logistic_res1.png Graphic file (type png)
 <use Figures/logistic_res1.png>
 Package pdftex.def Info: Figures/logistic_res1.png  used on input line 483.
 (pdftex.def)             Requested size: 222.00226pt x 160.79352pt.
-<Figures/logistic_smry1.png, id=331, 334.24875pt x 303.38344pt>
+<Figures/logistic_smry1.png, id=330, 334.24875pt x 303.38344pt>
 File: Figures/logistic_smry1.png Graphic file (type png)
 <use Figures/logistic_smry1.png>
 Package pdftex.def Info: Figures/logistic_smry1.png  used on input line 490.
@@ -1345,13 +1345,12 @@ rogram Files/MiKTeX 2.9/fonts/type1/public/fpl/fplrc8a.pfb><C:/Program Files/Mi
 KTeX 2.9/fonts/type1/public/fpl/fplrij8a.pfb><C:/Program Files/MiKTeX 2.9/fonts
 /type1/bera/fvmr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/nowacki/iwona/i
 wonab.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/nowacki/iwona/iwonar.pfb><C:
-/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Pr
-ogram Files/MiKTeX 2.9/fonts/type1/urw/palatino/uplb8a.pfb><C:/Program Files/Mi
-KTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts
-/type1/urw/palatino/uplri8a.pfb>
-Output written on article_4.pdf (24 pages, 10616784 bytes).
+/Program Files/MiKTeX 2.9/fonts/type1/urw/palatino/uplb8a.pfb><C:/Program Files
+/MiKTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Files/MiKTeX 2.9/fo
+nts/type1/urw/palatino/uplri8a.pfb>
+Output written on article_4.pdf (24 pages, 10609209 bytes).
 PDF statistics:
- 510 PDF objects out of 1000 (max. 8388607)
+ 506 PDF objects out of 1000 (max. 8388607)
  114 named destinations out of 1000 (max. 500000)
  50433 words of extra memory for PDF output out of 51595 (max. 10000000)
 
