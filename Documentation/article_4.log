@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.8.27)  17 SEP 2020 21:27
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.7) (preloaded format=pdflatex 2020.8.27)  17 SEP 2020 21:37
 entering extended mode
 **./article_4.tex
 (article_4.tex
@@ -1327,7 +1327,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 527.
  ) 
 Here is how much of TeX's memory you used:
  18801 strings out of 481212
- 351885 string characters out of 2913848
+ 352138 string characters out of 2913848
  922230 words of memory out of 3000000
  33777 multiletter control sequences out of 15000+200000
  669978 words of font info for 219 fonts, out of 3000000 for 9000
@@ -1349,7 +1349,7 @@ wonab.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/nowacki/iwona/iwonar.pfb><C:
 ogram Files/MiKTeX 2.9/fonts/type1/urw/palatino/uplb8a.pfb><C:/Program Files/Mi
 KTeX 2.9/fonts/type1/urw/palatino/uplr8a.pfb><C:/Program Files/MiKTeX 2.9/fonts
 /type1/urw/palatino/uplri8a.pfb>
-Output written on article_4.pdf (24 pages, 10616755 bytes).
+Output written on article_4.pdf (24 pages, 10616784 bytes).
 PDF statistics:
  510 PDF objects out of 1000 (max. 8388607)
  114 named destinations out of 1000 (max. 500000)
