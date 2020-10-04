@@ -265,6 +265,7 @@ shinydashboard::tabItem(tabName = "tab_2",
                                                                 inputId = "test_aggr", label = "Aggregate by week",
                                                                 value = FALSE
                                                               ),
+                                                              shiny::uiOutput("test_avg"),
                                                               shiny::uiOutput("test_NAlog")
                                                               ),
                                                        column(10,

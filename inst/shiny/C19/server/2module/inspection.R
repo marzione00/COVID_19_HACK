@@ -481,8 +481,17 @@ highcharter::highchart(type = "stock") %>%
 
 shiny::observe({
   if(input$test_aggr) {
-    reac_test$tamp_creg <- tamp_creg_wly
-    reac_test$tamp_creg_1 <- tamp_creg_1_wly
+    if(is_ready(input$test_avgbut)) {
+      switch(input$test_avgbut,
+             "abs" = {
+               reac_test$tamp_creg <- tamp_creg_wly
+               reac_test$tamp_creg_1 <- tamp_creg_1_wly
+             }, 
+             "avg" = {
+               reac_test$tamp_creg <- tamp_creg_avg_wly
+               reac_test$tamp_creg_1 <- tamp_creg_1_avg_wly
+             })
+    }
   } else {
     reac_test$tamp_creg <- tamp_creg
     reac_test$tamp_creg_1 <- tamp_creg_1
@@ -493,7 +502,7 @@ shiny::observe({
 
 output$tamp_plot <- highcharter::renderHighchart(
   highcharter::hchart(dplyr::filter(reac_test$tamp_creg_1,region==input$test_region), "column", 
-                      highcharter::hcaes(x = date, y = value, group = key), color=c("red","#888888")) %>% 
+                      highcharter::hcaes(x = Date, y = value, group = key), color=c("red","#888888")) %>% 
     # BUGGED
     #highcharter::hc_chart(zoomType = "xy", scrollablePlotArea = list(minWidth = 1000, scrollPositionX = 1)) %>%
     highcharter::hc_chart(zoomType = "xy") %>%
@@ -502,8 +511,8 @@ output$tamp_plot <- highcharter::renderHighchart(
       list(showLastLabel = FALSE, opposite = TRUE, title = list(text  =  ''))
     ) %>%
     highcharter::hc_add_series(data = dplyr::filter(reac_test$tamp_creg,region==input$test_region), 
-                               type = "spline", yAxis = 1, highcharter::hcaes(x = date, y = share_infected_discovered),
-                               name="share_infected_discovered", color="#383838")
+                               type = "spline", yAxis = 1, highcharter::hcaes(x = Date, y = share_infected_discovered),
+                               name="Share of infected discovered", color="#383838")
 )
 
 
@@ -606,6 +615,17 @@ output$test_NAlog <- renderUI({
     fluidRow(
       hr(),
       helpText(em("Warning: NA introduced"))
+    )
+  }
+})
+
+output$test_avg <- renderUI({
+  
+  if( is_ready(input$test_aggr) && input$test_aggr) {
+    shiny::fluidRow(
+      shiny::radioButtons("test_avgbut", label=NULL,
+                          choices=list("Absolute"="abs", "Average"="avg"),
+                          inline = TRUE)
     )
   }
 })
