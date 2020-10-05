@@ -63,3 +63,7 @@ ggplot2::ggplot(H_C,ggplot2::aes(x=Week,y=C.Entropy))+
   ggplot2::geom_line(color='darkblue')+
   ggplot2::theme(axis.text=ggplot2::element_text(size=12))
 
+output$entropy_plot <- highcharter::renderHighchart(
+  highcharter::hchart(H_C, "line",
+    highcharter::hcaes(x = Week, y = C.Entropy))
+)
