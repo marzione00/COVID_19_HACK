@@ -40,7 +40,8 @@ Imports:
     spectral,
     R0,
     deSolve,
-    scales
+    scales,
+    lubridate
 Remotes: 
     github::jbkunst/highcharter
 License: MIT + file LICENSE
