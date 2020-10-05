@@ -1,6 +1,3 @@
-# to be removed later on
-regionTS = covid19:::get_regionTS()
-
 ent_df <- data.frame()
 for (i in names(regionTS)) {
   ent_df <- regionTS[[i]] %>%
@@ -55,16 +52,18 @@ colnames(H_C)<-c("Week","C.Entropy")
 
 output$c_entropy_plot <- highcharter::renderHighchart(
   highcharter::hchart(H_C, "line",
-    highcharter::hcaes(x = Week, y = C.Entropy)) %>% 
+    highcharter::hcaes(x = countryTS$Italy$data[seq(1,N,7)], y = C.Entropy)) %>% 
     highcharter::hc_title(
       text = "Calculation of the <i>entropy index</i> since <b>Feb 2020</b> by week"
-    )
+    ) %>% 
+    highcharter::hc_xAxis(title = list(text = "Week"))
 )
 
 output$entropy_plot <- highcharter::renderHighchart(
   highcharter::hchart(H, "line", color = 'red',
-                      highcharter::hcaes(x = Week, y = Entropy)) %>% 
+                      highcharter::hcaes(x = countryTS$Italy$data[seq(1,N,7)], y = Entropy)) %>% 
     highcharter::hc_title(
       text = "Calculation of the <i>entropy index</i> since <b>Feb 2020</b> by week"
-    )
+    ) %>%
+    highcharter::hc_xAxis(title = list(text = "Week"))
 )
