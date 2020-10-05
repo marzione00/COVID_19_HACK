@@ -53,17 +53,18 @@ for (j in 1:max_col) {
 colnames(H)<-c("Week","Entropy")
 colnames(H_C)<-c("Week","C.Entropy")
 
-
-ggplot2::ggplot(H,ggplot2::aes(x=Week,y=Entropy))+ggplot2::geom_point(color='red')+
-  ggplot2::geom_line(color='red')+ggplot2::theme(axis.text=ggplot2::element_text(size=12),
-                                                 axis.title=ggplot2::element_text(size=14,face="bold"))
-
-ggplot2::ggplot(H_C,ggplot2::aes(x=Week,y=C.Entropy))+
-  ggplot2::geom_point(color='darkblue')+
-  ggplot2::geom_line(color='darkblue')+
-  ggplot2::theme(axis.text=ggplot2::element_text(size=12))
+output$c_entropy_plot <- highcharter::renderHighchart(
+  highcharter::hchart(H_C, "line",
+    highcharter::hcaes(x = Week, y = C.Entropy)) %>% 
+    highcharter::hc_title(
+      text = "Calculation of the <i>entropy index</i> since <b>Feb 2020</b> by week"
+    )
+)
 
 output$entropy_plot <- highcharter::renderHighchart(
-  highcharter::hchart(H_C, "line",
-    highcharter::hcaes(x = Week, y = C.Entropy))
+  highcharter::hchart(H, "line", color = 'red',
+                      highcharter::hcaes(x = Week, y = Entropy)) %>% 
+    highcharter::hc_title(
+      text = "Calculation of the <i>entropy index</i> since <b>Feb 2020</b> by week"
+    )
 )

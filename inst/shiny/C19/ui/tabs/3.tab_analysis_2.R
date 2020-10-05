@@ -11,6 +11,14 @@ shinydashboard::tabItem(
   
   shinydashboard::box(title = "Entropy", status = "danger", solidHeader = TRUE,
                       width = NULL,
-                      highcharter::highchartOutput("entropy_plot"))%>%shinycssloaders::withSpinner( color="#dd4b39"),
-  
+                      
+                      shinydashboard::tabBox(width = 12,
+                                             title = NULL,
+                                             tabPanel(h4("C.Entropy"),
+                                                      highcharter::highchartOutput("c_entropy_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
+                                             ),
+                                             tabPanel(h4("Entropy"),
+                                                      highcharter::highchartOutput("entropy_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
+                                             ))
+)
 )
