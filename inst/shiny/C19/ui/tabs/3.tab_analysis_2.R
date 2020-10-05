@@ -14,7 +14,7 @@ shinydashboard::tabItem(
                       
                       shinydashboard::tabBox(width = 12,
                                              title = NULL,
-                                             tabPanel(h4("C.Entropy"),
+                                             tabPanel(h4("Conditional Entropy"),
                                                       highcharter::highchartOutput("c_entropy_plot")%>%shinycssloaders::withSpinner( color="#dd4b39")
                                              ),
                                              tabPanel(h4("Entropy"),
