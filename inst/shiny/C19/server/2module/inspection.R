@@ -419,12 +419,12 @@ output$summary_box_growth <- renderUI({
   
   shinydashboardPlus::descriptionBlock(
     number = paste0(tail(reac_growth$out_growth$growth,1),"%"),
-    number_color = ifelse(tail(reac_growth$out_growth$growth,1)>0,"red","green"), 
-    number_icon = ifelse(tail(reac_growth$out_growth$growth,1)>0,"fa fa-caret-up","fa fa-caret-down"),
+    numberColor = ifelse(tail(reac_growth$out_growth$growth,1)>0,"red","green"), 
+    numberIcon = ifelse(tail(reac_growth$out_growth$growth,1)>0,"fas fa-caret-up","fas fa-caret-down"),
     header = "CASES GROWTH", 
     text = NULL, 
-    right_border = TRUE,
-    margin_bottom = FALSE
+    rightBorder = TRUE,
+    marginBottom = FALSE
   )
   
 })
@@ -434,12 +434,12 @@ output$summary_box_growth_change <- renderUI({
   
   shinydashboardPlus::descriptionBlock(
     number = paste0(tail(reac_growth$out_growth$growth_change,1),"%"),
-    number_color = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"red","green"), 
-    number_icon = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"fa fa-caret-up","fa fa-caret-down"),
+    numberColor = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"red","green"), 
+    numberIcon = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"fas fa-caret-up","fas fa-caret-down"),
     header = HTML("&Delta; CASES GROWTH"), 
     text = NULL, 
-    right_border = FALSE,
-    margin_bottom = FALSE
+    rightBorder = FALSE,
+    marginBottom = FALSE
   )
   
 })
