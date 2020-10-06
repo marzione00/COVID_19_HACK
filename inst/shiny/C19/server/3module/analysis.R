@@ -162,8 +162,8 @@ output$coolplot1 <- plotly::renderPlotly({
   
   conf <- nlstools::confint2(level = 0.95, object = reac_logistic$model)
   
-  yConf_up <- (conf["n0",2]*conf["k",2])/(conf["n0",2] + (conf["k",2]-conf["n0",2]) * exp(-conf["r",2]*sample_serial_date_trim))
-  yConf_down <- (conf["n0",1]*conf["k",1])/(conf["n0",1] + (conf["k",1]-conf["n0",1]) * exp(-conf["r",1]*sample_serial_date_trim))
+  yConf_up <- (conf["n0",2]*conf["k",2])/(conf["n0",2] + (conf["k",2]-conf["n0",2]) * exp(-conf["r",2]*(sample_serial_date_trim-sample_serial_date_trim[1]))) + sample_cases_trim[1]
+  yConf_down <- (conf["n0",1]*conf["k",1])/(conf["n0",1] + (conf["k",1]-conf["n0",1]) * exp(-conf["r",1]*(sample_serial_date_trim-sample_serial_date_trim[1]))) + sample_cases_trim[1]
   
   
   
