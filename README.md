@@ -45,13 +45,13 @@ devtools::install_github('marzione00/COVID_19_HACK')
 
 ## Usage
 
-Load the package
+Load the package to make the App work correctly:
 
 ```R
 require(covid19)
 ```
 
-The function of the package is `runC19()` and is run without arguments.
+The function `runC19()`, run without arguments, launches the GUI:
 
 ```R
 runC19()
