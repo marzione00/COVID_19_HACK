@@ -237,13 +237,13 @@ shiny::observe({
                             label = list(text = "Decree of June 11th"))
       )
     ) %>%
-    highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wk"), 
-                                                 list(type="week", count=3, text="3wk"), list(type="week", count=4, text="4wk"),
-                                                 list(type="week", count=5, text="5wk"), list(type="week", count=6, text="6wk"),
-                                                 list(type="month", count=2, text="2mth"), list(type="month", count=3, text="3mth"),
-                                                 list(type="month", count=4, text="4mth"), list(type="month", count=6, text="6mth"),
-                                                 list(type="all", count=1, text="All"))
-    ) %>%
+    # highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wk"), 
+    #                                              list(type="week", count=3, text="3wk"), list(type="week", count=4, text="4wk"),
+    #                                              list(type="week", count=5, text="5wk"), list(type="week", count=6, text="6wk"),
+    #                                              list(type="month", count=2, text="2mth"), list(type="month", count=3, text="3mth"),
+    #                                              list(type="month", count=4, text="4mth"), list(type="month", count=6, text="6mth"),
+    #                                              list(type="all", count=1, text="All"))
+    # ) %>%
     highcharter::hc_yAxis(
       max = reac_dataset$yAxis_max,
       min = 1
