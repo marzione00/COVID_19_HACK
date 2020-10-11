@@ -219,7 +219,8 @@ shiny::observe({
                                           highcharter::hcaes(x = Date, y = value, group = key),
                                           color=reac_dataset$colors,
                                           yAxis = reac_dataset$yAxis,
-                                          showInLegend=TRUE) %>%
+                                          showInLegend=TRUE,
+                                          zoomType= ) %>%
     highcharter::hc_xAxis(
       plotBands = list(list(color = "#ffe6e6", from = UTSdate(as.Date("2020-03-09")), to = UTSdate(as.Date("2020-05-04")),
                             label = list(text = "First stage", style = list(color = "#cc0000"))),
@@ -235,6 +236,13 @@ shiny::observe({
                        list(color = "#00e600", value = UTSdate(as.Date("2020-06-11")), width = 4,
                             label = list(text = "Decree of June 11th"))
       )
+    ) %>%
+    highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wk"), 
+                                                 list(type="week", count=3, text="3wk"), list(type="week", count=4, text="4wk"),
+                                                 list(type="week", count=5, text="5wk"), list(type="week", count=6, text="6wk"),
+                                                 list(type="month", count=2, text="2mth"), list(type="month", count=3, text="3mth"),
+                                                 list(type="month", count=4, text="4mth"), list(type="month", count=6, text="6mth"),
+                                                 list(type="all", count=1, text="All"))
     ) %>%
     highcharter::hc_yAxis(
       max = reac_dataset$yAxis_max,
@@ -252,8 +260,13 @@ shiny::observe({
       )  %>%
     highcharter::hc_legend(align = "top", verticalAlign = "top",
                            layout = "vertical", x = 30, y = 100, enabled=TRUE) %>%
-    highcharter::hc_title(text = paste0("General info for: ",reac_dataset$name),
-                            margin = 20, align = "left",
+    highcharter::hc_title(text = paste0("General info for: <strong>",reac_dataset$name, "</strong>. Data type: <strong>", 
+                                        switch(input$geninfo_type, 
+                                               "tot" = "Total",
+                                               "new" = "New",
+                                               "cur" = "Current"),
+                                        "</strong>."),
+                            margin = 20, align = "center",
                             style = list(useHTML = TRUE))
 
 })
@@ -422,6 +435,7 @@ shiny::observe({
 # boxes with arrows and growth in growth monitoring
 output$summary_box_growth <- renderUI({
   
+  if(is_ready(reac_growth$out_growth$growth)) {
   shinydashboardPlus::descriptionBlock(
     number = paste0(tail(reac_growth$out_growth$growth,1),"%"),
     numberColor = ifelse(tail(reac_growth$out_growth$growth,1)>0,"red","green"), 
@@ -431,12 +445,14 @@ output$summary_box_growth <- renderUI({
     rightBorder = TRUE,
     marginBottom = FALSE
   )
+  }
   
 })
 
 
 output$summary_box_growth_change <- renderUI({
   
+  if(is_ready(reac_growth$out_growth$growth_change)) {
   shinydashboardPlus::descriptionBlock(
     number = paste0(tail(reac_growth$out_growth$growth_change,1),"%"),
     numberColor = ifelse(tail(reac_growth$out_growth$growth_change,1)>0,"red","green"), 
@@ -446,6 +462,7 @@ output$summary_box_growth_change <- renderUI({
     rightBorder = FALSE,
     marginBottom = FALSE
   )
+  }
   
 })
 
@@ -453,9 +470,9 @@ output$plot_test <- highcharter::renderHighchart(
   if(is_ready(reac_growth$growth_xts)){
 highcharter::highchart(type = "stock") %>% 
   highcharter::hc_chart(zoomType = "xy") %>%
-  highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wks"), 
-                                               list(type="week", count=3, text="3wks"), list(type="week", count=4, text="4wks"),
-                                               list(type="week", count=5, text="5wks"), list(type="week", count=6, text="6wks"),
+  highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wk"), 
+                                               list(type="week", count=3, text="3wk"), list(type="week", count=4, text="4wk"),
+                                               list(type="week", count=5, text="5wk"), list(type="week", count=6, text="6wk"),
                                                list(type="all", count=1, text="All")), 
                                 selected = 7 ) %>%
   highcharter::hc_title(text = "% growth and growth change of total cases") %>%
