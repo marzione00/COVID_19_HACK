@@ -75,16 +75,19 @@ shiny::observe({
     {
       inpt = "tot"
     }
-    updateRadioButtons(session, inputId = "geninfo_type",selected =inpt, choiceValues = c("tot","new"),   choiceNames = list(HTML("<p><strong><span style='background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);'>Total</span></strong> (cumulative)</p>"),
-                                                                                                                               HTML("<p><span style='background-color: rgb(184, 49, 47); color: rgb(255, 255, 255);'><strong>New</strong></span> (daily)</p>")))
+    updateRadioButtons(session, inputId = "geninfo_type",selected =inpt, choiceValues = c("tot","new"),   
+                       choiceNames = list(shiny::HTML("<p><strong><span style='background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);'>Total</span></strong> (cumulative)<span style='color: rgb(40, 50, 78);'></span> <em><span style='color: rgb(166, 166, 166);'>- Total cases.</span></em></p>"),
+                                          shiny::HTML("<p><span style='background-color: rgb(184, 49, 47); color: rgb(255, 255, 255);'><strong>New</strong></span> (daily) <em><span style='color: rgb(166, 166, 166);'>- New cases.</span></em></p>")
+                                          )
+                       )
   }
-  
   else if (input$geninfo_prov == "default" )
   {
-    updateRadioButtons(session, inputId = "geninfo_type",choiceValues = c("tot","new","cur"), choiceNames = list(HTML("<p><strong><span style='background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);'>Total</span></strong> (cumulative)</p>"),
-                                                                                                                 HTML("<p><span style='background-color: rgb(184, 49, 47); color: rgb(255, 255, 255);'><strong>New</strong></span> (daily)</p>"),
-                                                                                                                 HTML("<p><span style='background-color: rgb(255, 204, 0); color: rgb(255, 255, 255);'><strong>Current</strong></span></p>")
-    ), selected = input$geninfo_type)
+    updateRadioButtons(session, inputId = "geninfo_type",choiceValues = c("tot","new","cur"), 
+                       choiceNames = list(shiny::HTML("<p><strong><span style='background-color: rgb(0, 0, 0); color: rgb(255, 255, 255);'>Total</span></strong> (cumulative)<span style='color: rgb(40, 50, 78);'></span> <em><span style='color: rgb(166, 166, 166);'>- Total cases, Total deaths, Total recoveries.</span></em></p>"),
+                                          shiny::HTML("<p><span style='background-color: rgb(184, 49, 47); color: rgb(255, 255, 255);'><strong>New</strong></span> (daily) <em><span style='color: rgb(166, 166, 166);'>- New cases, New deaths, New recoveries</span></em></p>"),
+                                          shiny::HTML("<p><span style='background-color: rgb(255, 204, 0); color: rgb(255, 255, 255);'><strong>Current</strong></span> <span style='color: rgb(166, 166, 166);'><em>- Current home isolation, Current hospitalized, Current intensive care, Current positive cases.</em></span></p>")
+                       ), selected = input$geninfo_type)
                                                                                                                                
   }
   
@@ -220,7 +223,7 @@ shiny::observe({
                                           color=reac_dataset$colors,
                                           yAxis = reac_dataset$yAxis,
                                           showInLegend=TRUE,
-                                          zoomType= ) %>%
+                                          zoomType= "xy") %>%
     highcharter::hc_xAxis(
       plotBands = list(list(color = "#ffe6e6", from = UTSdate(as.Date("2020-03-09")), to = UTSdate(as.Date("2020-05-04")),
                             label = list(text = "First stage", style = list(color = "#cc0000"))),
@@ -237,13 +240,13 @@ shiny::observe({
                             label = list(text = "Decree of June 11th"))
       )
     ) %>%
-    # highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wk"), 
-    #                                              list(type="week", count=3, text="3wk"), list(type="week", count=4, text="4wk"),
-    #                                              list(type="week", count=5, text="5wk"), list(type="week", count=6, text="6wk"),
-    #                                              list(type="month", count=2, text="2mth"), list(type="month", count=3, text="3mth"),
-    #                                              list(type="month", count=4, text="4mth"), list(type="month", count=6, text="6mth"),
-    #                                              list(type="all", count=1, text="All"))
-    # ) %>%
+    highcharter::hc_rangeSelector(buttons = list(list(type="week", count=1, text="1wk"), list(type="week", count=2, text="2wk"),
+                                                 list(type="week", count=3, text="3wk"), list(type="week", count=4, text="4wk"),
+                                                 list(type="week", count=5, text="5wk"), list(type="week", count=6, text="6wk"),
+                                                 list(type="month", count=2, text="2mth"), list(type="month", count=3, text="3mth"),
+                                                 list(type="month", count=4, text="4mth"), list(type="month", count=6, text="6mth"),
+                                                 list(type="all", count=1, text="All")),
+                                  selected = 11, allButtonsEnabled = T) %>%
     highcharter::hc_yAxis(
       max = reac_dataset$yAxis_max,
       min = 1
