@@ -217,18 +217,12 @@ shiny::observe({
   }
   
   #Substituing negative values with 0
-  
   # reac_dataset$table_plot = tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date)
   #reac_dataset$table_plot[["value"]] = ifelse(!is.na(reac_dataset$table_plot[["value"]]) & reac_dataset$table_plot[["value"]] <0, 0, reac_dataset$table_plot[["value"]])
-  
-  
-  reac_dataset$before_plot = tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date)
-  
-  print(  reac_dataset$before_plot)
+  #reac_dataset$before_plot = tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date)
+ # print(  reac_dataset$before_plot)
   # reac_dataset$table_plot$value = ifelse(!is.na(reac_dataset$table_plot$value) & reac_dataset$table_plot$value <0, 0, reac_dataset$table_plot$value)
   
-  
-    
   newdata = tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date)
   
   newdata$value = ifelse(!is.na(newdata$value) & newdata$value <0, 0, newdata$value)
