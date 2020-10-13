@@ -184,7 +184,8 @@ shiny::observe({
              backgroundColor = 'rgba(63, 63, 191, 0.4)')
       )
     }
-    
+
+        
     
   } else if(input$geninfo_prov == "default" && input$geninfo_type == "cur") {
     reac_dataset$plot_type = "spline"
@@ -214,10 +215,25 @@ shiny::observe({
            backgroundColor = 'rgba(0, 191, 255, 0.4)')
     )
   }
+  
+  #Substituing negative values with 0
+  
+  # reac_dataset$table_plot = tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date)
+  #reac_dataset$table_plot[["value"]] = ifelse(!is.na(reac_dataset$table_plot[["value"]]) & reac_dataset$table_plot[["value"]] <0, 0, reac_dataset$table_plot[["value"]])
+  
+  
+  reac_dataset$before_plot = tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date)
+  
+  print(  reac_dataset$before_plot)
+  # reac_dataset$table_plot$value = ifelse(!is.na(reac_dataset$table_plot$value) & reac_dataset$table_plot$value <0, 0, reac_dataset$table_plot$value)
+  
+  
     
+  newdata = tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date)
   
+  newdata$value = ifelse(!is.na(newdata$value) & newdata$value <0, 0, newdata$value)
   
-  reac_dataset$plot = highcharter::hchart(tidyr::gather((reac_dataset$table_plot), key="key", value="value", -Date),
+  reac_dataset$plot = highcharter::hchart(newdata,
                                           type = reac_dataset$plot_type, title= "General info",
                                           highcharter::hcaes(x = Date, y = value, group = key),
                                           color=reac_dataset$colors,
