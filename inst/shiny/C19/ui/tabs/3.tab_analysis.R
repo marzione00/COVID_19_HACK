@@ -365,66 +365,67 @@ shinydashboard::tabItem(
     width = NULL
   ),
   
-  shinydashboard::box(
-    width = 12,
-    status = "danger",
-    solidHeader = TRUE,
-    shiny::htmlOutput("selected_info4")
-  ),
+#  shinydashboard::box(
+#    width = 12,
+#    status = "danger",
+#    solidHeader = TRUE,
+#    shiny::htmlOutput("selected_info4")
+#  ),
   
-  
+#  
   fluidRow(
-    
-    column(
+#    
+   column(
       3,
-      shinydashboard::box(
-        width = 12,
-        status = "danger",
-        solidHeader = TRUE,
-        title = "Input",
-        shiny::sliderInput(inputId = "Gamma_1", label = "Shape parameter",
-                           min = 0, max = 5 ,step = 0.5,value=1.40),
-        shiny::sliderInput(inputId = "Gamma_2", label = "Rate parameter",
-                           min = 0, max = 5,step = 0.5,value=0.75)
-      )),
+#      shinydashboard::box(
+#        width = 12,
+#        status = "danger",
+#        solidHeader = TRUE,
+#        title = "Input",
+#        shiny::sliderInput(inputId = "Gamma_1", label = "Shape parameter",
+#                           min = 0, max = 5 ,step = 0.5,value=1.40),
+#        shiny::sliderInput(inputId = "Gamma_2", label = "Rate parameter",
+#                           min = 0, max = 5,step = 0.5,value=0.75)
+#     )
+),
     column(
       9,
-      shinydashboard::box(
-        color = "red",
-        status = "danger",
-        title = "R(t)",
-        shiny::plotOutput("R_t_evaluation") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
-        width = 12
-      )
-    )
-  ),
+#      shinydashboard::box(
+#        color = "red",
+#        status = "danger",
+#        title = "R(t)",
+#        shiny::plotOutput("R_t_evaluation") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
+#        width = 12
+#      )
+   )
+ ),
 
-  fluidRow(
-    column(
-      6,
-      shinydashboard::box(
-        color = "red",
-        status = "danger",
-        title = "R(t)",
-        shiny::plotOutput("R_t_goodness_of_fit") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
-        width = 12
-      )
-    ),
-    
-    #background-color: #f5f5f5; */
-  
-    
-    column(
-      6,
-      shinydashboard::box(
-        color = "red",
-        status = "danger",
-        title = "FFT of R(t)",
-        shiny::plotOutput("R_t_evaluation_FFT") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
-        width = 12
-      )
-    )
-  ),
+#  fluidRow(
+#    column(
+#      6,
+#      shinydashboard::box(
+#        color = "red",
+#        status = "danger",
+#        title = "R(t)",
+#        shiny::plotOutput("R_t_goodness_of_fit") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
+#        width = 12
+#      )
+#    ),
+#    
+#    #background-color: #f5f5f5; */
+#  
+#    
+#    column(
+#      6,
+#      shinydashboard::box(
+#        color = "red",
+#        status = "danger",
+#        title = "FFT of R(t)",
+#        shiny::plotOutput("R_t_evaluation_FFT") %>% shinycssloaders::withSpinner(color = "#dd4b39"),
+#        width = 12
+#      )
+#    )
+#  ),
     #background-color: #f5f5f5; */
 
   
@@ -437,22 +438,35 @@ shinydashboard::tabItem(
     color = "navy",
     width = NULL
   ),
+
+##------------
+## DA ELIINARE !!!!  
+fluidRow(
+  column(12,
+ shinydashboard::box(
+    background = "black",
+    "Working in progress..."
+  )
+  )
+)
+##------------
+
+
   
-  
-  shinydashboard::box(
-    width = 12,
-    status = "danger",
-    solidHeader = TRUE,
-    shiny::htmlOutput("selected_info5")
-  ),
+  #shinydashboard::box(
+  #  width = 12,
+  #  status = "danger",
+  #  solidHeader = TRUE,
+  # shiny::htmlOutput("selected_info5")
+  #),
   
   
   # fluidRow(
   #   
-  #   column(
+  #  column(
   #     4,
   #     shinydashboard::box(
-  #       width = 12,
+  #      width = 12,
   #       status = "danger",
   #       solidHeader = TRUE,
   #       title = "Input",
@@ -475,7 +489,7 @@ shinydashboard::tabItem(
   #       solidHeader = TRUE,
   #       title = "R0",
   #       shiny::verbatimTextOutput("SEIR_R0")
-  #     )
+  #    )
   #     
   #   ),
   #   
