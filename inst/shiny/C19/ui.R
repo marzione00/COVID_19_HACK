@@ -12,7 +12,8 @@ ui <-
                                          
                                          
                                          shinydashboard::dashboardSidebar(collapsed = T,
-                                                                          shinydashboard::sidebarMenuOutput("menu")
+                                                                          shinydashboard::sidebarMenuOutput("menu"),
+                                                                          tags$head(tags$style(HTML('.content-wrapper {background-image:url(\'https://ak.picdn.net/shutterstock/videos/19948891/thumb/1.jpg\');}')))
                                          ),
                                          shinydashboard::dashboardBody(
                                            tags$head( tags$meta( name="google-site-verification" ,content="uqldthSbvNv8p4RPxzlwihRq2OXixrauM9a_G-OKXB4")),

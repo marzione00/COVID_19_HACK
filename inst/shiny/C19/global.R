@@ -161,6 +161,7 @@ clean_prov <- clean_prov %>%
 
 url <- "http://code.highcharts.com/mapdata/countries/it/it-all.geo.json"
 tmpfile <- tempfile(fileext = ".json")
+
 utils::download.file(url, tmpfile)
 
 ita <- readLines(tmpfile)
