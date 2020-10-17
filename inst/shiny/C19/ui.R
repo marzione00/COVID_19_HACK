@@ -74,8 +74,12 @@ ui <-
                                            # tabs --------------------------------------------------------------------
                                            shinydashboard::tabItems(
                                              
+                                             # tab 0 -------------------------------------------------------------------
+                                             source(file.path("ui/tabs", "0.tab_home.R"),  local = TRUE)$value,
+                                             
+                                             
                                              # tab 1 -------------------------------------------------------------------
-                                             source(file.path("ui/tabs", "1.tab_home.R"),  local = TRUE)$value,
+                                             source(file.path("ui/tabs", "1.tab_map.R"),  local = TRUE)$value,
                                              
                                              
                                              # tab 2 -------------------------------------------------------------------

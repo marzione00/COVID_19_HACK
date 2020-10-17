@@ -4,6 +4,7 @@ output$menu <-   shinydashboard::renderMenu({
                               tags$div(class = "hide", checked = NA,
             shinydashboard::menuItem("", tabName = "home")),
             shinydashboard::menuItem("Home", tabName = "home", icon=icon("home")),
+            shinydashboard::menuItem("Map", tabName = "map", icon=icon("map-marked-alt")),
             shinydashboard::menuItem("Inspection", tabName = "tab_2", icon=icon("search")),
             shinydashboard::menuItem("Analysis", tabName = "tab_3_all", icon=icon("chart-line"),
                                      shinydashboard::menuSubItem("Section 1", tabName = "tab_3"),
