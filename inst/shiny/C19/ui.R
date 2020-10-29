@@ -11,6 +11,7 @@ ui <-
                                          shinydashboard::dashboardHeader(title = img(src = "coronavirus_white.png","DisCOVIDer19")),
                                          
                                          
+										 
                                          shinydashboard::dashboardSidebar(collapsed = T,
                                                                           shinydashboard::sidebarMenuOutput("menu"),
                                                                        tags$head(tags$style(HTML('.content-wrapper {background-image:url(\'https://i.pinimg.com/originals/af/8d/63/af8d63a477078732b79ff9d9fc60873f.jpg\');}')))
