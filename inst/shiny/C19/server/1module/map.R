@@ -13,25 +13,25 @@ shiny::observe({
   wait <- waitLoading_map()
   
   if(input$map_value=="absolute"){
-    reac_map$name <- "<strong>absolute</strong> (total cases)"
+    reac_map$name <- paste0("<strong>absolute</strong> ", input$category_track)
     reac_map$colors <- c("#FFE4B5","#FFA500","#FF4500","#cc0000")
     reac_map$valueDecimals = 0
     reac_map$valueSuffix = ""
     
   } else if(input$map_value=="proportion") {
-    reac_map$name <- "<strong>proportion</strong> (cases/pop * 100)"
+    reac_map$name <- paste0("<strong>proportion</strong> (", input$category_track, "/pop * 100)")
     reac_map$colors <- c("#D4E6F1", "#7FB3D5", "#2980B9", "#1A5276")
     reac_map$valueDecimals = 4
     reac_map$valueSuffix = "%"
     
   } else if(input$map_value=="density") {
-    reac_map$name <-"<strong>density</strong> (cases/area)"
+    reac_map$name <- paste0("<strong>density</strong> (", input$category_track, "/area)")
     reac_map$colors <- c("#d8ebb5","#639a67","#2b580c","#003000")
     reac_map$valueDecimals = 4
     reac_map$valueSuffix = " / km<sup>2</sup>"
     
   } else {
-    reac_map$name <- "<strong>growth<strong> (cases<sub>t</sub>/cases<sub>t-1</sub> - 1) * 100"
+    reac_map$name <- paste0("<strong>growth<strong> (", input$category_track, "<sub>t</sub>/", input$category_track, "<sub>t-1</sub> - 1) * 100")
     reac_map$colors <- c("#E6E6FA","#D8BFD8","#BA55D3","#800080")
     reac_map$valueDecimals = 3
     reac_map$valueSuffix = "%"
@@ -40,7 +40,7 @@ shiny::observe({
   
   ## REGION MAP ##
   
-  reac_map$df <- dfita1 %>%
+  reac_map$df <- get_mapregion(input$category_track) %>% 
     dplyr::filter(type==input$map_value) %>%
     dplyr::select(-type)
   

@@ -59,20 +59,42 @@ shinydashboard::tabItem(tabName = "map",
                                                        ),
                                                        # The id lets us use input$tabset1 on the server to find the current tab
                                                        id = "tabset1",
-                                                       tabPanel("By Province",
-                                                                shinycssloaders::withSpinner(
-                                                                  highcharter::highchartOutput('map_province',
-                                                                                               width = "100%",
-                                                                                               height = "600px"),
-                                                                  color="#dd4b39"
-                                                                )
-                                                       ),
                                                        tabPanel("By Region",
+                                                                fluidRow(
+                                                                column(9,
                                                                 shinycssloaders::withSpinner(
                                                                   highcharter::highchartOutput('map_region',
                                                                                                width = "100%",
                                                                                                height = "600px"
                                                                   ),
+                                                                  color="#dd4b39"
+                                                                )
+                                                                ),
+                                                                column(3,
+                                                                       shinydashboard::box(title="Categories to track", solidHeader = T,
+                                                                                           width = NULL,
+                                                                                           color = "red",
+                                                                         radioButtons("category_track", "",
+                                                                                      c("Total cases" = "totale_casi",
+                                                                                        "Total positive cases" = "totale_positivi",
+                                                                                        "New positive cases" = "nuovi_positivi",
+                                                                                        "Deaths" = "deceduti",
+                                                                                        "Swabs" = "tamponi",
+                                                                                        "Cases tested" = "casi_testati",
+                                                                                        "Discharged and recovered" = "dimessi_guariti",
+                                                                                        "Hospitalised with symptoms" = "ricoverati_con_sintomi",
+                                                                                        "Intensive care" = "terapia_intensiva",
+                                                                                        "Total hospitalised" = "totale_ospedalizzati",
+                                                                                        "Home isolation" = "isolamento_domiciliare"))
+                                                                       )
+                                                                       )
+                                                       )
+                                                       ),
+                                                       tabPanel("By Province",
+                                                                shinycssloaders::withSpinner(
+                                                                  highcharter::highchartOutput('map_province',
+                                                                                               width = "100%",
+                                                                                               height = "600px"),
                                                                   color="#dd4b39"
                                                                 )
                                                        )

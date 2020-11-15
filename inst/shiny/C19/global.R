@@ -64,6 +64,8 @@ fin_date <- max(countryTS$Italy$data)
 #====== MODULE 1 - HOME ====== 
 
 # --- region ---
+get_mapregion <- function(category_track){
+  
 map <- "https://raw.githubusercontent.com/stefanocudini/leaflet-geojson-selector/master/examples/italy-regions.json" %>% 
   httr::GET() %>% 
   httr::content() %>% 
@@ -82,7 +84,7 @@ pc_df <- purrr::map_df(names(pc_data), function(x){
   dplyr::tibble(
     name=x,
     date=pc_data[[x]]$data,
-    cases=pc_data[[x]]$totale_casi)
+    cases=pc_data[[x]][[category_track]])
 })
 
 pc_df <- pc_df %>%
@@ -90,7 +92,7 @@ pc_df <- pc_df %>%
   dplyr::group_by(name) %>%
   dplyr::mutate(growth=round(((cases-dplyr::lag(cases))/dplyr::lag(cases))*100,2))
 
-pc_df$name
+# pc_df$name
 
 # integrate population info
 pop_region <- italy_pop$region %>% 
@@ -125,7 +127,7 @@ a <- pc_df$name
 
 b <- dfita1$name
 
-setdiff(b,a)
+# setdiff(b,a)
 
 dfita1 <- dfita1 %>%
   dplyr::left_join(pc_df) %>%
@@ -139,7 +141,9 @@ dfita1 <- dfita1 %>%
   dplyr::ungroup() %>%
   tidyr::gather(key="type",value="value",-id,-date)
 
+dfita1
 
+}
 
 
 
